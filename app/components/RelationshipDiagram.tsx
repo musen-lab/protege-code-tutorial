@@ -1,0 +1,230 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { CSSProperties } from "react";
+import type { DiagramSpec } from "@/app/lib/course";
+import { sourceUrl } from "@/app/lib/course";
+
+export function RelationshipDiagram({ diagram }: { diagram: DiagramSpec }) {
+  const [selected, setSelected] = useState(0);
+  const node = diagram.nodes[selected];
+  const stageRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const connections = useMemo(() => diagram.connections ?? diagram.nodes.slice(0, -1).map((item, index) => ({
+    from: item.title,
+    to: diagram.nodes[index + 1].title,
+    label: diagram.edges[index] ?? "then",
+  })), [diagram]);
+  const columns = diagram.columns ?? (diagram.nodes.length <= 4 ? diagram.nodes.length : diagram.nodes.length <= 6 ? 3 : 4);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    const canvas = canvasRef.current;
+    if (!stage || !canvas) {
+      return;
+    }
+
+    const draw = () => {
+      const stageRect = stage.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.max(1, Math.round(stageRect.width * ratio));
+      canvas.height = Math.max(1, Math.round(stageRect.height * ratio));
+      canvas.style.width = `${stageRect.width}px`;
+      canvas.style.height = `${stageRect.height}px`;
+
+      const context = canvas.getContext("2d");
+      if (!context) {
+        return;
+      }
+      context.scale(ratio, ratio);
+      context.clearRect(0, 0, stageRect.width, stageRect.height);
+
+      const styles = getComputedStyle(stage);
+      const lineColor = styles.getPropertyValue("--diagram-line").trim() || "#716879";
+      const labelBackground = styles.getPropertyValue("--diagram-label-bg").trim() || "#fffdf8";
+      const labelColor = styles.getPropertyValue("--diagram-label-ink").trim() || "#514957";
+
+      const rects = new Map<string, DOMRect>();
+      stage.querySelectorAll<HTMLElement>("[data-diagram-node]").forEach((element) => {
+        rects.set(element.dataset.diagramNode ?? "", element.getBoundingClientRect());
+      });
+
+      const geometries = connections.flatMap((connection) => {
+        const fromRect = rects.get(connection.from);
+        const toRect = rects.get(connection.to);
+        if (!fromRect || !toRect) {
+          return [];
+        }
+
+        const from = relativeRect(fromRect, stageRect);
+        const to = relativeRect(toRect, stageRect);
+        const start = edgePoint(from, to);
+        const end = edgePoint(to, from);
+        const sameRow = Math.abs(start.y - end.y) < 12;
+        const sameColumn = Math.abs(start.x - end.x) < 12;
+        return [{ connection, from, to, start, end, sameRow, sameColumn }];
+      });
+
+      // Paint every path first. Labels are a separate pass so no later path can
+      // cross through text that has already been drawn.
+      geometries.forEach(({ start, end, sameRow, sameColumn }) => {
+        context.save();
+        context.strokeStyle = lineColor;
+        context.fillStyle = lineColor;
+        context.lineWidth = 1.5;
+        context.beginPath();
+        context.moveTo(start.x, start.y);
+        if (sameRow || sameColumn) {
+          context.lineTo(end.x, end.y);
+        } else {
+          const middleY = start.y + (end.y - start.y) / 2;
+          context.bezierCurveTo(start.x, middleY, end.x, middleY, end.x, end.y);
+        }
+        context.stroke();
+
+        const angle = sameRow || sameColumn
+          ? Math.atan2(end.y - start.y, end.x - start.x)
+          : Math.atan2(end.y - (start.y + end.y) / 2, 0.01);
+        drawArrowHead(context, end.x, end.y, angle);
+        context.restore();
+      });
+
+      geometries.forEach(({ connection, from, to, start, end, sameRow }) => {
+        const labelX = start.x + (end.x - start.x) / 2;
+        let labelY = start.y + (end.y - start.y) / 2;
+        context.font = "600 10px ui-monospace, SFMono-Regular, Menlo, monospace";
+        const textWidth = context.measureText(connection.label).width;
+
+        // A long label cannot fit between two boxes on the same row. Put it in
+        // the open row corridor instead of allowing either box to clip it.
+        const horizontalGap = Math.abs(end.x - start.x);
+        if (sameRow && textWidth + 12 > horizontalGap - 4) {
+          labelY = Math.max(10, Math.min(from.y, to.y) - 15);
+        }
+
+        context.save();
+        context.fillStyle = labelBackground;
+        roundedRect(context, labelX - textWidth / 2 - 6, labelY - 10, textWidth + 12, 20, 5);
+        context.fill();
+        context.fillStyle = labelColor;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.fillText(connection.label, labelX, labelY);
+        context.restore();
+      });
+    };
+
+    draw();
+    const observer = new ResizeObserver(draw);
+    observer.observe(stage);
+    window.addEventListener("resize", draw);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", draw);
+    };
+  }, [connections]);
+
+  return (
+    <figure className="relationship-diagram" aria-labelledby={`diagram-${slugify(diagram.title)}`}>
+      <div className="diagram-heading">
+        <div>
+          <p><span>{diagram.kind ?? "Flow diagram"}</span>{diagram.question}</p>
+          <h3 id={`diagram-${slugify(diagram.title)}`}>{diagram.title}</h3>
+        </div>
+        <span>Select any box for detail</span>
+      </div>
+      <div
+        className="diagram-graph"
+        ref={stageRef}
+        style={{ "--diagram-columns": columns } as CSSProperties}
+      >
+        <canvas ref={canvasRef} aria-hidden="true" />
+        <div className="diagram-node-grid" role="list" aria-label={`${diagram.title} nodes`}>
+          {diagram.nodes.map((item, index) => (
+            <div
+              role="listitem"
+              key={`${item.title}-${index}`}
+              style={item.position ? { gridColumn: item.position.column, gridRow: item.position.row } : undefined}
+            >
+              <button
+                type="button"
+                data-diagram-node={item.title}
+                className={`diagram-node tone-${item.tone} ${selected === index ? "is-selected" : ""}`}
+                aria-pressed={selected === index}
+                onClick={() => setSelected(index)}
+              >
+                <small>{item.subtitle}</small>
+                <strong className={codeTitleClass(item.title)}>{item.title}</strong>
+              </button>
+            </div>
+          ))}
+        </div>
+        <ul className="diagram-mobile-relations" aria-label={`${diagram.title} relationships`}>
+          {connections.map((connection) => (
+            <li key={`${connection.from}-${connection.label}-${connection.to}`}>
+              <strong>{connection.from}</strong>
+              <span>{connection.label} <b aria-hidden="true">→</b></span>
+              <strong>{connection.to}</strong>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="diagram-detail" aria-live="polite">
+        <div className={`detail-key tone-${node.tone}`} aria-hidden="true">{selected + 1}</div>
+        <div>
+          <strong>{node.title}</strong>
+          <p>{node.detail}</p>
+          {node.source && (
+            <a href={sourceUrl(node.source.path, node.source.line)} target="_blank" rel="noreferrer">
+              Open {node.source.label} at the verified snapshot ↗
+            </a>
+          )}
+        </div>
+      </div>
+      <figcaption>{diagram.caption}</figcaption>
+    </figure>
+  );
+}
+
+function slugify(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+function codeTitleClass(value: string) {
+  if (!/^[a-zA-Z0-9_.:$-]+$/.test(value)) {
+    return undefined;
+  }
+  return value.length > 17 ? "diagram-code-title is-long" : "diagram-code-title";
+}
+
+type Rect = { x: number; y: number; width: number; height: number };
+
+function relativeRect(rect: DOMRect, parent: DOMRect): Rect {
+  return { x: rect.x - parent.x, y: rect.y - parent.y, width: rect.width, height: rect.height };
+}
+
+function edgePoint(from: Rect, to: Rect) {
+  const fromCenter = { x: from.x + from.width / 2, y: from.y + from.height / 2 };
+  const toCenter = { x: to.x + to.width / 2, y: to.y + to.height / 2 };
+  const dx = toCenter.x - fromCenter.x;
+  const dy = toCenter.y - fromCenter.y;
+  const scaleX = dx === 0 ? Number.POSITIVE_INFINITY : (from.width / 2) / Math.abs(dx);
+  const scaleY = dy === 0 ? Number.POSITIVE_INFINITY : (from.height / 2) / Math.abs(dy);
+  const scale = Math.min(scaleX, scaleY);
+  return { x: fromCenter.x + dx * scale, y: fromCenter.y + dy * scale };
+}
+
+function drawArrowHead(context: CanvasRenderingContext2D, x: number, y: number, angle: number) {
+  const size = 8;
+  context.beginPath();
+  context.moveTo(x, y);
+  context.lineTo(x - size * Math.cos(angle - Math.PI / 6), y - size * Math.sin(angle - Math.PI / 6));
+  context.lineTo(x - size * Math.cos(angle + Math.PI / 6), y - size * Math.sin(angle + Math.PI / 6));
+  context.closePath();
+  context.fill();
+}
+
+function roundedRect(context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
+  context.beginPath();
+  context.roundRect(x, y, width, height, radius);
+}
