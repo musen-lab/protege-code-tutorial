@@ -8,26 +8,93 @@ modern Java after working primarily with Ruby on Rails and TypeScript/Angular.
 
 - Eight guided journeys, from module orientation through safe contribution
 - Interactive architecture, runtime, extension, and edit-flow diagrams
-- Source cutaways linked to exact files in the local Protégé checkout
+- Source cutaways linked to exact files in a pinned Protégé GitHub snapshot
 - Java time-capsule notes and Rails/Angular conceptual bridges
 - Prediction checkpoints, field exercises, and a searchable reference notebook
 
 The tutorial is intentionally progressive rather than encyclopedic. It teaches
 the stable paths and concepts that make the rest of the source tree navigable.
 
-## Development
+## Installation
 
-Requires Node.js `>=22.13.0`.
+### Prerequisites
+
+- Node.js `22.13.0` or newer. Node 22 LTS is recommended; odd-numbered,
+  non-LTS releases such as Node 23 can produce engine warnings in the lint
+  toolchain.
+- npm, which is included with Node.js
+- An internet connection for the initial dependency download and external
+  source links
+
+Running the tutorial does not require Java, Maven, a local Protégé checkout, a
+database, environment variables, or ChatGPT authentication.
+
+### Install the dependencies
+
+From a checkout of this repository:
 
 ```bash
-npm install
+cd /path/to/protege-code-tutorial
+npm ci
+```
+
+`npm ci` installs the exact dependency versions recorded in
+`package-lock.json`. Use `npm install` only when intentionally changing the
+dependency set and updating the lockfile.
+
+### Start the local development server
+
+```bash
 npm run dev
+```
+
+When the server reports that it is ready, open
+[http://localhost:3000](http://localhost:3000) in a browser. Source changes are
+reflected while the development server is running. Press `Ctrl+C` in the
+terminal to stop it.
+
+## Usage
+
+1. Open the course home page and choose **Start Journey 1**.
+2. Follow the eight journeys in order. Each journey builds on the mental model
+   established by the previous one.
+3. Select boxes in diagrams to inspect their responsibilities, relationships,
+   and source evidence.
+4. Use the prediction checkpoints before revealing their answers.
+5. Follow source links when you want the full implementation. They open the
+   exact file and line at the verified Protégé source snapshot.
+6. Use the **Architecture Atlas** and **Field notebook** as supporting
+   references. They are not alternative starting points.
+
+The tutorial saves the current journey and scroll position in the browser's
+local storage. Return to the home page and choose **Resume the course** to
+continue. Choose **Restart from Journey 1** to clear that saved position.
+Progress is specific to the current browser profile and is lost if its site
+data is cleared.
+
+## Development commands
+
+```bash
+# Start the development server at http://localhost:3000
+npm run dev
+
+# Check the source with ESLint
 npm run lint
+
+# Create the production build
+npm run build
+
+# Serve an existing production build at http://localhost:3000
+npm run start
+
+# Create a fresh production build and verify the rendered pages
 npm test
 ```
 
 `npm test` creates the production build and verifies rendered HTML for the
-trailhead, a guided journey, the architecture atlas, and the field notebook.
+trailhead, guided journeys, the Architecture Atlas, and the Field notebook.
+Run `npm run build` before `npm run start`; `npm run dev` does not require a
+production build.
 
 ## Course records
 
