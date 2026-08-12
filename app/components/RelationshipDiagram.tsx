@@ -17,6 +17,45 @@ export function RelationshipDiagram({ diagram }: { diagram: DiagramSpec }) {
   })), [diagram]);
   const columns = diagram.columns ?? (diagram.nodes.length <= 4 ? diagram.nodes.length : diagram.nodes.length <= 6 ? 3 : 4);
 
+  // A same-row connection with another node between its endpoints cannot be a
+  // straight line: the line would run underneath the intervening box and its
+  // label would float in an unrelated gap. Those connections are routed as an
+  // arc through the lane below their row instead.
+  const layout = useMemo(() => {
+    const positions = new Map<string, { column: number; row: number }>();
+    diagram.nodes.forEach((item, index) => {
+      positions.set(item.title, item.position ?? {
+        column: (index % columns) + 1,
+        row: Math.floor(index / columns) + 1,
+      });
+    });
+    const maxRow = Math.max(...[...positions.values()].map((position) => position.row));
+    const arcsPerRow = new Map<number, number>();
+    const arcs = new Map<string, { depth: number; row: number }>();
+    connections.forEach((connection) => {
+      const from = positions.get(connection.from);
+      const to = positions.get(connection.to);
+      if (!from || !to || from.row !== to.row || Math.abs(from.column - to.column) < 2) {
+        return;
+      }
+      const low = Math.min(from.column, to.column);
+      const high = Math.max(from.column, to.column);
+      const blocked = [...positions.values()].some(
+        (position) => position.row === from.row && position.column > low && position.column < high,
+      );
+      if (!blocked) {
+        return;
+      }
+      const laneIndex = arcsPerRow.get(from.row) ?? 0;
+      arcsPerRow.set(from.row, laneIndex + 1);
+      arcs.set(`${connection.from}→${connection.to}`, { depth: 30 + laneIndex * 18, row: from.row });
+    });
+    const bottomLaneDepth = [...arcs.values()]
+      .filter((arc) => arc.row === maxRow)
+      .reduce((deepest, arc) => Math.max(deepest, arc.depth), 0);
+    return { arcs, extraBottom: bottomLaneDepth ? Math.max(0, bottomLaneDepth - 4) : 0 };
+  }, [connections, diagram, columns]);
+
   useEffect(() => {
     const stage = stageRef.current;
     const canvas = canvasRef.current;
@@ -58,23 +97,33 @@ export function RelationshipDiagram({ diagram }: { diagram: DiagramSpec }) {
 
         const from = relativeRect(fromRect, stageRect);
         const to = relativeRect(toRect, stageRect);
+        const arc = layout.arcs.get(`${connection.from}→${connection.to}`);
+        if (arc) {
+          const start = { x: from.x + from.width / 2, y: from.y + from.height };
+          const end = { x: to.x + to.width / 2, y: to.y + to.height };
+          const rowBottom = Math.max(start.y, end.y);
+          const control = { x: start.x + (end.x - start.x) / 2, y: rowBottom + arc.depth * 2 };
+          return [{ connection, from, to, start, end, control, sameRow: false, sameColumn: false }];
+        }
         const start = edgePoint(from, to);
         const end = edgePoint(to, from);
         const sameRow = Math.abs(start.y - end.y) < 12;
         const sameColumn = Math.abs(start.x - end.x) < 12;
-        return [{ connection, from, to, start, end, sameRow, sameColumn }];
+        return [{ connection, from, to, start, end, control: undefined, sameRow, sameColumn }];
       });
 
       // Paint every path first. Labels are a separate pass so no later path can
       // cross through text that has already been drawn.
-      geometries.forEach(({ start, end, sameRow, sameColumn }) => {
+      geometries.forEach(({ start, end, control, sameRow, sameColumn }) => {
         context.save();
         context.strokeStyle = lineColor;
         context.fillStyle = lineColor;
         context.lineWidth = 1.5;
         context.beginPath();
         context.moveTo(start.x, start.y);
-        if (sameRow || sameColumn) {
+        if (control) {
+          context.quadraticCurveTo(control.x, control.y, end.x, end.y);
+        } else if (sameRow || sameColumn) {
           context.lineTo(end.x, end.y);
         } else {
           const middleY = start.y + (end.y - start.y) / 2;
@@ -82,25 +131,59 @@ export function RelationshipDiagram({ diagram }: { diagram: DiagramSpec }) {
         }
         context.stroke();
 
-        const angle = sameRow || sameColumn
-          ? Math.atan2(end.y - start.y, end.x - start.x)
-          : Math.atan2(end.y - (start.y + end.y) / 2, 0.01);
+        const angle = control
+          ? Math.atan2(end.y - control.y, end.x - control.x)
+          : sameRow || sameColumn
+            ? Math.atan2(end.y - start.y, end.x - start.x)
+            : Math.atan2(end.y - (start.y + end.y) / 2, 0.01);
         drawArrowHead(context, end.x, end.y, angle);
         context.restore();
       });
 
-      geometries.forEach(({ connection, from, to, start, end, sameRow }) => {
+      // Labels avoid boxes and one another: a label drawn under a node button
+      // is invisible, and overlapping labels are unreadable.
+      const nodeObstacles = [...rects.values()].map((rect) => relativeRect(rect, stageRect));
+      const placedLabels: Rect[] = [];
+      const overlaps = (candidate: Rect) =>
+        [...nodeObstacles, ...placedLabels].some(
+          (other) =>
+            candidate.x < other.x + other.width + 2 &&
+            candidate.x + candidate.width > other.x - 2 &&
+            candidate.y < other.y + other.height + 2 &&
+            candidate.y + candidate.height > other.y - 2,
+        );
+
+      geometries.forEach(({ connection, from, to, start, end, control, sameRow }) => {
         const labelX = start.x + (end.x - start.x) / 2;
         let labelY = start.y + (end.y - start.y) / 2;
         context.font = "600 10px ui-monospace, SFMono-Regular, Menlo, monospace";
         const textWidth = context.measureText(connection.label).width;
 
-        // A long label cannot fit between two boxes on the same row. Put it in
-        // the open row corridor instead of allowing either box to clip it.
-        const horizontalGap = Math.abs(end.x - start.x);
-        if (sameRow && textWidth + 12 > horizontalGap - 4) {
-          labelY = Math.max(10, Math.min(from.y, to.y) - 15);
+        if (control) {
+          // The apex of the quadratic arc, where the lane is open.
+          labelY = 0.25 * start.y + 0.5 * control.y + 0.25 * end.y;
+        } else {
+          // A long label cannot fit between two boxes on the same row. Put it
+          // in the open row corridor instead of allowing either box to clip it.
+          const horizontalGap = Math.abs(end.x - start.x);
+          if (sameRow && textWidth + 12 > horizontalGap - 4) {
+            labelY = Math.max(10, Math.min(from.y, to.y) - 15);
+          }
         }
+
+        const labelRect = (y: number): Rect => ({
+          x: labelX - textWidth / 2 - 6,
+          y: y - 10,
+          width: textWidth + 12,
+          height: 20,
+        });
+        for (const offset of [0, -16, 16, -30, 30]) {
+          if (!overlaps(labelRect(labelY + offset))) {
+            labelY += offset;
+            break;
+          }
+        }
+        placedLabels.push(labelRect(labelY));
 
         context.save();
         context.fillStyle = labelBackground;
@@ -122,7 +205,7 @@ export function RelationshipDiagram({ diagram }: { diagram: DiagramSpec }) {
       observer.disconnect();
       window.removeEventListener("resize", draw);
     };
-  }, [connections]);
+  }, [connections, layout]);
 
   return (
     <figure className="relationship-diagram" aria-labelledby={`diagram-${slugify(diagram.title)}`}>
@@ -136,7 +219,10 @@ export function RelationshipDiagram({ diagram }: { diagram: DiagramSpec }) {
       <div
         className="diagram-graph"
         ref={stageRef}
-        style={{ "--diagram-columns": columns } as CSSProperties}
+        style={{
+          "--diagram-columns": columns,
+          "--diagram-arc-lane": `${layout.extraBottom}px`,
+        } as CSSProperties}
       >
         <canvas ref={canvasRef} aria-hidden="true" />
         <div className="diagram-node-grid" role="list" aria-label={`${diagram.title} nodes`}>

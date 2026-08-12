@@ -190,6 +190,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
   position: relative;
   padding: 14px 6px 28px;
 }
+.diagram-graph { padding-bottom: calc(28px + var(--diagram-arc-lane, 0px)); }
 .diagram-graph canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .diagram-node-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(var(--diagram-columns), minmax(0, 1fr)); gap: 74px 64px; align-items: stretch; }
 .diagram-node-grid > div { min-width: 0; }
@@ -411,6 +412,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
   .diagram-heading { align-items: start; }
   .diagram-heading > span { display: none; }
   .diagram-graph canvas { display: none; }
+  .diagram-graph { padding-bottom: 28px; }
   .diagram-node-grid { grid-template-columns: 1fr; gap: 8px; }
   .diagram-node-grid > div { grid-column: 1 !important; grid-row: auto !important; }
   .diagram-node { min-height: 72px; }
