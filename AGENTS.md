@@ -109,14 +109,18 @@ typography checks and final visual validation.
    change.
 4. Make the smallest coherent change that preserves the product invariants.
 5. Validate at the level appropriate to the change, using the matrix below.
-6. Review the final diff for accidental content, generated files, and stale
+6. Step back and explicitly evaluate whether `README.md`, `AGENTS.md`,
+   `CLAUDE.md`, or another contributor guide must change. Include any required
+   documentation in the same update.
+7. Review the final diff for accidental content, generated files, and stale
    claims.
-7. Commit the validated change directly to `main` with a concise, descriptive
-   commit message.
+8. Commit the validated change immediately and directly to `main` with a
+   concise, descriptive commit message.
 
 Current repository policy:
 
 - Work directly on `main`.
+- Do not leave a completed, validated update uncommitted.
 - Do not create branches or pull requests unless explicitly requested.
 - Do not add a Git remote, push commits, publish the site, or change site access
   unless explicitly authorized.
