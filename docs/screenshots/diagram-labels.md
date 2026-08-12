@@ -10,7 +10,7 @@ conditions.
 | Area | Before | After |
 | --- | --- | --- |
 | Same-row edges with a box between endpoints (`editor-owl → launcher`, `launcher → editor-core`, `JAR location → Plugin report`) | Straight line drawn underneath the intervening boxes; the label floated in an unrelated gap, reading as a nonexistent edge between neighbors | Routed as an arc through the open lane below the row, with the label on the arc apex |
-| Label collisions | Two `depends on` labels overlapped near the launcher box on the Atlas Modules lens | Labels avoid node boxes and one another; colliding labels shift into free space |
+| Label collisions | Two `depends on` labels overlapped near the launcher box on the Atlas Modules lens | Labels avoid node boxes and one another; colliding labels shift into free space, and a shifted label must stay inside the canvas (a nudge may not clip a top-row label out of view) |
 | Diagram card height | Arcs would have been clipped at the stage edge | The stage reserves a bottom lane (`--diagram-arc-lane`) only when a bottom-row arc exists |
 
 ## Atlas, Modules lens

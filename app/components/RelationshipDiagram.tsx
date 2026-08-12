@@ -177,8 +177,12 @@ export function RelationshipDiagram({ diagram }: { diagram: DiagramSpec }) {
           width: textWidth + 12,
           height: 20,
         });
+        // A nudged label must stay inside the canvas: a candidate that clears
+        // its neighbors by leaving the stage is worse than a slight overlap.
+        const inStage = (rect: Rect) => rect.y >= 0 && rect.y + rect.height <= stageRect.height;
         for (const offset of [0, -16, 16, -30, 30]) {
-          if (!overlaps(labelRect(labelY + offset))) {
+          const candidate = labelRect(labelY + offset);
+          if (inStage(candidate) && !overlaps(candidate)) {
             labelY += offset;
             break;
           }
