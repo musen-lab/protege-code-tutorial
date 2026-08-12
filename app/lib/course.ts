@@ -534,7 +534,7 @@ workspace.initialise();`,
         title: "User state decides which contributed tabs appear",
         paragraphs: [
           "TabbedWorkspace.initialise reads remembered visible tab ids. On first run, it shows contributions marked protegeDefaultTab. On later runs, it restores exactly the remembered set. Contributions are combined with custom user tabs and ordered by their string index.",
-          "The method catches failures around individual tabs and substitutes an error panel. This is part of the project's broader philosophy: one broken plugin should degrade one feature, not prevent the application window from opening.",
+          "The method catches failures around individual tabs: a tab that was constructed but failed to load is filled with an error panel, while a tab whose instantiation threw is only logged. This is part of the project's broader philosophy: one broken plugin should degrade one feature, not prevent the application window from opening.",
         ],
         code: {
           path: "protege-editor-core/src/main/java/org/protege/editor/core/ui/workspace/TabbedWorkspace.java",
