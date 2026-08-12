@@ -19,15 +19,37 @@ the stable paths and concepts that make the rest of the source tree navigable.
 
 ### Prerequisites
 
-- Node.js `22.13.0` or newer. Node 22 LTS is recommended; odd-numbered,
-  non-LTS releases such as Node 23 can produce engine warnings in the lint
-  toolchain.
+- Node.js `22.13.0` or newer from a supported LTS line. Node 24 LTS is
+  recommended; odd-numbered, non-LTS releases such as Node 23 can produce
+  engine warnings in the lint toolchain.
 - npm, which is included with Node.js
 - An internet connection for the initial dependency download and external
   source links
 
 Running the tutorial does not require Java, Maven, a local Protégé checkout, a
 database, environment variables, or ChatGPT authentication.
+
+### If you use Homebrew...
+
+Homebrew can install the recommended Node.js LTS release and npm:
+
+```bash
+brew install node@24
+```
+
+The versioned [`node@24`](https://formulae.brew.sh/formula/node@24) formula is
+keg-only, so Homebrew may not place it first on your `PATH`. Run the following
+for the current shell, and add the same `export` line to `~/.zshrc` if you want
+the setting to persist:
+
+```bash
+export PATH="$(brew --prefix node@24)/bin:$PATH"
+node --version
+npm --version
+```
+
+Confirm that `node --version` reports a supported release, preferably `v24`,
+before continuing.
 
 ### Install the dependencies
 
@@ -95,6 +117,12 @@ npm test
 trailhead, guided journeys, the Architecture Atlas, and the Field notebook.
 Run `npm run build` before `npm run start`; `npm run dev` does not require a
 production build.
+
+## Contributing
+
+Read [`AGENTS.md`](AGENTS.md) before changing or validating the project. It is
+the canonical guide for repository structure, source-evidence rules, testing,
+visual QA, commits, and publishing constraints.
 
 ## Course records
 
