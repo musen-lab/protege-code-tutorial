@@ -16,7 +16,7 @@ export default function AtlasPage() {
         <header className="atlas-hero">
           <span className="eyebrow">Architecture Atlas</span>
           <h1>One system, four relationship lenses.</h1>
-          <p>Keep a component selected while changing the question you ask about it: who imports it, when it starts, how it is discovered, or what events flow through it.</p>
+          <p>Switch lenses to change the question you ask of the same system: who imports it, when it starts, how it is discovered, or what events flow through it.</p>
         </header>
         <AtlasExplorer />
 
