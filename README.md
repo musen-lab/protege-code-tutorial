@@ -64,16 +64,29 @@ npm ci
 `package-lock.json`. Use `npm install` only when intentionally changing the
 dependency set and updating the lockfile.
 
-### Start the local development server
+### Start the course locally
+
+```bash
+npm run build
+npm run start
+```
+
+When the server reports that it is ready, open
+[http://localhost:3000](http://localhost:3000) in a browser. This production-mode
+server matches the typography and assets used by the hosted course. Press
+`Ctrl+C` in the terminal to stop it.
+
+### Use development mode while editing
 
 ```bash
 npm run dev
 ```
 
-When the server reports that it is ready, open
-[http://localhost:3000](http://localhost:3000) in a browser. Source changes are
-reflected while the development server is running. Press `Ctrl+C` in the
-terminal to stop it.
+Development mode reflects source changes without rebuilding. With the current
+Vinext release, however, it does not inject the generated `next/font` styles.
+Geist and Lora therefore fall back to system fonts. Use development mode for
+rapid iteration, but use `npm run build` followed by `npm run start` for
+typography checks and final visual validation.
 
 ## Usage
 
@@ -97,7 +110,8 @@ data is cleared.
 ## Development commands
 
 ```bash
-# Start the development server at http://localhost:3000
+# Start the fast development server at http://localhost:3000
+# Note: generated next/font styles are not loaded in this mode
 npm run dev
 
 # Check the source with ESLint
@@ -116,7 +130,8 @@ npm test
 `npm test` creates the production build and verifies rendered HTML for the
 trailhead, guided journeys, the Architecture Atlas, and the Field notebook.
 Run `npm run build` before `npm run start`; `npm run dev` does not require a
-production build.
+production build but must not be used as the final typography or visual
+baseline.
 
 ## Contributing
 

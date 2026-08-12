@@ -88,12 +88,18 @@ recommended. The repository records exact npm dependencies in
 
 ```bash
 npm ci
-npm run dev
+npm run build
+npm run start
 ```
 
 The local course is available at `http://localhost:3000`. No Java, Maven,
 database, environment variables, local Protégé checkout, or ChatGPT sign-in is
 required to run it.
+
+Use `npm run dev` for rapid iteration. The current Vinext release does not
+inject the generated `next/font` styles in development mode, so Geist and Lora
+fall back to system fonts. Use `npm run build` followed by `npm run start` for
+typography checks and final visual validation.
 
 ## Contribution workflow
 
@@ -145,8 +151,8 @@ before following the new workflow.
 | --- | --- |
 | Documentation only | Check every command or link changed, then run `git diff --check`. |
 | Course content or source claim | Verify against `SOURCE_COMMIT`, then run `npm run lint` and `npm test`. |
-| Component, route, diagram data, or CSS | Run `npm run lint` and `npm test`, then inspect the affected page with `npm run dev`. |
-| Responsive or visual behavior | Compare the actual page before and after at the same viewport. Check desktop and mobile behavior. |
+| Component, route, diagram data, or CSS | Run `npm run lint` and `npm test`, then inspect the affected page. Development mode is acceptable for iteration; use `npm run build` and `npm run start` for the final visual check. |
+| Responsive or visual behavior | Compare the production-mode page before and after at the same viewport. Check desktop and mobile behavior. |
 | Dependency change | Use `npm install` only intentionally, inspect `package.json` and `package-lock.json`, then run the full validation suite. |
 | Build or runtime integration | Run `npm run build`, then `npm run start` and verify `http://localhost:3000` responds successfully. |
 
