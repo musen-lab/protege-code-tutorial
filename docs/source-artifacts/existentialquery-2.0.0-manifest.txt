@@ -2,6 +2,9 @@ Artifact: edu.stanford.protege:existentialquery:2.0.0
 Source: https://repo1.maven.org/maven2/edu/stanford/protege/existentialquery/2.0.0/existentialquery-2.0.0.jar
 SHA-256: 87182fe546fccc76e15e09900f6cc710d793a643d9dbbad953794770aed8802c
 Extracted path: META-INF/MANIFEST.MF
+Note: excerpt. Headers and Import-Package entries not used by the course are
+omitted; every retained line matches the real manifest exactly. The SHA-256
+above is the hash of the complete released JAR, not of this file.
 
 Bundle-ManifestVersion: 2
 Bundle-Name: Existential Query
