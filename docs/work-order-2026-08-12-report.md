@@ -47,8 +47,8 @@ Start with these surfaces:
 1. `/`: the ordered ten-lesson trailhead, course promise, resume and restart behavior, official branding, and separate search utility.
 2. `/journeys/landscape`: the first lesson and first-use technology primers. The `journeys` segment is intentionally retained for URL compatibility even though the UI says “Lesson.”
 3. `/search?q=OSGi`: server-rendered search across course and reference content.
-4. `/journeys/plugin-authoring`: the complete plugin vertical slice and links to the buildable exercise.
-5. `/journeys/frames`: frame-based ontology editing, including class and add-sequence diagrams.
+4. `/journeys/build-plugin`: the complete plugin vertical slice and links to the buildable exercise.
+5. `/journeys/edit-through-frames`: frame-based ontology editing, including class and add-sequence diagrams.
 6. `/reference`: the technology index, Java compatibility notes, class landmarks, all 24 first-party extension points, and source-navigation recipes.
 
 Important implementation boundaries:
