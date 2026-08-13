@@ -116,6 +116,11 @@ inject the generated `next/font` styles in development mode, so Geist and Lora
 fall back to system fonts. Use `npm run build` followed by `npm run start` for
 typography checks and final visual validation.
 
+Restart `npm run start` after every rebuild, including the build that
+`npm test` runs. The server does not hot-swap `dist/`; serving a page whose
+HTML references replaced chunks breaks all client-side behavior (dead
+buttons, undrawn diagram arrows) while the page still looks rendered.
+
 ## Contribution workflow
 
 1. Read the relevant mission, curriculum, resource, and audit material.
