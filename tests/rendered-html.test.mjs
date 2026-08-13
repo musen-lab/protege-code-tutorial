@@ -36,8 +36,9 @@ test("server-renders the production trailhead", async () => {
   assert.match(html, /<span>Protégé<\/span>/);
   assert.match(html, /<strong>Code Tutorial<\/strong>/);
   assert.match(html, /class="header-search-link" href="\/search" aria-label="Search the Protégé Code Tutorial"/);
-  assert.match(html, /<link rel="shortcut icon" href="\/protege-icon\.svg"/);
-  assert.match(html, /<link rel="icon" href="\/protege-icon\.svg"/);
+  assert.match(html, /<link rel="shortcut icon" href="\/favicon\.ico\?v=1"/);
+  assert.match(html, /<link rel="icon" href="\/favicon\.ico\?v=1" type="image\/x-icon" sizes="16x16 32x32 48x48"/);
+  assert.match(html, /<link rel="icon" href="\/protege-icon\.svg\?v=1" type="image\/svg\+xml"/);
   assert.doesNotMatch(html, /href="\/search">Search<\/a>/);
   assert.match(html, /Learn Protégé by following one clear path\./);
   assert.match(html, /Start Lesson 1/);
@@ -52,6 +53,16 @@ test("server-renders the production trailhead", async () => {
   assert.equal(
     createHash("sha256").update(logo).digest("hex"),
     "3f7fdd08b4f232a4b9e566099ed832612ff160098667bcd36d3b2f02da1758ac",
+  );
+
+  const favicon = await readFile(new URL("../public/favicon.ico", import.meta.url));
+  assert.equal(favicon.readUInt16LE(0), 0);
+  assert.equal(favicon.readUInt16LE(2), 1);
+  assert.equal(favicon.readUInt16LE(4), 3);
+  assert.deepEqual([favicon[6], favicon[22], favicon[38]], [16, 32, 48]);
+  assert.equal(
+    createHash("sha256").update(favicon).digest("hex"),
+    "f699b66241e25449c3a275c0c78857f115c958df1cb8f327ebbc54da9025b450",
   );
 });
 
