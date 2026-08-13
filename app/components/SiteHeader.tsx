@@ -11,12 +11,19 @@ export function SiteHeader() {
         <span className="brand-divider" aria-hidden="true" />
         <strong>Code Tutorial</strong>
       </a>
-      <nav className="top-nav" aria-label="Primary navigation">
-        <a className="course-nav-link" href="/">Course</a>
-        <a href="/search">Search</a>
-        <a href="/atlas">Atlas</a>
-        <a href="/reference">Field notebook</a>
-      </nav>
+      <div className="header-actions">
+        <a className="header-search-link" href="/search" aria-label="Search the Protégé Code Tutorial">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="10.75" cy="10.75" r="6.25" />
+            <path d="m15.5 15.5 4.25 4.25" />
+          </svg>
+        </a>
+        <nav className="top-nav" aria-label="Primary navigation">
+          <a className="course-nav-link" href="/">Course</a>
+          <a href="/atlas">Atlas</a>
+          <a href="/reference">Field notebook</a>
+        </nav>
+      </div>
     </header>
   );
 }

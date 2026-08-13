@@ -35,6 +35,10 @@ test("server-renders the production trailhead", async () => {
   assert.match(html, /<img[^>]+src="\/protege-icon\.svg"/);
   assert.match(html, /<span>Protégé<\/span>/);
   assert.match(html, /<strong>Code Tutorial<\/strong>/);
+  assert.match(html, /class="header-search-link" href="\/search" aria-label="Search the Protégé Code Tutorial"/);
+  assert.match(html, /<link rel="shortcut icon" href="\/protege-icon\.svg"/);
+  assert.match(html, /<link rel="icon" href="\/protege-icon\.svg"/);
+  assert.doesNotMatch(html, /href="\/search">Search<\/a>/);
   assert.match(html, /Learn Protégé by following one clear path\./);
   assert.match(html, /Start Lesson 1/);
   assert.match(html, /A repeated four-step learning rhythm/);
@@ -76,6 +80,10 @@ test("explains automatic stop and resume behavior", async () => {
 test("keeps the menu actionable and offers a restart path", async () => {
   const home = await (await render()).text();
   assert.doesNotMatch(home, />References<\/span>/);
+
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(styles, /\.header-search-link \{[^}]*width: 44px;[^}]*height: 44px;/s);
+  assert.match(styles, /\.header-search-link::before \{[^}]*width: 34px;[^}]*height: 34px;/s);
 
   const resumeSource = await readFile(new URL("../app/components/ResumeCourse.tsx", import.meta.url), "utf8");
   assert.match(resumeSource, /Restart from Lesson 1/);

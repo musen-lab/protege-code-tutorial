@@ -163,6 +163,9 @@ before following the new workflow.
 - Search is server-rendered and must remain usable as an ordinary GET form
   without client-side JavaScript. Index new lesson and reference content when
   it introduces a term learners are likely to look up.
+- Header search is a separate icon utility before the primary menu. Preserve
+  its descriptive accessible name, ordinary `/search` link, 44px interaction
+  target, 34px visible circle, and wider separation from the menu.
 - Course progress is stored under `inside-protege-progress-v1` in browser local
   storage. Treat changes to that key or data shape as a migration concern.
 - The current value records only the last reading position, not completion.

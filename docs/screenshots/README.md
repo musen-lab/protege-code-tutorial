@@ -40,3 +40,10 @@ The later `after-official-logo-desktop.png` and
 `after-official-logo-mobile.png` captures compare the official Protégé mark
 refinement with the earlier `after-terminology-search-branding-*` captures at
 the same 1280 by 800 and 390 by 844 viewport sizes.
+
+## Search utility
+
+The four `before-search-utility-*` and `after-search-utility-*` captures compare
+commit `e60ca46` with the approved hybrid icon treatment at matching 1280 by 800
+and 390 by 844 viewport sizes. See `../search-utility-2026-08-12.md` for measured
+dimensions, behavior, and reproduction steps.
