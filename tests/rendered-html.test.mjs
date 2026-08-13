@@ -176,6 +176,24 @@ test("renders handbook-aligned developer guidance", async () => {
   assert.match(extension, /installation location contains the word plugin/);
   assert.match(extension, /three separate facts/);
   assert.match(extension, /Plugin JAR contract/);
+  assert.match(extension, /default authoring choice/);
+  assert.match(extension, /This is not an omission default/);
+  assert.match(extension, /rejects a missing attribute/);
+  assert.match(extension, /ViewComponentPluginJPFImpl/);
+  assert.match(extension, /historical leftovers, not evidence that the current runtime uses JPF/);
+  assert.match(extension, /EditorKitExtensionMatcher\.java#L12/);
+  assert.match(extension, /PluginParameterExtensionMatcher\.java#L68/);
+  assert.match(extension, /ViewComponentPluginJPFImpl\.java#L3/);
+  assert.match(extension, /a class named only at runtime is invisible to BND/);
+  assert.match(extension, /Class\.forName\(lafClsName\)/);
+  assert.match(extension, /UIManager an explicit classloader/);
+  assert.match(extension, /ProtegeApplication\.java#L321/);
+
+  const change = await (await render("/journeys/change")).text();
+  assert.match(change, /A coarse-event listener that throws is logged and then removed/);
+  assert.match(change, /If updates quietly stop, inspect protege\.log/);
+  assert.match(change, /modelManagerChangeListeners\.remove\(listener\)/);
+  assert.match(change, /OWLModelManagerImpl\.java#L188/);
 
   const workSafely = await (await render("/journeys/work-safely")).text();
   assert.match(workSafely, /Use three loops, not one build for every question/);
@@ -209,6 +227,8 @@ test("renders architecture as connected, accessible diagrams", async () => {
 
   const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(styles, /\.diagram-node \.diagram-code-title \{[^}]*white-space: nowrap/);
+  assert.match(styles, /\.code-cutaway pre \{[^}]*box-sizing: border-box;[^}]*width: 100%/);
+  assert.match(styles, /\.code-cutaway pre code \{[^}]*display: block;[^}]*max-width: 100%/);
 });
 
 test("internal navigation remains browser-native", async () => {

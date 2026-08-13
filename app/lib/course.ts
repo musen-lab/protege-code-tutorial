@@ -637,7 +637,25 @@ workspace.initialise();`,
         paragraphs: [
           "OWL API ontology-change listeners receive exact change lists such as AddAxiom, RemoveAxiom, or SetOntologyID. Protégé uses these for dirty tracking, history, import-closure updates, and feature-level reactions.",
           "OWLModelManagerListener receives coarse application events such as ONTOLOGY_LOADED, ACTIVE_ONTOLOGY_CHANGED, REASONER_CHANGED, or ENTITY_RENDERER_CHANGED. These events say that a subsystem state changed, not which axioms changed.",
+          "A coarse-event listener that throws is logged and then removed from modelManagerChangeListeners. A view can therefore react once, fail, and receive no later coarse events. If updates quietly stop, inspect protege.log for the listener warning before debugging event production.",
         ],
+        code: {
+          path: "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManagerImpl.java",
+          line: 188,
+          language: "java",
+          snippet: `for (OWLModelManagerListener listener :
+        new ArrayList<>(modelManagerChangeListeners)) {
+    try {
+        listener.handleChange(event);
+    } catch (Throwable e) {
+        logger.warn("Exception thrown by listener: {}.  Detatching bad listener.", listener
+                .getClass()
+                .getName());
+        modelManagerChangeListeners.remove(listener);
+    }
+}`,
+          focus: "fireEvent isolates a failing plugin listener, records its class in the log, and unsubscribes it from later coarse model events.",
+        },
         diagram: {
           title: "One edit, two notification channels",
           question: "Should a listener inspect axioms or react to application state?",
@@ -691,6 +709,7 @@ workspace.initialise();`,
     sourceRefs: [
       src("Apply changes", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManagerImpl.java", 716, "Change boundary"),
       src("Change listener", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManagerImpl.java", 736, "History and dirty state"),
+      src("Defensive model events", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManagerImpl.java", 188, "Log and detach a failing listener"),
       src("History manager", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/history/HistoryManagerImpl.java", 79, "Undo/redo state machine"),
     ],
   },
@@ -714,7 +733,22 @@ workspace.initialise();`,
         paragraphs: [
           "Equinox parses extension declarations into IExtension objects. A Protégé loader names a plugin namespace and extension-point id, filters matching extensions, wraps their metadata in a typed plugin object, and eventually asks that wrapper to instantiate the declared class.",
           "The registry does not eagerly create every menu, view, or reasoner. Loaders choose when to query, how to filter by editorKitId or parameters, and when to create the actual plugin instance.",
+          "For editor-kit-scoped points, use editorKitId=\"any\" as the default authoring choice unless the contribution specifically requires OWLEditorKit. This is not an omission default: EditorKitExtensionMatcher accepts the literal value any or the current kit id, while PluginParameterExtensionMatcher rejects a missing attribute.",
         ],
+        code: {
+          path: "protege-editor-core/src/main/java/org/protege/editor/core/plugin/EditorKitExtensionMatcher.java",
+          line: 12,
+          language: "java",
+          snippet: `PluginParameterExtensionMatcher generalMatcher =
+    new PluginParameterExtensionMatcher();
+generalMatcher.put(PluginProperties.EDITOR_KIT_PARAM_NAME, "any");
+
+PluginParameterExtensionMatcher specificMatcher =
+    new PluginParameterExtensionMatcher();
+specificMatcher.put(PluginProperties.EDITOR_KIT_PARAM_NAME,
+                    editorKit.getId());`,
+          focus: "The OR matcher loads general contributions marked any and contributions targeted to the current editor-kit id.",
+        },
         diagram: {
           title: "Extension discovery pipeline",
           question: "Which step turns XML metadata into Java behavior?",
@@ -750,6 +784,7 @@ workspace.initialise();`,
         paragraphs: [
           "OSGi bundles do not share one application classloader. PluginUtilities maps an IExtension to its IContributor, asks PackageAdmin for that contributor's bundle, and calls bundle.loadClass on the configured implementation name.",
           "This is why reflection through Class.forName from core would be wrong. Core's classloader cannot necessarily see a plugin's private implementation package, even when the plugin can see core's exported API.",
+          "Names such as ViewComponentPluginJPFImpl are historical leftovers, not evidence that the current runtime uses JPF. That wrapper imports Equinox IExtension, and ViewComponentPluginLoader constructs it from the registry extension. Read the suffix as archaeology; follow the imports and constructor to identify the live mechanism.",
         ],
         code: {
           path: "protege-editor-core/src/main/java/org/protege/editor/core/plugin/PluginUtilities.java",
@@ -777,7 +812,26 @@ workspace.initialise();`,
         paragraphs: [
           "A Protégé plugin JAR needs META-INF/MANIFEST.MF, plugin.xml at the JAR root, and its implementation classes. The manifest imports host API packages and exports only packages other bundles need. The plugin.xml contribution names the exact fully qualified extension-point id and an implementation with a public no-argument constructor.",
           "A Maven plugin project normally uses bundle packaging and enables maven-bundle-plugin as an extension. BND derives imports from bytecode, but reflective dependencies may need explicit Import-Package entries. Put setup in the point-specific initialize method, not the constructor. A Bundle-Activator is usually unnecessary for a normal UI contribution.",
+          "The developer handbook calls out the trap: a class named only at runtime is invisible to BND's ordinary bytecode analysis, so its package may need an explicit import. Protégé's look-and-feel setup is the concrete example. It retrieves a class name from preferences, uses Class.forName for one path, and gives UIManager an explicit classloader for the name-based Swing loading path.",
         ],
+        code: {
+          path: "protege-editor-core/src/main/java/org/protege/editor/core/ProtegeApplication.java",
+          line: 321,
+          language: "java",
+          snippet: `UIDefaults defaults = UIManager.getDefaults();
+if (lafClsName.equals(PlasticLookAndFeel.class.getName())) {
+    UIManager.put("ClassLoader",
+                  PlasticLookAndFeel.class.getClassLoader());
+    LookAndFeel lookAndFeel =
+        (LookAndFeel) Class.forName(lafClsName).newInstance();
+    UIManager.setLookAndFeel(lookAndFeel);
+}
+else {
+    UIManager.put("ClassLoader", this.getClass().getClassLoader());
+    UIManager.setLookAndFeel(lafClsName);
+}`,
+          focus: "The class name comes from preferences. Protégé supplies Swing with a bundle-aware classloader because name-based loading crosses the OSGi boundary.",
+        },
         diagram: {
           title: "Plugin JAR contract",
           question: "Which file answers each runtime question?",
@@ -831,7 +885,11 @@ workspace.initialise();`,
     capability: "You can trace and diagnose an extension from metadata to a live plugin instance.",
     sourceRefs: [
       src("Plugin loader", "protege-editor-core/src/main/java/org/protege/editor/core/plugin/AbstractPluginLoader.java", 56, "Registry query"),
+      src("Editor-kit matcher", "protege-editor-core/src/main/java/org/protege/editor/core/plugin/EditorKitExtensionMatcher.java", 12, "any or exact editor-kit id"),
+      src("Missing parameter behavior", "protege-editor-core/src/main/java/org/protege/editor/core/plugin/PluginParameterExtensionMatcher.java", 68, "Missing attributes do not match"),
       src("Bundle classloading", "protege-editor-core/src/main/java/org/protege/editor/core/plugin/PluginUtilities.java", 76, "Contributor mapping"),
+      src("Historically named wrapper", "protege-editor-core/src/main/java/org/protege/editor/core/ui/view/ViewComponentPluginJPFImpl.java", 3, "Equinox IExtension wrapper"),
+      src("Name-based look and feel loading", "protege-editor-core/src/main/java/org/protege/editor/core/ProtegeApplication.java", 321, "UIManager classloader handoff"),
       src("OWL extension points", "protege-editor-owl/src/main/resources/plugin.xml", 6, "Domain-specific plugin surface"),
     ],
   },
