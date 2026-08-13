@@ -174,8 +174,6 @@ visual QA, commits, and publishing constraints.
 
 - `MISSION.md` defines the learner and teaching contract.
 - `CURRICULUM.md` maps the progression and diagram inventory.
-- `docs/progress-model-proposal.md` records the completion-tracking design
-  implemented on 2026-08-12.
 - `GLOSSARY.md` provides canonical project terminology.
 - `RESOURCES.md` records the source and documentation evidence base.
 - `learning-records/` stores durable learner context.

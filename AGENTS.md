@@ -61,7 +61,8 @@ changes:
 - `tests/`: rendered-HTML regression tests and progress unit tests
 - `exercises/`: buildable learner exercises with their own prerequisites and
   provenance records
-- `docs/`: audits and captured visual evidence
+- `docs/`: the handbook consistency audit and external source-artifact
+  provenance
 - `public/`: static assets and social preview
 - `build/`, `worker/`, `vite.config.ts`: Vinext, Vite, and Cloudflare-compatible
   build/runtime integration
@@ -177,8 +178,7 @@ section before following it.
 - Completion is explicit-action only: a generic section completes through its
   Mark-section-complete control, a checkpoint section by revealing the
   answer, an exercise section through its I-completed-this-exercise checkbox.
-  Never award completion for visits or scrolling. The design record is
-  `docs/progress-model-proposal.md`.
+  Never award completion for visits or scrolling.
 
 ## Validation matrix
 

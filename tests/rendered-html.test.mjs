@@ -85,10 +85,6 @@ test("explains automatic stop and resume behavior", async () => {
   const home2 = await (await render()).text();
   assert.match(home2, /Course completion/);
   assert.match(home2, /0 of \d+ sections/);
-
-  const proposal = await readFile(new URL("../docs/progress-model-proposal.md", import.meta.url), "utf8");
-  assert.match(proposal, /Status: approved/);
-  assert.match(proposal, /inside-protege-progress-v2/);
 });
 
 test("offers explicit completion controls on lesson pages", async () => {
