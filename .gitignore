@@ -38,3 +38,7 @@ yarn-error.log*
 /.wrangler/
 /outputs/
 /work/
+
+# Nitro build output (Vercel and other non-Cloudflare deploys)
+/.output/
+/.nitro/

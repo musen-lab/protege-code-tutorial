@@ -170,6 +170,26 @@ Read [`AGENTS.md`](AGENTS.md) before changing or validating the project. It is
 the canonical guide for repository structure, source-evidence rules, testing,
 visual QA, commits, and publishing constraints.
 
+## Deployment
+
+Local development, tests, and the default build target the Cloudflare
+runtime. For other platforms, `vite.config.ts` switches to vinext's Nitro
+integration whenever `VERCEL` or `NITRO_PRESET` is set in the environment,
+emitting a platform-appropriate server into `.output/`.
+
+To deploy on Vercel, import the GitHub repository in the Vercel dashboard,
+set the build command to `npm run build` and the output directory to
+`.output`. Vercel sets `VERCEL=1` during builds, which selects the Nitro
+path automatically, and Nitro detects the Vercel preset on its own. Pushes
+to `main` then redeploy automatically.
+
+To verify the Nitro build locally without any platform:
+
+```bash
+NITRO_PRESET=node npm run build
+node .output/server/index.mjs
+```
+
 ## Course records
 
 - `MISSION.md` defines the learner and teaching contract.

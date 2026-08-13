@@ -65,7 +65,10 @@ changes:
   provenance
 - `public/`: static assets and social preview
 - `build/`, `worker/`, `vite.config.ts`: Vinext, Vite, and Cloudflare-compatible
-  build/runtime integration
+  build/runtime integration. When `VERCEL` or `NITRO_PRESET` is set,
+  `vite.config.ts` builds through vinext's Nitro integration into `.output/`
+  for non-Cloudflare hosting (see README's Deployment section); local dev and
+  `npm test` always use the Cloudflare path
 - `.openai/hosting.json`: existing Sites project identity, not a place for
   secrets or local configuration
 

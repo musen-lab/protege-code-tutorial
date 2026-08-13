@@ -33,7 +33,28 @@ const localBindingConfig = {
     : [],
 };
 
+// Local development, `npm test`, and the Codex Sites hosting use the
+// Cloudflare runtime. Builds on Vercel (which sets VERCEL=1) or with
+// NITRO_PRESET set use vinext's Nitro integration instead, which emits a
+// platform-appropriate server into `.output`.
+const useNitro = Boolean(process.env.VERCEL || process.env.NITRO_PRESET);
+
 export default defineConfig(async () => {
+  if (useNitro) {
+    const { nitro } = await import("nitro/vite");
+    // Under the Nitro environments, Vite's CSS resolver does not resolve the
+    // bare `@import "tailwindcss"` specifier the way the Cloudflare build
+    // does, so point it at the concrete stylesheet.
+    return {
+      resolve: {
+        alias: {
+          tailwindcss: new URL("./node_modules/tailwindcss/index.css", import.meta.url).pathname,
+        },
+      },
+      plugins: [vinext(), sites(), nitro()],
+    };
+  }
+
   // Keep Wrangler and Miniflare state project-local. These are non-secret tool
   // settings; application environment belongs in ignored `.env*` files.
   process.env.WRANGLER_WRITE_LOGS ??= "false";
