@@ -97,17 +97,20 @@ typography checks and final visual validation.
    established by the previous one.
 3. Select boxes in diagrams to inspect their responsibilities, relationships,
    and source evidence.
-4. Use the prediction checkpoints before revealing their answers.
+4. Use the prediction checkpoints before revealing their answers. Journeys 9
+   and 10 also include guided field exercises; the other journeys do not claim
+   to provide reproduce-style practice.
 5. Follow source links when you want the full implementation. They open the
    exact file and line at the verified Protégé source snapshot.
 6. Use the **Architecture Atlas** and **Field notebook** as supporting
    references. They are not alternative starting points.
 
 The tutorial saves the current journey and scroll position in the browser's
-local storage. Return to the home page and choose **Resume the course** to
-continue. Choose **Restart from Journey 1** to clear that saved position.
-Progress is specific to the current browser profile and is lost if its site
-data is cleared.
+local storage. This is a resume position, not a record that a journey or the
+course was completed. Return to the home page and choose **Resume the course**
+to continue. Choose **Restart from Journey 1** to clear that saved position.
+The saved position is specific to the current browser profile and is lost if
+its site data is cleared.
 
 ### Run the plugin exercise
 
@@ -159,7 +162,9 @@ visual QA, commits, and publishing constraints.
 ## Course records
 
 - `MISSION.md` defines the learner and teaching contract.
-- `CURRICULUM.md` maps the progression and completion criteria.
+- `CURRICULUM.md` maps the progression and diagram inventory.
+- `docs/progress-model-proposal.md` records an unapproved completion-tracking
+  design; the current application does not implement it.
 - `GLOSSARY.md` provides canonical project terminology.
 - `RESOURCES.md` records the source and documentation evidence base.
 - `learning-records/` stores durable learner context.

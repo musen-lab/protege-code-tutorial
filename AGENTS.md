@@ -151,6 +151,9 @@ before following the new workflow.
   it with framework navigation without a verified need and regression coverage.
 - Course progress is stored under `inside-protege-progress-v1` in browser local
   storage. Treat changes to that key or data shape as a migration concern.
+- The current value records only the last reading position, not completion.
+  `docs/progress-model-proposal.md` is an unapproved design. Do not implement
+  its completion model without a separate maintainer decision.
 
 ## Validation matrix
 

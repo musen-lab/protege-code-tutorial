@@ -34,7 +34,7 @@ export default function Home() {
             <li><span>1</span><strong>Observe</strong><p>Begin with something Protégé visibly does.</p></li>
             <li><span>2</span><strong>Trace</strong><p>Follow that behavior through modules and objects.</p></li>
             <li><span>3</span><strong>Read</strong><p>Inspect the small source cutaway that explains it.</p></li>
-            <li><span>4</span><strong>Practice</strong><p>Predict or reproduce the flow yourself.</p></li>
+            <li><span>4</span><strong>Practice</strong><p>Check your understanding. Selected journeys add a guided field exercise.</p></li>
           </ol>
         </section>
 

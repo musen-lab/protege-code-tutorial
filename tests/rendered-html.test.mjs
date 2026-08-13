@@ -43,9 +43,23 @@ test("server-renders the production trailhead", async () => {
 test("explains automatic stop and resume behavior", async () => {
   const home = await (await render()).text();
   assert.match(home, /Your place will be saved automatically in this browser\./);
+  assert.match(home, /Check your understanding\. Selected journeys add a guided field exercise\./);
+  assert.doesNotMatch(home, /Predict or reproduce the flow yourself/);
 
   const lesson = await (await render("/journeys/landscape")).text();
   assert.match(lesson, /Your place is saved in this browser\.|Saving your place/);
+
+  const resumeSource = await readFile(new URL("../app/components/ResumeCourse.tsx", import.meta.url), "utf8");
+  assert.match(resumeSource, /inside-protege-progress-v1/);
+  assert.doesNotMatch(resumeSource, /completedUnitIds|inside-protege-progress-v2/);
+
+  const proposal = await readFile(new URL("../docs/progress-model-proposal.md", import.meta.url), "utf8");
+  assert.match(proposal, /Status: proposal only, not approved or implemented/);
+  assert.match(proposal, /Mark section\s+complete/);
+  assert.match(proposal, /inside-protege-progress-v2/);
+  assert.match(proposal, /copy its valid fields into `lastPosition`/);
+  assert.match(proposal, /initialize\s+`completedUnitIds` to an empty array/);
+  assert.match(proposal, /Label the home-page bar \*\*Course completion\*\*/);
 });
 
 test("keeps the menu actionable and offers a restart path", async () => {
