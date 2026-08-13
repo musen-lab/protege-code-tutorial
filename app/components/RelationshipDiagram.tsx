@@ -2,8 +2,19 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import type { DiagramSpec } from "@/app/lib/course";
+import type { DiagramSpec, Tone } from "@/app/lib/course";
 import { sourceUrl } from "@/app/lib/course";
+
+// What each node color means, in a stable display order. Every diagram shows
+// a legend for exactly the tones it uses.
+const TONE_LABELS: Record<Tone, string> = {
+  runtime: "Runtime & packaging",
+  core: "Framework (editor-core)",
+  owl: "OWL editor (editor-owl)",
+  ui: "User-visible UI",
+  data: "Model & data state",
+};
+const TONE_ORDER: Tone[] = ["runtime", "core", "owl", "ui", "data"];
 
 export function RelationshipDiagram({ diagram }: { diagram: DiagramSpec }) {
   const [selected, setSelected] = useState(0);
@@ -259,6 +270,14 @@ export function RelationshipDiagram({ diagram }: { diagram: DiagramSpec }) {
           ))}
         </ul>
       </div>
+      <ul className="diagram-legend" aria-label="What the box colors mean">
+        {TONE_ORDER.filter((tone) => diagram.nodes.some((item) => item.tone === tone)).map((tone) => (
+          <li key={tone}>
+            <span className={`legend-swatch tone-${tone}`} aria-hidden="true" />
+            {TONE_LABELS[tone]}
+          </li>
+        ))}
+      </ul>
       <div className="diagram-detail" aria-live="polite">
         <div className={`detail-key tone-${node.tone}`} aria-hidden="true">{selected + 1}</div>
         <div>

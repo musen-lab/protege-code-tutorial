@@ -166,6 +166,9 @@ section before following it.
 - For relationship-heavy material, prefer a labeled diagram plus selectable
   details. Keep the diagram deterministic; learners should not need to arrange
   nodes themselves.
+- Node tones carry a fixed meaning (runtime, core, owl, ui, data) and every
+  diagram shows a legend derived from the tones it uses. Pick each node's
+  tone by system layer, not for visual variety.
 - Keep code-like module and class names legible. Verify that arrow labels are
   not crossed by lines or clipped by adjacent nodes.
 - Internal navigation intentionally uses browser-native anchors. Do not replace

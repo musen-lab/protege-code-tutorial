@@ -310,6 +310,9 @@ test("renders architecture as connected, accessible diagrams", async () => {
   assert.match(landscape, /ModelManager/);
   assert.match(landscape, /OWLModelManagerImpl/);
   assert.match(landscape, /Core contract and OWL implementation relationships/);
+  assert.match(landscape, /What the box colors mean/);
+  assert.match(landscape, /Runtime &amp;(amp;)? packaging|Runtime & packaging/);
+  assert.match(landscape, /Framework \(editor-core\)/);
 
   const extension = await (await render("/lessons/extension")).text();
   assert.match(extension, /Extension architecture diagram/);
