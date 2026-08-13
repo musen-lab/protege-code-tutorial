@@ -54,9 +54,11 @@ changes:
 - `app/lib/technologies.ts`: reusable technology primers, official references,
   and pinned Protégé evidence
 - `app/lib/search.ts`: searchable records and ranking across course surfaces
+- `app/lib/progress.mjs`, `app/lib/progress-client.ts`: completion and resume
+  progress (pure core plus browser storage layer)
 - `app/components/`: shared interactive and navigational components
 - `app/globals.css`: global visual system and responsive behavior
-- `tests/rendered-html.test.mjs`: production-rendering regression tests
+- `tests/`: rendered-HTML regression tests and progress unit tests
 - `exercises/`: buildable learner exercises with their own prerequisites and
   provenance records
 - `docs/`: audits and captured visual evidence
@@ -128,19 +130,16 @@ typography checks and final visual validation.
 
 Current repository policy:
 
-- Work directly on `main`.
-- Do not leave a completed, validated update uncommitted.
+- Work directly on `main`. Commit each validated change and push it to
+  `origin` (`github.com/musen-lab/protege-code-tutorial`) promptly.
 - Do not create branches or pull requests unless explicitly requested.
-- The remote is `github.com/musen-lab/protege-code-tutorial` (public, added
-  2026-08-12 on maintainer instruction). Push committed work to `origin/main`
-  promptly.
-- Do not publish the site, change repository visibility, or change site
-  access unless explicitly authorized by the maintainer.
+- Do not deploy or publish the hosted site, and do not change repository
+  visibility or access, without maintainer authorization.
 - Never commit credentials, local environment files, or private source
   material.
 
 If a pull-request-based collaboration workflow is adopted later, update this
-section before following the new workflow.
+section before following it.
 
 ## Implementation guidance
 
@@ -214,5 +213,6 @@ visual or interaction change.
 ## Handoff
 
 Report what changed, which source evidence was checked, which validation ran,
-and whether the working tree is clean. State clearly that nothing was pushed or
-published unless that action was explicitly requested and completed.
+whether the work was committed and pushed, and whether the working tree is
+clean. If the hosted site was deployed or repository access changed, say so
+explicitly; those actions require maintainer authorization.
