@@ -1465,7 +1465,7 @@ public void disposeView() {
         eyebrow: "Java generics",
         title: "Read the three type parameters as root, axiom, and edited value",
         paragraphs: [
-          "OWLFrameSection<R, A, E> and OWLFrameSectionRow<R, A, E> use the same three roles. R is the frame's root object. A is the OWLAxiom subtype displayed by the section. E is the value the editor returns before the section or row converts it into an axiom.",
+          "OWLFrameSection<R, A, E> and OWLFrameSectionRow<R, A, E> use the same three roles. R is the section's root object, usually the frame's root or a form the section derives from it. A is the OWLAxiom subtype displayed by the section. E is the value the editor returns before the section or row converts it into an axiom.",
           "For the subclass section, R is OWLClassExpression, A is OWLSubClassOfAxiom, and E is OWLClassExpression. The selected class is the root; the row stores a subclass axiom; the editor edits only the superclass expression. This separation lets one generic dialog and change pipeline serve many concrete axiom types.",
         ],
         code: {
@@ -1482,7 +1482,7 @@ public void disposeView() {
     List<A> getAxioms();
     OWLObjectEditor<E> getEditor();
 }`,
-          focus: "Think R = selected root, A = stored axiom type, E = value edited in the dialog.",
+          focus: "Think R = selected root, A = stored axiom type, E = value edited in the dialog. The excerpt keeps the three role-defining members; the full interface adds lifecycle, labeling, and ordering methods.",
         },
         bridge: {
           title: "Rails and Angular bridge",
@@ -1564,7 +1564,7 @@ public OWLObjectEditor<OWLClassExpression> getObjectEditor() {
     changes.add(new AddAxiom(getOntology(), newAxiom));
     getOWLModelManager().applyChanges(changes);
 }`,
-          focus: "An edit is not an in-place mutation. The row recreates an axiom, retains annotations, and applies remove plus add as one list.",
+          focus: "An edit is not an in-place mutation. The row recreates an axiom, retains annotations, and applies remove plus add as one list. The excerpt drops the empty-input guards and the fallback that adds a single axiom to the active ontology when the row has no ontology.",
         },
         checkpoint: {
           prompt: "Why does a frame row store both an axiom and an ontology?",
@@ -1592,7 +1592,7 @@ public OWLObjectEditor<OWLClassExpression> getObjectEditor() {
     changes.add(new AddAxiom(ontology, axiom));
 }
 getOWLModelManager().applyChanges(changes);`,
-          focus: "Concrete sections define createAxiom; the abstract base supplies ontology selection and the shared change-application path.",
+          focus: "Concrete sections define createAxiom; the abstract base supplies ontology selection and the shared change-application path. The excerpt omits the strategy selector's construction from preferences and the post-apply warning.",
         },
       },
       {
