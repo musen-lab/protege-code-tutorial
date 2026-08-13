@@ -49,8 +49,11 @@ Resolution note, later the same day: items 1 through 7 below were fixed and
 validated (lint clean, 11/11 rendered-HTML tests) in the commits following
 this document. Item 8 was then also resolved: with the site still
 unpublished, the maintainer approved the full rename, so the route is now
-`/lessons/[slug]` and the internal `journey-*` identifiers are gone. Only
-item 9 (the progress-model product decision) remains open.
+`/lessons/[slug]` and the internal `journey-*` identifiers are gone. Item 9
+was then decided and implemented: completion-based progress per
+`docs/progress-model-proposal.md`, with exercises required, reversible
+section and exercise controls, and checkpoint completion on reveal. No
+follow-up items remain open.
 
 1. **Undisclosed snippet condensations in Lesson 10** (`app/lib/course.ts`).
    Content is faithful, but three cutaways silently drop code: the

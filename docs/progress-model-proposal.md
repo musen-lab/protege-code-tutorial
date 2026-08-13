@@ -1,6 +1,12 @@
 # Completion-based progress proposal
 
-Status: proposal only, not approved or implemented.
+Status: approved by the maintainer and implemented on 2026-08-12. The three
+reserved decisions were resolved as: the explicit-action completion criterion
+stands as written; field exercises are required units; section and exercise
+completion are reversible, while a revealed checkpoint stays complete. The
+implementation lives in `app/lib/progress.mjs` (pure core, unit-tested in
+`tests/progress.test.mjs`), `app/lib/progress-client.ts` (storage layer), and
+the completion controls in `app/components/`.
 
 The current application stores the most recently visited lesson and scroll
 position under `inside-protege-progress-v1`. That makes Resume useful, but a

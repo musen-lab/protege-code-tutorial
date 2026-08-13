@@ -165,11 +165,18 @@ before following the new workflow.
 - Header search is a separate icon utility before the primary menu. Preserve
   its descriptive accessible name, ordinary `/search` link, 44px interaction
   target, 34px visible circle, and wider separation from the menu.
-- Course progress is stored under `inside-protege-progress-v1` in browser local
-  storage. Treat changes to that key or data shape as a migration concern.
-- The current value records only the last reading position, not completion.
-  `docs/progress-model-proposal.md` is an unapproved design. Do not implement
-  its completion model without a separate maintainer decision.
+- Course progress is stored under `inside-protege-progress-v2` in browser
+  local storage: a saved reading position plus explicitly completed unit ids
+  (one unit per lesson section). A legacy `inside-protege-progress-v1` record
+  is migrated on first client read with an empty completion set and removed
+  only after the v2 write succeeds. Treat changes to the key, the data shape,
+  or lesson/section ids as a migration concern; the pure logic lives in
+  `app/lib/progress.mjs` and is unit-tested in `tests/progress.test.mjs`.
+- Completion is explicit-action only: a generic section completes through its
+  Mark-section-complete control, a checkpoint section by revealing the
+  answer, an exercise section through its I-completed-this-exercise checkbox.
+  Never award completion for visits or scrolling. The design record is
+  `docs/progress-model-proposal.md`.
 
 ## Validation matrix
 

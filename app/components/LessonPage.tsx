@@ -1,9 +1,11 @@
 import type { Lesson } from "@/app/lib/course";
-import { adjacentLessons, lessons, sourceUrl } from "@/app/lib/course";
+import { adjacentLessons, lessons, sectionUnitId, sourceUrl } from "@/app/lib/course";
 import { Checkpoint } from "./Checkpoint";
 import { CourseMap } from "./CourseMap";
 import { ProgressTracker } from "./ProgressTracker";
 import { RelationshipDiagram } from "./RelationshipDiagram";
+import { ExerciseCompletion, ProgressLiveRegion, SectionCompletion } from "./SectionCompletion";
+import { SectionNav } from "./SectionNav";
 import { SiteHeader } from "./SiteHeader";
 import { SourceLink } from "./SourceLink";
 import { TechnologyPrimerGroup } from "./TechnologyPrimer";
@@ -21,16 +23,14 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
       <div className="lesson-grid">
         <aside className="lesson-rail">
           <CourseMap currentSlug={lesson.slug} />
-          <nav className="section-nav" aria-label="On this page">
-            <strong>On this page</strong>
-            {lesson.sections.map((section) => (
-              <a key={section.id} href={`#${section.id}`}>{section.title}</a>
-            ))}
-            <a href="#sources">Source trail</a>
-          </nav>
+          <SectionNav
+            slug={lesson.slug}
+            sections={lesson.sections.map(({ id, title }) => ({ id, title }))}
+          />
         </aside>
 
         <main className="lesson-main">
+          <ProgressLiveRegion />
           <header className="lesson-hero">
             <div className="lesson-kicker">
               <span>Lesson {lesson.number} of {lessons.length}</span>
@@ -107,10 +107,21 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
                   <ul>
                     {section.exercise.verify.map((item) => <li key={item}>{item}</li>)}
                   </ul>
+                  <ExerciseCompletion unitId={sectionUnitId(lesson.slug, section.id)} />
                 </aside>
               )}
 
-              {section.checkpoint && <Checkpoint {...section.checkpoint} />}
+              {section.checkpoint && (
+                <Checkpoint
+                  {...section.checkpoint}
+                  unitId={sectionUnitId(lesson.slug, section.id)}
+                  completesSection={!section.exercise}
+                />
+              )}
+
+              {!section.exercise && !section.checkpoint && (
+                <SectionCompletion unitId={sectionUnitId(lesson.slug, section.id)} />
+              )}
             </section>
           ))}
 

@@ -76,17 +76,28 @@ test("explains automatic stop and resume behavior", async () => {
   const lesson = await (await render("/lessons/landscape")).text();
   assert.match(lesson, /Your place is saved in this browser\.|Saving your place/);
 
-  const resumeSource = await readFile(new URL("../app/components/ResumeCourse.tsx", import.meta.url), "utf8");
-  assert.match(resumeSource, /inside-protege-progress-v1/);
-  assert.doesNotMatch(resumeSource, /completedUnitIds|inside-protege-progress-v2/);
+  // The completion model is implemented: the client reads v2, migrates v1,
+  // and completion is counted only from explicitly completed units.
+  const progressCore = await readFile(new URL("../app/lib/progress.mjs", import.meta.url), "utf8");
+  assert.match(progressCore, /inside-protege-progress-v2/);
+  assert.match(progressCore, /completedUnitIds: \[\]/);
+
+  const home2 = await (await render()).text();
+  assert.match(home2, /Course completion/);
+  assert.match(home2, /0 of \d+ sections/);
 
   const proposal = await readFile(new URL("../docs/progress-model-proposal.md", import.meta.url), "utf8");
-  assert.match(proposal, /Status: proposal only, not approved or implemented/);
-  assert.match(proposal, /Mark section\s+complete/);
+  assert.match(proposal, /Status: approved/);
   assert.match(proposal, /inside-protege-progress-v2/);
-  assert.match(proposal, /copy its valid fields into `lastPosition`/);
-  assert.match(proposal, /initialize\s+`completedUnitIds` to an empty array/);
-  assert.match(proposal, /Label the home-page bar \*\*Course completion\*\*/);
+});
+
+test("offers explicit completion controls on lesson pages", async () => {
+  const landscape = await (await render("/lessons/landscape")).text();
+  assert.match(landscape, /Mark section complete/);
+  assert.match(landscape, /Revealing this answer records the section as complete\./);
+
+  const plugin = await (await render("/lessons/build-plugin")).text();
+  assert.match(plugin, /I completed this exercise/);
 });
 
 test("keeps the menu actionable and offers a restart path", async () => {
@@ -99,7 +110,12 @@ test("keeps the menu actionable and offers a restart path", async () => {
 
   const resumeSource = await readFile(new URL("../app/components/ResumeCourse.tsx", import.meta.url), "utf8");
   assert.match(resumeSource, /Restart from Lesson 1/);
-  assert.match(resumeSource, /removeItem\(COURSE_PROGRESS_KEY\)/);
+  assert.match(resumeSource, /clearProgress\(\)/);
+  assert.match(resumeSource, /clears your course completion and your saved reading position/);
+
+  const clientSource = await readFile(new URL("../app/lib/progress-client.ts", import.meta.url), "utf8");
+  assert.match(clientSource, /removeItem\(PROGRESS_V2_KEY\)/);
+  assert.match(clientSource, /removeItem\(PROGRESS_V1_KEY\)/);
 });
 
 test("server-renders every production page type", async () => {

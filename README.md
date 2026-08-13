@@ -113,12 +113,15 @@ typography checks and final visual validation.
    point, or technology. Results link directly to the matching lesson section
    or reference entry.
 
-The tutorial saves the current lesson and scroll position in the browser's
-local storage. This is a resume position, not a record that a lesson or the
-course was completed. Return to the home page and choose **Resume the course**
-to continue. Choose **Restart from Lesson 1** to clear that saved position.
-The saved position is specific to the current browser profile and is lost if
-its site data is cleared.
+The tutorial saves two things in the browser's local storage: a resume
+position (current lesson and scroll offset) and course completion. Completion
+is recorded only through explicit actions: marking a section complete,
+revealing a checkpoint answer, or checking off a hands-on exercise. Visiting
+or scrolling a lesson never counts as completing it. Return to the home page
+and choose **Resume the course** to continue; the **Course completion** bar
+there counts completed sections. Choose **Restart from Lesson 1** to clear
+both, after a confirmation. All of this is specific to the current browser
+profile and is lost if its site data is cleared.
 
 ### Run the plugin exercise
 
@@ -171,8 +174,8 @@ visual QA, commits, and publishing constraints.
 
 - `MISSION.md` defines the learner and teaching contract.
 - `CURRICULUM.md` maps the progression and diagram inventory.
-- `docs/progress-model-proposal.md` records an unapproved completion-tracking
-  design; the current application does not implement it.
+- `docs/progress-model-proposal.md` records the completion-tracking design
+  implemented on 2026-08-12.
 - `GLOSSARY.md` provides canonical project terminology.
 - `RESOURCES.md` records the source and documentation evidence base.
 - `learning-records/` stores durable learner context.

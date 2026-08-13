@@ -1642,6 +1642,21 @@ export function getLesson(slug: string) {
   return lessons.find((lesson) => lesson.slug === slug);
 }
 
+// Every section is one required completion unit. Ids are stable as long as
+// lesson slugs and section ids are stable; treat renames as a data migration.
+export function sectionUnitId(lessonSlug: string, sectionId: string) {
+  return `${lessonSlug}:${sectionId}`;
+}
+
+export const requiredUnitIds: string[] = lessons.flatMap((lesson) =>
+  lesson.sections.map((section) => sectionUnitId(lesson.slug, section.id)),
+);
+
+export function lessonUnitIds(slug: string): string[] {
+  const lesson = getLesson(slug);
+  return lesson ? lesson.sections.map((section) => sectionUnitId(lesson.slug, section.id)) : [];
+}
+
 export function adjacentLessons(slug: string) {
   const index = lessons.findIndex((lesson) => lesson.slug === slug);
   return {
