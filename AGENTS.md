@@ -131,13 +131,16 @@ Current repository policy:
 - Work directly on `main`.
 - Do not leave a completed, validated update uncommitted.
 - Do not create branches or pull requests unless explicitly requested.
-- Do not add a Git remote, push commits, publish the site, or change site access
-  unless explicitly authorized.
+- The remote is `github.com/musen-lab/protege-code-tutorial` (private, added
+  2026-08-12 on maintainer instruction). Push committed work to `origin/main`
+  promptly.
+- Do not publish the site, change repository visibility, or change site
+  access unless explicitly authorized by the maintainer.
 - Never commit credentials, local environment files, or private source
   material.
 
-If a remote collaboration workflow is adopted later, update this section
-before following the new workflow.
+If a pull-request-based collaboration workflow is adopted later, update this
+section before following the new workflow.
 
 ## Implementation guidance
 
