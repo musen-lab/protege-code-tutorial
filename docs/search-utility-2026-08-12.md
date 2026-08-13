@@ -15,7 +15,7 @@ the working tree immediately after that commit.
 | Interaction target | Text-link target. | The visible circle is 34 by 34px inside a 44 by 44px link target. |
 | Accessible name | Visible text supplied the name. | The icon-only link is named “Search the Protégé Code Tutorial.” |
 | Mobile fit | 390px document width at a 390px viewport. | 390px document width at a 390px viewport; the 44px search target and primary menu fit on the second header row. |
-| Favicon | `/protege-icon.svg`. | Unchanged: the official icon-only Protégé mark remains both the regular and shortcut favicon. |
+| Favicon at the comparison revisions | `/protege-icon.svg`. | Unchanged by the search treatment itself. Commit `25ac9d8`, made later, added an ICO fallback while retaining the official SVG alternative. |
 
 The production interaction check followed the utility link from `/` to
 `/search` and found the search-page heading “Find the lesson, concept, class,
@@ -41,6 +41,6 @@ npm run start
 ```
 
 Inspect `/` at 1280 by 800 and 390 by 844. Activate the search icon with a
-mouse and keyboard and confirm that it opens `/search`. Inspect the document
-head and confirm that `rel="icon"` and `rel="shortcut icon"` both reference
-`/protege-icon.svg`.
+mouse and keyboard and confirm that it opens `/search`. The exact historical
+comparison is `e60ca46` versus `50fd3e9`; current favicon metadata intentionally
+differs because of the later compatibility fix.
