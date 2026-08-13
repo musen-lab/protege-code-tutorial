@@ -131,7 +131,32 @@ test("renders handbook-aligned developer guidance", async () => {
   assert.match(reference, /editor-owl declares 12/);
   assert.match(reference, /OtherStartupActions/);
   assert.match(reference, /ExtraReasonerMenuAction/);
+  assert.match(reference, /Start with these four/);
+  assert.match(reference, /Choose the socket that matches the job/);
+  assert.match(reference, /Add a configurable, dockable view inside an editor kit/);
+  assert.match(reference, /Add a menu, submenu, or action for an editor kit/);
+  assert.match(reference, /Register a selectable OWL reasoner factory/);
+  assert.match(reference, /Contribute a CatalogEntryManager for ontology-library entries/);
+  assert.match(reference, /protege-editor-core\/schema\/ViewComponent\.exsd#L1/);
+  assert.match(reference, /protege-editor-owl\/schema\/ReasonerFactory\.exsd#L1/);
+  assert.ok((reference.match(/No \.exsd in this snapshot/g)?.length ?? 0) >= 4);
+  assert.match(reference, /Protégé Developer Documentation wiki/);
+  assert.match(reference, /protege-dev mailing list and support/);
+  assert.match(reference, /README\.md#L11/);
   assert.doesNotMatch(reference, /Java 11 is the ceiling/);
+
+  const extensionPointIds = [
+    "ViewComponent", "WorkspaceTab", "EditorKitMenuAction", "ToolBarAction", "ViewAction",
+    "preferencespanel", "explanationpreferencespanel", "EditorKitHook", "EditorKitFactory",
+    "OntologyRepositoryFactory", "OntologyLoader", "OtherStartupActions",
+    "inference_reasonerfactory", "inference_preferences", "explanation",
+    "inconsistentOntologyExplanation", "entity_renderer", "ui_renderer_entitycolorprovider",
+    "ui_editor_description", "searchmanager", "moveaxiomskit", "io_listener", "repository",
+    "ExtraReasonerMenuAction",
+  ];
+  for (const id of extensionPointIds) {
+    assert.match(reference, new RegExp(`id="extension-${id}"`), id);
+  }
 
   const extension = await (await render("/journeys/extension")).text();
   assert.match(extension, /installation location contains the word plugin/);

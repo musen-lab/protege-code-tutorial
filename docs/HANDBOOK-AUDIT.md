@@ -26,7 +26,8 @@ The handbook was converted to plain text and read in full. Its architectural, bu
 | Model-manager event type names | Aligned | The tutorial uses `OWLModelManagerListener` and `OWLModelManagerChangeEvent`, matching source and avoiding the nonexistent `OWLModelManagerChangeListener` name. |
 | Extension discovery pipeline | Aligned and expanded | The course already covered Equinox metadata, filter, loader, wrapper, contributor bundle classloading, and initialization. It now also names the plugin JAR, manifest, Maven/BND, no-argument constructor, and lifecycle contracts. |
 | Silent plugin failures | Corrected | The course previously covered only singleton metadata. It now also explains `ProtegeApplication.isPlugin`, which classifies only bundle locations containing `plugin`. A JAR under `bundles` may start but not be reported as a plugin. |
-| Extension-point inventory | Expanded | The Field Notebook now lists all 24 first-party points exactly: 12 from editor-core and 12 from editor-owl. |
+| Extension-point inventory | Expanded | The Field Notebook lists all 24 first-party points exactly: 12 from editor-core and 12 from editor-owl. It now adds a source-checked one-line purpose, a four-point starting guide, each available `.exsd` path, and an explicit marker for the four OWL points without schemas in this snapshot. Declarations are cited at `protege-editor-core/src/main/resources/plugin.xml:4-34` and `protege-editor-owl/src/main/resources/plugin.xml:6-31`; schemas are cited from each module's top-level `schema/` directory. |
+| Developer wiki and protege-dev list | Restored as living references | The Field Notebook links the developer wiki and support page named by the pinned project `README.md:11-13`. They are labeled as living resources that may change after the source snapshot. |
 | Logging and diagnostics | Corrected | The course previously led with the in-app log. It now leads with `~/.Protege/logs/protege.log`, which remains available when the UI cannot start, and treats the in-app view as a convenient second surface. |
 | OSGi and JPF history | Intentionally secondary | The course explains the current Felix plus Equinox mechanism. The older Protégé and JPF chronology is useful background but not required on the primary causal path, so it remains handbook reference material rather than a new journey. |
 | Compatibility library cautions | Intentionally secondary | Guava Optional, AutoValue, Swing threading, and mixed-era reflection are covered. Detailed JAXB and historical Equinox compatibility notes remain reference-level material because they do not change the stable architecture map. |
@@ -50,7 +51,9 @@ The handbook was converted to plain text and read in full. Its architectural, bu
 - View lifecycle and accessor chain: `protege-editor-owl/src/main/java/org/protege/editor/owl/ui/view/AbstractOWLViewComponent.java`
 - Plugin classification and singleton check: `protege-editor-core/src/main/java/org/protege/editor/core/ProtegeApplication.java`
 - Extension discovery and classloading: `protege-editor-core/src/main/java/org/protege/editor/core/plugin/`
-- Extension-point count and ids: both module `src/main/resources/plugin.xml` files
+- Extension-point count, ids, and declarations: `protege-editor-core/src/main/resources/plugin.xml:4-34` and `protege-editor-owl/src/main/resources/plugin.xml:6-31`
+- Extension-point contracts: `protege-editor-core/schema/*.exsd` and `protege-editor-owl/schema/*.exsd`; only eight OWL declarations name schemas in this snapshot
+- Developer wiki and mailing-list references: `README.md:11-13`
 - Log destination: `protege-desktop/src/main/logging/conf/logback.xml`
 - Official example lifecycle, contribution, and bundle POM: `protegeproject/protege-plugin-examples@d879601324d0c45d99e0d0879219ef15763ced50`
 - Cellfie embed/import instructions: `protegeproject/cellfie-plugin@1dd0896c8dd07b4f764d40225e374a5dc15a5d28`, `pom.xml:72-111`

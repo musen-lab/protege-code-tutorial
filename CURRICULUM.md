@@ -15,6 +15,11 @@ The default route is ten causal journeys. Reference material stays available thr
 9. **Build a view plugin**: minimal view lifecycle, complete `plugin.xml`, Maven and BND packaging, manifest inspection, compatibility ranges, installation, and runtime observation.
 10. **Edit through frames**: frame, section, row, and editor roles; concrete subclass-axiom add/edit flows; OWLDataFactory construction; model-manager changes; reusable implementation recipe.
 
+## Supporting references
+
+- **Architecture Atlas**: alternate dependency, ownership, lifecycle, and extension lenses over the same pinned source snapshot.
+- **Field Notebook**: Java compatibility notes, class landmarks, search recipes, and all 24 first-party extension points with purposes, declarations, and every available `.exsd` contract. Its “start with these four” guide offers a practical entry into the larger plugin surface without changing the ten-journey order.
+
 ## Diagram inventory
 
 - Build-time module dependency map

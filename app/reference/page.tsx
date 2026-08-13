@@ -35,35 +35,73 @@ const classLandmarks = [
   ["AbstractOWLViewComponent", "OWL view accessors and lifecycle", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/view/AbstractOWLViewComponent.java", 28],
 ] as const;
 
-const coreExtensionPoints = [
-  "ViewComponent",
-  "WorkspaceTab",
-  "EditorKitMenuAction",
-  "ToolBarAction",
-  "ViewAction",
-  "preferencespanel",
-  "explanationpreferencespanel",
-  "EditorKitHook",
-  "EditorKitFactory",
-  "OntologyRepositoryFactory",
-  "OntologyLoader",
-  "OtherStartupActions",
+type ExtensionPoint = {
+  id: string;
+  purpose: string;
+  declarationLine: number;
+  schema?: string;
+};
+
+const coreExtensionPoints: ExtensionPoint[] = [
+  { id: "ViewComponent", purpose: "Add a configurable, dockable view inside an editor kit.", declarationLine: 8, schema: "ViewComponent.exsd" },
+  { id: "WorkspaceTab", purpose: "Add a top-level workspace tab and its default view layout.", declarationLine: 6, schema: "WorkspaceTab.exsd" },
+  { id: "EditorKitMenuAction", purpose: "Add a menu, submenu, or action for an editor kit.", declarationLine: 12, schema: "EditorKitMenuAction.exsd" },
+  { id: "ToolBarAction", purpose: "Add a grouped action to the main editor-kit toolbar.", declarationLine: 15, schema: "ToolBarAction.exsd" },
+  { id: "ViewAction", purpose: "Add an icon action to a specific contributed view.", declarationLine: 10, schema: "ViewAction.exsd" },
+  { id: "preferencespanel", purpose: "Add a panel to the application preferences dialog.", declarationLine: 17, schema: "preferencespanel.exsd" },
+  { id: "explanationpreferencespanel", purpose: "Add a panel to the explanation preferences dialog.", declarationLine: 20, schema: "explanationpreferencespanel.exsd" },
+  { id: "EditorKitHook", purpose: "Install code that is initialized and disposed with a matching editor kit.", declarationLine: 23, schema: "EditorKitHook.exsd" },
+  { id: "EditorKitFactory", purpose: "Advertise and create an EditorKit implementation.", declarationLine: 4, schema: "EditorKitFactory.exsd" },
+  { id: "OntologyRepositoryFactory", purpose: "Contribute a factory that creates an ontology repository.", declarationLine: 26, schema: "OntologyRepositoryFactory.exsd" },
+  { id: "OntologyLoader", purpose: "Declare a loader class associated with an editor-kit id.", declarationLine: 29, schema: "OntologyLoader.exsd" },
+  { id: "OtherStartupActions", purpose: "Add an alternate action to the startup window.", declarationLine: 32, schema: "OtherStartupActions.exsd" },
 ];
 
-const owlExtensionPoints = [
-  "inference_reasonerfactory",
-  "inference_preferences",
-  "explanation",
-  "inconsistentOntologyExplanation",
-  "entity_renderer",
-  "ui_renderer_entitycolorprovider",
-  "ui_editor_description",
-  "searchmanager",
-  "moveaxiomskit",
-  "io_listener",
-  "repository",
-  "ExtraReasonerMenuAction",
+const owlExtensionPoints: ExtensionPoint[] = [
+  { id: "inference_reasonerfactory", purpose: "Register a selectable OWL reasoner factory.", declarationLine: 6, schema: "ReasonerFactory.exsd" },
+  { id: "inference_preferences", purpose: "Add a preferences panel that customizes an inference engine.", declarationLine: 9, schema: "inference_preferences.exsd" },
+  { id: "explanation", purpose: "Supply a named explanation service implementation.", declarationLine: 13, schema: "ExplanationServices.exsd" },
+  { id: "inconsistentOntologyExplanation", purpose: "Supply a named service for explaining ontology inconsistency.", declarationLine: 14, schema: "InconsistentOntologyServices.exsd" },
+  { id: "entity_renderer", purpose: "Add a selectable OWL entity rendering scheme.", declarationLine: 28, schema: "entity_renderer.exsd" },
+  { id: "ui_renderer_entitycolorprovider", purpose: "Provide the colors used to render OWL entities.", declarationLine: 16, schema: "EntityColorProvider.exsd" },
+  { id: "ui_editor_description", purpose: "Add an indexed editor for OWL class expressions.", declarationLine: 25, schema: "UI_Editor_Description.exsd" },
+  { id: "searchmanager", purpose: "Contribute a named SearchManager initialized with the OWL editor kit.", declarationLine: 31 },
+  { id: "moveaxiomskit", purpose: "Add a named strategy for moving axioms between ontologies.", declarationLine: 21, schema: "MoveAxiomsKit.exsd" },
+  { id: "io_listener", purpose: "Listen to OWL editor-kit input and output activity.", declarationLine: 23 },
+  { id: "repository", purpose: "Contribute a CatalogEntryManager for ontology-library entries.", declarationLine: 27 },
+  { id: "ExtraReasonerMenuAction", purpose: "Add an extra action to the Reasoner menu.", declarationLine: 29 },
 ];
+
+const starterExtensionPoints = [
+  ["ViewComponent", "a feature panel"],
+  ["EditorKitMenuAction", "a menu command"],
+  ["WorkspaceTab", "a top-level workspace"],
+  ["inference_reasonerfactory", "an OWL reasoner"],
+] as const;
+
+function ExtensionPointList({ points, module }: { points: ExtensionPoint[]; module: "core" | "owl" }) {
+  const declarationPath = module === "core"
+    ? "protege-editor-core/src/main/resources/plugin.xml"
+    : "protege-editor-owl/src/main/resources/plugin.xml";
+  const schemaRoot = module === "core" ? "protege-editor-core/schema" : "protege-editor-owl/schema";
+
+  return (
+    <ul className="extension-point-list">
+      {points.map((point) => (
+        <li id={`extension-${point.id}`} key={point.id}>
+          <code>{point.id}</code>
+          <p>{point.purpose}</p>
+          <div className="extension-source-links">
+            <a href={sourceUrl(declarationPath, point.declarationLine)} target="_blank" rel="noreferrer">declaration ↗</a>
+            {point.schema
+              ? <a href={sourceUrl(`${schemaRoot}/${point.schema}`, 1)} target="_blank" rel="noreferrer">{point.schema} ↗</a>
+              : <span>No .exsd in this snapshot</span>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function ReferencePage() {
   return (
@@ -123,26 +161,43 @@ export default function ReferencePage() {
             <span className="eyebrow">Plugin surface</span>
             <h2>Extension-point families</h2>
           </div>
+          <aside className="extension-starters" aria-labelledby="extension-starters-title">
+            <div>
+              <span className="eyebrow">Start with these four</span>
+              <h3 id="extension-starters-title">Choose the socket that matches the job</h3>
+              <p>Most first plugins do not need the full catalog. Begin with the visible result you want, then follow that point into its declaration and schema.</p>
+            </div>
+            <ul>
+              {starterExtensionPoints.map(([id, result]) => (
+                <li key={id}><a href={`#extension-${id}`}><code>{id}</code><span>{result}</span></a></li>
+              ))}
+            </ul>
+          </aside>
           <div className="extension-columns">
             <article>
               <span>editor-core declares 12</span>
               <h3>Desktop framework points</h3>
-              <ul className="extension-point-list">
-                {coreExtensionPoints.map((point) => <li key={point}><code>{point}</code></li>)}
-              </ul>
+              <ExtensionPointList points={coreExtensionPoints} module="core" />
               <a href={sourceUrl("protege-editor-core/src/main/resources/plugin.xml", 4)} target="_blank" rel="noreferrer">Open declarations ↗</a>
             </article>
             <article>
               <span>editor-owl declares 12</span>
               <h3>Ontology-specific points</h3>
-              <ul className="extension-point-list">
-                {owlExtensionPoints.map((point) => <li key={point}><code>{point}</code></li>)}
-              </ul>
+              <ExtensionPointList points={owlExtensionPoints} module="owl" />
               <a href={sourceUrl("protege-editor-owl/src/main/resources/plugin.xml", 6)} target="_blank" rel="noreferrer">Open declarations ↗</a>
             </article>
           </div>
           <p className="reference-note">These are the 24 first-party extension points in this snapshot. Third-party bundles may declare additional points. Point ids are case-sensitive and must be fully qualified in contributions.</p>
           <a className="inline-journey-link" href="/journeys/extension">Study the complete extension trace →</a>
+          <aside className="external-references">
+            <h3>Continue with the project community</h3>
+            <p>These living resources can change after the pinned source snapshot.</p>
+            <ul>
+              <li><a href="https://github.com/protegeproject/protege/wiki/Developer-Documentation" target="_blank" rel="noreferrer">Protégé Developer Documentation wiki ↗</a></li>
+              <li><a href="https://protege.stanford.edu/support.php" target="_blank" rel="noreferrer">protege-dev mailing list and support ↗</a></li>
+              <li><a href={sourceUrl("README.md", 11)} target="_blank" rel="noreferrer">Where the pinned project README names these resources ↗</a></li>
+            </ul>
+          </aside>
         </section>
 
         <section id="search" className="reference-section">
