@@ -40,7 +40,8 @@ test("server-renders the production trailhead", async () => {
   assert.match(html, /<link rel="icon" href="\/favicon\.ico\?v=1" type="image\/x-icon" sizes="16x16 32x32 48x48"/);
   assert.match(html, /<link rel="icon" href="\/protege-icon\.svg\?v=1" type="image\/svg\+xml"/);
   assert.doesNotMatch(html, /href="\/search">Search<\/a>/);
-  assert.match(html, /Learn Protégé by following one clear path\./);
+  assert.match(html, /Learn the Protégé codebase, one lesson at a time\./);
+  assert.match(html, /Build the mental model you need to navigate, debug, and extend Protégé\./);
   assert.match(html, /Start Lesson 1/);
   assert.match(html, /A repeated four-step learning rhythm/);
   assert.match(html, /Follow all 10 lessons in order/);

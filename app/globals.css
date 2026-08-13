@@ -142,7 +142,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
   line-height: 1.06;
   letter-spacing: -0.035em;
 }
-.home-hero h1 { max-width: 760px; font-size: clamp(46px, 7vw, 82px); }
+.home-hero h1 { max-width: 760px; font-size: clamp(46px, 6vw, 72px); }
 .home-hero-copy > p { max-width: 690px; color: #d8d0cb; font-size: clamp(17px, 2vw, 21px); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 34px 0 26px; }
 .primary-action, .secondary-action {

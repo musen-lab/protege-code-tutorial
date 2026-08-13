@@ -11,9 +11,9 @@ export default function Home() {
         <section className="home-hero">
           <div className="home-hero-copy">
             <span className="eyebrow">{`Inside Protégé · ${lessons.length} lessons · one recommended order`}</span>
-            <h1>Learn Protégé by following one clear path.</h1>
+            <h1>Learn the Protégé codebase, one lesson at a time.</h1>
             <p>
-              {`${lessons.length} source-backed lessons move from a user action to the modules, classes, runtime wiring, ontology state, and UI reactions that make it work. Start at Lesson 1 and continue in order.`}
+              {`${lessons.length} source-backed lessons move from a user action to the modules, classes, runtime wiring, ontology state, and UI reactions that make it work. Build the mental model you need to navigate, debug, and extend Protégé. Start at Lesson 1 and continue in order.`}
             </p>
             <div className="snapshot-note">
               <span>Verified snapshot</span>
