@@ -841,13 +841,57 @@ workspace.initialise();`,
     title: "Work safely",
     question: "Which constraints make a change compile successfully but fail in the product?",
     summary: "Connect Maven, BND manifests, OSGi exports, assembly lists, Swing threads, tests, and diagnostics into a practical change checklist.",
-    duration: "35 min",
+    duration: "40 min",
     outcomes: [
+      "Choose the shortest development loop that preserves the boundary under test.",
       "Build and run the actual assembled distribution.",
       "Recognize package-export and shipping-list failures.",
       "Use the log and focused tests before broad debugging.",
     ],
     sections: [
+      {
+        id: "fast-loops",
+        eyebrow: "Development strategy",
+        title: "Use three loops, not one build for every question",
+        paragraphs: [
+          "Use the IDE profile when changing core or OWL editor code and you need debugger breakpoints. The profile does not launch Protégé by itself. It generates the bundle manifest under META-INF, unpacks provided dependencies into target/dependency, and copies plugin.xml to the module root so Eclipse PDE, m2e, and an OSGi Framework launch configuration can see the expected project layout.",
+          "Use the plugin-only loop for a standalone plugin: build its JAR, copy it into the installed distribution's plugins directory or ~/.Protege/plugins, restart Protégé, and read the log. The pinned config explicitly scans both locations, so the Protégé reactor does not need to rebuild. Reserve the release loop for launcher, start-level, assembly, bundled dependency, and distribution changes.",
+        ],
+        code: {
+          path: "pom.xml",
+          line: 565,
+          language: "shell",
+          snippet: `# Core or editor code, prepared for an IDE OSGi launch
+mvn -Pide package
+
+# Standalone plugin, tested against an installed Protégé
+cd your-plugin
+mvn clean package
+cp target/your-plugin.jar /path/to/Protege/plugins/
+# Restart Protégé and inspect ~/.Protege/logs/protege.log
+
+# Distribution or runtime assembly change
+mvn -Prelease clean package`,
+          focus: "The pinned ide profile prepares PDE-visible files; config.xml scans installation and per-user plugin directories; the release profile builds distributable packages.",
+        },
+        diagram: {
+          title: "The shortest faithful feedback loop",
+          question: "Which loop preserves the runtime boundary your change can break?",
+          kind: "Development workflow diagram",
+          columns: 3,
+          nodes: [
+            { title: "IDE + debugger", subtitle: "core/editor code", detail: "Run mvn -Pide package, then use an IDE OSGi Framework launch. Best for stepping through Java while retaining bundle metadata and provided dependencies.", tone: "core", source: src("IDE profile", "pom.xml", 565, "Manifest, dependency, and plugin.xml preparation") },
+            { title: "Plugin JAR drop", subtitle: "standalone plugin", detail: "Build only the plugin, copy its JAR to plugins or ~/.Protege/plugins, restart the installed application, and inspect the log.", tone: "owl", source: src("Plugin search paths", "protege-desktop/src/main/felix/conf/config.xml", 48, "Installation and per-user plugin directories") },
+            { title: "Release distribution", subtitle: "packaging/runtime", detail: "Build the reactor and launch the assembled product when the change can affect configuration, start levels, bundled libraries, launchers, or assembly.", tone: "runtime", source: src("Desktop assembly", "protege-desktop/pom.xml", 93, "Package-phase platform assemblies") },
+          ],
+          edges: ["increase scope", "increase scope"],
+          caption: "Fast feedback is useful only when the loop still includes the mechanism you changed.",
+        },
+        checkpoint: {
+          prompt: "You changed only a third-party ViewComponent plugin. Must you rebuild Protégé?",
+          answer: "No. Build the plugin JAR, inspect its manifest, copy it to the installation or per-user plugins directory, restart Protégé, and inspect the log. Rebuild the host only if the change also touches host exports, assembly, or runtime configuration.",
+        },
+      },
       {
         id: "build-run",
         eyebrow: "Development loop",
@@ -922,6 +966,9 @@ cd protege-desktop/target/\
     ],
     capability: "You can validate changes in the environment that users actually run and localize common runtime-only failures.",
     sourceRefs: [
+      src("IDE profile", "pom.xml", 565, "PDE manifest, dependency, and resource preparation"),
+      src("IDE profile activation", "protege-editor-core/pom.xml", 117, "Core opts into profile-managed plugins"),
+      src("Plugin search paths", "protege-desktop/src/main/felix/conf/config.xml", 48, "Installation and per-user plugin directories"),
       src("Compiler baseline", "pom.xml", 354, "Java 11 release"),
       src("Bundle assembly list", "protege-desktop/src/main/assembly/dependency-sets.xml", 1, "Separate JAR shipping"),
       src("Core manifest instructions", "protege-editor-core/pom.xml", 1, "Export and embed rules"),

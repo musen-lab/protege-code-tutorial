@@ -10,7 +10,7 @@ The default route is nine causal journeys. Reference material stays available th
 4. **Build the screen**: workspace, declarative tabs and views, layout descriptors, lifecycle and disposal.
 5. **Make a change**: UI action, `OWLOntologyChange` list, minimization, OWL API listeners, dirty state, history, repaint.
 6. **Follow an extension**: `plugin.xml`, Equinox registry, loader/filter/wrapper, contributing bundle classloader, singleton rule.
-7. **Work safely**: Maven reactor, bundle exports, dependency packaging, tests, logging, Swing thread rules.
+7. **Work safely**: IDE/debugger, plugin-JAR, and full-distribution loops; Maven reactor, bundle exports, dependency packaging, tests, logging, and Swing thread rules.
 8. **Navigate independently**: task-to-module recipes, source searches, failure signatures, and a capstone investigation.
 9. **Build a view plugin**: minimal view lifecycle, complete `plugin.xml`, Maven and BND packaging, manifest inspection, compatibility ranges, installation, and runtime observation.
 
@@ -28,6 +28,7 @@ The default route is nine causal journeys. Reference material stays available th
 - Plugin discovery and classloader flow
 - Extension-point ecosystem map
 - Maven-to-distribution dependency checklist
+- IDE, plugin-only, and release feedback-loop selector
 - Task-to-change-point atlas
 - Source-to-visible-view build and discovery pipeline
 

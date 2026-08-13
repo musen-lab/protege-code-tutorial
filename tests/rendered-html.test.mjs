@@ -122,6 +122,12 @@ test("renders handbook-aligned developer guidance", async () => {
   assert.match(extension, /Plugin JAR contract/);
 
   const workSafely = await (await render("/journeys/work-safely")).text();
+  assert.match(workSafely, /Use three loops, not one build for every question/);
+  assert.match(workSafely, /mvn -Pide package/);
+  assert.match(workSafely, /unpacks provided dependencies into target\/dependency/);
+  assert.match(workSafely, /~\/\.Protege\/plugins/);
+  assert.match(workSafely, /Protégé reactor does not need to rebuild/);
+  assert.match(workSafely, /The shortest faithful feedback loop/);
   assert.match(workSafely, /mvn -Prelease clean package/);
   assert.match(workSafely, /\.Protege\/logs\/protege\.log/);
 });
