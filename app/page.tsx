@@ -10,10 +10,10 @@ export default function Home() {
       <main>
         <section className="home-hero">
           <div className="home-hero-copy">
-            <span className="eyebrow">One course · eight journeys · one recommended order</span>
+            <span className="eyebrow">One course · {lessons.length} journeys · one recommended order</span>
             <h1>Learn Protégé by following one clear path.</h1>
             <p>
-              Eight source-backed journeys move from a user action to the modules, classes,
+              Nine source-backed journeys move from a user action to the modules, classes,
               runtime wiring, ontology state, and UI reactions that make it work. Start at
               Journey 1 and continue in order.
             </p>
@@ -43,7 +43,7 @@ export default function Home() {
         <section className="journey-index">
           <div className="home-section-heading">
             <span className="eyebrow">The primary course</span>
-            <h2>Follow these eight journeys in order</h2>
+            <h2>Follow these nine journeys in order</h2>
             <p>Each journey assumes the mental model built by the one before it.</p>
           </div>
           <div className="journey-cards">

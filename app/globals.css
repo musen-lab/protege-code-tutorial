@@ -315,6 +315,16 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .bridge-note { border-color: #6ea29d; background: var(--teal-soft); }
 .bridge-note > span { color: #175f59; }
 
+.exercise-block { margin: 32px 0; padding: 28px; border: 1px solid #6ea29d; border-radius: 14px; background: var(--teal-soft); }
+.exercise-block > span { color: #175f59; font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.exercise-block h3 { margin: 8px 0 10px; font-family: var(--font-display), Georgia, serif; font-size: 24px; }
+.exercise-block p, .exercise-block li { font-size: 13px; }
+.exercise-block ol, .exercise-block ul { display: grid; gap: 7px; padding-left: 22px; }
+.exercise-path { display: inline-block; margin: 5px 0 10px; padding: 5px 8px; color: var(--purple-dark); background: rgba(255,255,255,.65); }
+.exercise-block pre { margin: 18px 0; padding: 18px; overflow-x: auto; color: var(--code-ink); border-radius: 10px; background: var(--code); font-size: 12px; line-height: 1.7; }
+.exercise-block pre code { color: inherit; background: transparent; }
+.exercise-block > strong { display: block; margin-top: 18px; font-size: 12px; }
+
 .checkpoint { margin: 30px 0 4px; border: 1px solid #a486b5; border-radius: 12px; background: var(--purple-soft); }
 .checkpoint summary { display: grid; gap: 5px; padding: 20px 22px; cursor: pointer; list-style: none; }
 .checkpoint summary::-webkit-details-marker { display: none; }

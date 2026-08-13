@@ -1,6 +1,6 @@
 # Inside Protégé: Production Curriculum
 
-The default route is eight causal journeys. Reference material stays available through the Atlas and Field Notebook without interrupting Next and Previous navigation.
+The default route is nine causal journeys. Reference material stays available through the Atlas and Field Notebook without interrupting Next and Previous navigation.
 
 ## Journeys
 
@@ -12,6 +12,7 @@ The default route is eight causal journeys. Reference material stays available t
 6. **Follow an extension**: `plugin.xml`, Equinox registry, loader/filter/wrapper, contributing bundle classloader, singleton rule.
 7. **Work safely**: Maven reactor, bundle exports, dependency packaging, tests, logging, Swing thread rules.
 8. **Navigate independently**: task-to-module recipes, source searches, failure signatures, and a capstone investigation.
+9. **Build a view plugin**: minimal view lifecycle, complete `plugin.xml`, Maven and BND packaging, manifest inspection, compatibility ranges, installation, and runtime observation.
 
 ## Diagram inventory
 
@@ -28,5 +29,6 @@ The default route is eight causal journeys. Reference material stays available t
 - Extension-point ecosystem map
 - Maven-to-distribution dependency checklist
 - Task-to-change-point atlas
+- Source-to-visible-view build and discovery pipeline
 
 Every diagram answers one named question, uses stable semantic colors, and links important nodes to the exact source snapshot.

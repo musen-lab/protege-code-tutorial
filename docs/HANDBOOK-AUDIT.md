@@ -8,7 +8,7 @@ Tutorial source baseline: `protegeproject/protege@d9c9d392f9d88b5c4dc49a109009e9
 
 ## Method
 
-The handbook was converted to plain text and read in full. Its architectural, build, lifecycle, extension, and debugging claims were mapped to the eight course journeys, Architecture Atlas, and Field Notebook. Every disputed or potentially drift-prone claim was then checked in the pinned source, POM files, plugin declarations, assembly configuration, and CI workflow.
+The handbook was converted to plain text and read in full. Its architectural, build, lifecycle, extension, and debugging claims were mapped to the nine course journeys, Architecture Atlas, and Field Notebook. Every disputed or potentially drift-prone claim was then checked in the pinned source, POM files, plugin declarations, assembly configuration, CI workflow, and fixed real-plugin artifacts.
 
 ## Findings and disposition
 
@@ -29,6 +29,11 @@ The handbook was converted to plain text and read in full. Its architectural, bu
 | Logging and diagnostics | Corrected | The course previously led with the in-app log. It now leads with `~/.Protege/logs/protege.log`, which remains available when the UI cannot start, and treats the in-app view as a convenient second surface. |
 | OSGi and JPF history | Intentionally secondary | The course explains the current Felix plus Equinox mechanism. The older Protégé and JPF chronology is useful background but not required on the primary causal path, so it remains handbook reference material rather than a new journey. |
 | Compatibility library cautions | Intentionally secondary | Guava Optional, AutoValue, Swing threading, and mixed-era reflection are covered. Detailed JAXB and historical Equinox compatibility notes remain reference-level material because they do not change the stable architecture map. |
+| Minimal plugin authoring | Restored as Journey 9 | The handbook's class, `plugin.xml`, POM, build, copy, restart, and observe sequence is now a guided exercise. Java and extension metadata are traced to `protege-plugin-examples@d879601`; current build versions are isolated in the exercise POM and verified by a clean Maven build. |
+| Generated manifest inspection | Restored as required evidence | Journey 9 teaches `jar tf` and `unzip -p ... META-INF/MANIFEST.MF`. It explicitly treats the generated manifest as the runtime contract rather than assuming the POM's intent became the emitted headers. |
+| Version-range diagnosis | Restored with released artifact | The handbook's incompatibility example is grounded in the released `existentialquery:2.0.0` JAR. Its recorded manifest imports OWL API packages with `[4.1,5)`, which excludes 5.0. The downloaded artifact's SHA-256 is stored with the checked excerpt. |
+| Embed versus import | Restored with Cellfie | The Cellfie 2.1.0 POM at commit `1dd0896` embeds Apache POI, Gson, mapping-master, and related private libraries while importing Protégé and OWL API packages. Journey 9 uses the concrete list and explains class identity across bundle classloaders. |
+| BND instruction vocabulary | Restored from pinned POMs | Negation, `resolution:=optional`, `registry="split"`, ordering, and the trailing wildcard are tied to `protege-common/pom.xml:49-57` and `protege-editor-core/pom.xml:104-110` at the tutorial baseline. |
 
 ## Source checks
 
@@ -45,6 +50,9 @@ The handbook was converted to plain text and read in full. Its architectural, bu
 - Extension discovery and classloading: `protege-editor-core/src/main/java/org/protege/editor/core/plugin/`
 - Extension-point count and ids: both module `src/main/resources/plugin.xml` files
 - Log destination: `protege-desktop/src/main/logging/conf/logback.xml`
+- Official example lifecycle, contribution, and bundle POM: `protegeproject/protege-plugin-examples@d879601324d0c45d99e0d0879219ef15763ced50`
+- Cellfie embed/import instructions: `protegeproject/cellfie-plugin@1dd0896c8dd07b4f764d40225e374a5dc15a5d28`, `pom.xml:72-111`
+- Released compatibility manifest: `edu.stanford.protege:existentialquery:2.0.0`, `META-INF/MANIFEST.MF`, SHA-256 recorded in `docs/source-artifacts/existentialquery-2.0.0-manifest.txt`
 
 ## Conclusion
 

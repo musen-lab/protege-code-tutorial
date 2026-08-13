@@ -1,0 +1,20 @@
+Artifact: edu.stanford.protege:existentialquery:2.0.0
+Source: https://repo1.maven.org/maven2/edu/stanford/protege/existentialquery/2.0.0/existentialquery-2.0.0.jar
+SHA-256: 87182fe546fccc76e15e09900f6cc710d793a643d9dbbad953794770aed8802c
+Extracted path: META-INF/MANIFEST.MF
+
+Bundle-ManifestVersion: 2
+Bundle-Name: Existential Query
+Bundle-SymbolicName: existentialquery;singleton:=true
+Bundle-Version: 2.0.0
+Created-By: Apache Maven Bundle Plugin
+Import-Package: org.protege.editor.core.ui.util;version="5.0",
+ org.protege.editor.owl;version="5.0",
+ org.protege.editor.owl.model;version="5.0",
+ org.protege.editor.owl.ui.view;version="5.0",
+ com.google.common.base;version="[18.0,19)",
+ org.semanticweb.owlapi.model;version="[4.1,5)",
+ org.semanticweb.owlapi.reasoner;version="[4.1,5)",
+ org.semanticweb.owlapi.reasoner.impl;version="[4.1,5)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Tool: Bnd-3.0.0.201509101326

@@ -7,6 +7,7 @@ export type SourceRef = {
   path: string;
   line?: number;
   note: string;
+  url?: string;
 };
 
 export type DiagramNode = {
@@ -53,6 +54,15 @@ export type LessonSection = {
     language: string;
     snippet: string;
     focus: string;
+    url?: string;
+  };
+  exercise?: {
+    title: string;
+    goal: string;
+    path: string;
+    steps: string[];
+    commands?: string;
+    verify: string[];
   };
   javaNote?: {
     title: string;
@@ -84,12 +94,23 @@ export function sourceUrl(path: string, line?: number) {
   return `https://github.com/protegeproject/protege/blob/${SOURCE_COMMIT}/${path}${anchor}`;
 }
 
-const src = (label: string, path: string, line: number | undefined, note: string): SourceRef => ({
+export function sourceRefUrl(source: SourceRef) {
+  return source.url ?? sourceUrl(source.path, source.line);
+}
+
+const src = (label: string, path: string, line: number | undefined, note: string, url?: string): SourceRef => ({
   label,
   path,
   line,
   note,
+  url,
 });
+
+const PLUGIN_EXAMPLE_COMMIT = "d879601324d0c45d99e0d0879219ef15763ced50";
+const PLUGIN_EXAMPLE_URL = `https://github.com/protegeproject/protege-plugin-examples/blob/${PLUGIN_EXAMPLE_COMMIT}`;
+const CELLFIE_COMMIT = "1dd0896c8dd07b4f764d40225e374a5dc15a5d28";
+const CELLFIE_URL = `https://github.com/protegeproject/cellfie-plugin/blob/${CELLFIE_COMMIT}`;
+const EXISTENTIAL_QUERY_JAR_URL = "https://repo1.maven.org/maven2/edu/stanford/protege/existentialquery/2.0.0/existentialquery-2.0.0.jar";
 
 export const lessons: Lesson[] = [
   {
@@ -683,7 +704,7 @@ workspace.initialise();`,
     outcomes: [
       "Trace plugin.xml through AbstractPluginLoader.",
       "Explain why the contributing bundle's classloader matters.",
-      "Build and diagnose a plugin that starts but contributes nothing.",
+      "Diagnose a plugin that starts but contributes nothing.",
     ],
     sections: [
       {
@@ -1001,6 +1022,258 @@ rg -n "artifact-name|package.name" \
       src("View declaration example", "protege-editor-owl/src/main/resources/plugin.xml", 442, "Metadata-to-class search"),
       src("Plugin utility", "protege-editor-core/src/main/java/org/protege/editor/core/plugin/PluginUtilities.java", 76, "Contributor and registry bridge"),
       src("Model event dispatch", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManagerImpl.java", 188, "EDT-aware event path"),
+    ],
+  },
+  {
+    slug: "build-plugin",
+    number: 9,
+    title: "Build a view plugin",
+    question: "How do you turn a small Java class into a plugin Protégé can discover and run?",
+    summary: "Build a real ViewComponent bundle, inspect the generated manifest, install it in Protégé, and diagnose the compatibility boundaries that separate compilation from runtime success.",
+    duration: "60 min",
+    outcomes: [
+      "Build and inspect a minimal ViewComponent plugin JAR.",
+      "Explain how plugin.xml, BND instructions, and the generated manifest cooperate.",
+      "Recognize version-range and duplicate-class failures before debugging UI code.",
+    ],
+    sections: [
+      {
+        id: "view-lifecycle",
+        eyebrow: "Implementation",
+        title: "Begin with the smallest honest view lifecycle",
+        paragraphs: [
+          "A minimal OWL view extends AbstractOWLViewComponent and implements two lifecycle hooks. initialiseOWLView constructs Swing state after the workspace and model manager are available. disposeOWLView releases anything the view registered or created. The official plugin example creates a Metrics component in the first hook and disposes it in the second.",
+          "The class alone is not a plugin. Protégé cannot discover it until plugin.xml contributes it to the ViewComponent extension point, and OSGi cannot load it until the JAR manifest describes a singleton bundle with compatible package imports.",
+        ],
+        code: {
+          path: "src/main/java/edu/stanford/bmir/protege/examples/view/ExampleViewComponent.java",
+          line: 8,
+          language: "java",
+          snippet: `public class ExampleViewComponent extends AbstractOWLViewComponent {
+    private Metrics metricsComponent;
+
+    @Override
+    protected void initialiseOWLView() throws Exception {
+        setLayout(new BorderLayout());
+        metricsComponent = new Metrics(getOWLModelManager());
+        add(metricsComponent, BorderLayout.CENTER);
+    }
+
+    @Override
+    protected void disposeOWLView() {
+        metricsComponent.dispose();
+    }
+}`,
+          focus: "This cutaway is from the official protege-plugin-examples repository at a fixed commit. The exercise keeps the same lifecycle and trims the UI to one label.",
+          url: `${PLUGIN_EXAMPLE_URL}/src/main/java/edu/stanford/bmir/protege/examples/view/ExampleViewComponent.java#L8-L25`,
+        },
+        javaNote: {
+          title: "Protected lifecycle hooks",
+          body: "Protégé calls the final public setup path inherited from AbstractOWLViewComponent, which then invokes these protected hooks. Your plugin supplies behavior at the intended subclass seam without replacing the host's setup order.",
+        },
+      },
+      {
+        id: "plugin-document",
+        eyebrow: "Discovery metadata",
+        title: "plugin.xml names the extension point and implementation",
+        paragraphs: [
+          "The complete minimal document below follows the official example's ViewComponent declaration. The point attribute targets the exact extension-point id declared by editor-core. The class value must match the compiled class name. The label, header color, and category determine how the view is presented in the Add view interface.",
+          "Place plugin.xml at src/main/resources/plugin.xml. Maven copies it to the JAR root, where Equinox expects the declaration. A correctly compiled class with a missing, nested, or misspelled plugin.xml remains invisible to the extension registry.",
+        ],
+        code: {
+          path: "src/main/resources/plugin.xml",
+          line: 1,
+          language: "xml",
+          snippet: `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.0"?>
+<plugin>
+  <extension id="ExampleViewComponent"
+             point="org.protege.editor.core.application.ViewComponent">
+    <label value="Example view component"/>
+    <class value="edu.stanford.bmir.protege.examples.view.ExampleViewComponent"/>
+    <headerColor value="@org.protege.ontologycolor"/>
+    <category value="@org.protege.ontologycategory"/>
+  </extension>
+</plugin>`,
+          focus: "This complete exercise document is traced to the official example declaration at plugin.xml:24-31; only surrounding unrelated extensions were removed.",
+          url: `${PLUGIN_EXAMPLE_URL}/src/main/resources/plugin.xml#L24-L31`,
+        },
+      },
+      {
+        id: "bundle-build",
+        eyebrow: "Build artifact",
+        title: "Maven compiles; BND writes the runtime contract",
+        paragraphs: [
+          "The POM uses bundle packaging and enables maven-bundle-plugin as a Maven extension. Bundle-SymbolicName ends with singleton:=true because Equinox only processes plugin.xml contributions from singleton bundles. The provided Protégé dependency compiles the plugin without copying host classes into its JAR.",
+          "BND analyzes bytecode and writes Import-Package into META-INF/MANIFEST.MF. The exercise asks for Protégé OWL packages in the 5.6 line and leaves the trailing wildcard so BND can add other packages it detects. The generated manifest, not the POM text, is the runtime source of truth.",
+        ],
+        code: {
+          path: "pom.xml",
+          line: 8,
+          language: "xml",
+          snippet: `<packaging>bundle</packaging>
+
+<dependency>
+  <groupId>edu.stanford.protege</groupId>
+  <artifactId>protege-editor-owl</artifactId>
+  <version>5.6.6</version>
+  <scope>provided</scope>
+</dependency>
+
+<plugin>
+  <groupId>org.apache.felix</groupId>
+  <artifactId>maven-bundle-plugin</artifactId>
+  <version>5.1.9</version>
+  <extensions>true</extensions>
+  <configuration><instructions>
+    <Bundle-SymbolicName>\${project.artifactId};singleton:=true</Bundle-SymbolicName>
+    <Import-Package>
+      org.protege.editor.owl.*;version="[5.6,6)",
+      *
+    </Import-Package>
+  </instructions></configuration>
+</plugin>`,
+          focus: "The exercise POM is a current, build-verified adaptation of the official example POM at lines 5-62. Its Protégé version is the published 5.6.6 artifact available from Maven Central.",
+          url: `${PLUGIN_EXAMPLE_URL}/pom.xml#L5-L62`,
+        },
+        diagram: {
+          title: "From source tree to visible ViewComponent",
+          question: "Which artifact or runtime gate turns Java source into a visible view?",
+          kind: "Build and discovery pipeline",
+          columns: 3,
+          nodes: [
+            { title: "Java + plugin.xml + POM", subtitle: "authoring inputs", detail: "The class supplies lifecycle behavior, plugin.xml declares the contribution, and the POM supplies dependencies plus BND instructions.", tone: "data", position: { column: 1, row: 1 } },
+            { title: "Maven + BND", subtitle: "package bundle", detail: "Maven compiles the class and copies resources. BND analyzes packages and generates the OSGi manifest.", tone: "runtime", position: { column: 2, row: 1 } },
+            { title: "Plugin JAR", subtitle: "inspect before install", detail: "The root contains plugin.xml; META-INF/MANIFEST.MF contains singleton metadata and package imports.", tone: "runtime", position: { column: 3, row: 1 } },
+            { title: "plugins directory", subtitle: "installation location", detail: "Copy the JAR into Protégé's plugins directory and restart so Felix installs the bundle.", tone: "runtime", position: { column: 1, row: 2 } },
+            { title: "Equinox registry", subtitle: "discover contribution", detail: "The registry reads the singleton bundle's plugin.xml and records its ViewComponent contribution.", tone: "core", position: { column: 2, row: 2 } },
+            { title: "Add view menu", subtitle: "instantiate class", detail: "The loader matches the extension and the bundle classloader creates the view when the user selects it.", tone: "ui", position: { column: 3, row: 2 } },
+          ],
+          edges: [],
+          connections: [
+            { from: "Java + plugin.xml + POM", label: "build", to: "Maven + BND" },
+            { from: "Maven + BND", label: "writes", to: "Plugin JAR" },
+            { from: "Plugin JAR", label: "copy", to: "plugins directory" },
+            { from: "plugins directory", label: "restart", to: "Equinox registry" },
+            { from: "Equinox registry", label: "offers", to: "Add view menu" },
+          ],
+          caption: "Compilation proves only the first transition. Manifest inspection, registry discovery, and view instantiation prove the remaining gates.",
+        },
+      },
+      {
+        id: "compatibility-ranges",
+        eyebrow: "Compatibility diagnosis",
+        title: "Version ranges can reject a newer host cleanly",
+        paragraphs: [
+          "The released existentialquery 2.0.0 JAR imports OWL API model and reasoner packages with version range [4.1,5). The opening bracket includes 4.1; the closing parenthesis excludes 5.0 and every later major version. An OSGi resolver therefore cannot wire those imports to an OWL API 5 exporter, even if the Java source might otherwise compile after an upgrade.",
+          "Treat a range failure as an explicit compatibility boundary. Rebuild against the intended host, update only ranges justified by source and runtime verification, then inspect the newly generated manifest. Do not widen a range merely to make resolution proceed.",
+        ],
+        code: {
+          path: "META-INF/MANIFEST.MF",
+          line: 11,
+          language: "manifest",
+          snippet: `Import-Package: org.protege.editor.owl.ui.view;version="5.0",
+ com.google.common.base;version="[18.0,19)",
+ org.semanticweb.owlapi.model;version="[4.1,5)",
+ org.semanticweb.owlapi.reasoner;version="[4.1,5)",
+ org.semanticweb.owlapi.reasoner.impl;version="[4.1,5)"`,
+          focus: "Extracted from the released edu.stanford.protege:existentialquery:2.0.0 JAR. The checked copy and SHA-256 are recorded in docs/source-artifacts.",
+          url: EXISTENTIAL_QUERY_JAR_URL,
+        },
+      },
+      {
+        id: "embed-or-import",
+        eyebrow: "Class identity",
+        title: "Embed private libraries; import host APIs",
+        paragraphs: [
+          "Cellfie 2.1.0 provides a concrete separation. Its BND instructions embed libraries such as Apache POI, Gson, and mapping-master inside the plugin while importing org.protege.editor.*, OWL API, and optional external packages. The plugin carries its private implementation dependencies but shares the host's API types through OSGi imports.",
+          "Never embed Protégé or OWL API classes in a plugin. Two bundles can then load two distinct Class objects with the same fully qualified name. Crossing the extension boundary with those lookalike types can cause ClassCastException because Java type identity includes the defining classloader.",
+        ],
+        code: {
+          path: "pom.xml",
+          line: 72,
+          language: "xml",
+          snippet: `<Embed-Dependency>
+  commons-codec, poi, poi-ooxml, xmlbeans, gson, mapping-master
+</Embed-Dependency>
+<Import-Package>
+  org.protege.editor.core.*;version="5.0.0",
+  org.protege.editor.owl.*;version="5.0.0",
+  org.semanticweb.owlapi.*;version="[4.1.3,5.0.0)",
+  org.apache.*;resolution:=optional,
+  *
+</Import-Package>`,
+          focus: "This is a shortened, line-preserving excerpt from Cellfie 2.1.0's real POM. The full lists remain available at the linked fixed commit.",
+          url: `${CELLFIE_URL}/pom.xml#L72-L111`,
+        },
+      },
+      {
+        id: "bnd-vocabulary",
+        eyebrow: "Manifest vocabulary",
+        title: "Read BND instructions as filters and directives",
+        paragraphs: [
+          "Protégé's pinned POMs show the vocabulary in production. A leading exclamation mark excludes matching packages from generated imports. resolution:=optional permits a bundle to resolve when that package has no provider. The editor-core instruction registry=\"split\" tells BND how to handle the Eclipse registry package split across sources. The trailing wildcard asks BND to include every remaining detected import.",
+          "Order matters because BND evaluates package patterns from top to bottom. Specific exclusions and directives belong before the catch-all wildcard. After any edit, inspect the built manifest to see the concrete header BND emitted.",
+        ],
+        code: {
+          path: "protege-editor-core/pom.xml",
+          line: 104,
+          language: "xml",
+          snippet: `<Import-Package>
+  !com.sun.*,
+  !com.apple.*,
+  !sun.swing,
+  org.eclipse.core.runtime;registry="split",
+  *
+</Import-Package>`,
+          focus: "These instructions come directly from the pinned editor-core POM. The common module adds examples such as !com.ibm.* and sun.misc;resolution:=optional.",
+        },
+        checkpoint: {
+          prompt: "Why is mvn package not enough evidence that a plugin can run?",
+          answer: "Compilation does not prove that plugin.xml is at the JAR root, singleton metadata is present, package imports match the host, or the extension registry can discover and instantiate the class. Inspect the JAR, then run it in the assembled product.",
+        },
+      },
+      {
+        id: "build-install",
+        eyebrow: "Practice",
+        title: "Build, inspect, install, and observe",
+        paragraphs: [
+          "The repository includes a complete minimal plugin under exercises/minimal-view-plugin. Its Java class, plugin.xml, and POM are adaptations of the fixed official example, with a currently published Protégé 5.6.6 dependency so the exercise builds from a clean Maven cache.",
+          "The exercise is complete only after you inspect the JAR and observe the view in a real Protégé runtime. A successful Maven build is useful evidence, but it is not the runtime result.",
+        ],
+        exercise: {
+          title: "Ship one visible view",
+          goal: "Produce a bundle whose generated manifest and root plugin.xml match the runtime contract, then make its view appear in Protégé.",
+          path: "exercises/minimal-view-plugin",
+          steps: [
+            "Build the bundle from the exercise directory.",
+            "List the JAR and confirm plugin.xml is at its root.",
+            "Read META-INF/MANIFEST.MF and find Bundle-SymbolicName plus Import-Package.",
+            "Copy the JAR to the plugins directory of a Protégé 5.6 installation, then restart Protégé.",
+            "Open Window > Views and add Example view component. If it is absent, inspect ~/.Protege/logs/protege.log and revisit Journey 6's discovery gates.",
+          ],
+          commands: `cd exercises/minimal-view-plugin
+mvn clean package
+jar tf target/protege-minimal-view-1.0.0.jar
+unzip -p target/protege-minimal-view-1.0.0.jar META-INF/MANIFEST.MF`,
+          verify: [
+            "The JAR contains plugin.xml at the root and ExampleViewComponent.class under its package path.",
+            "The manifest contains Bundle-SymbolicName: protege-minimal-view;singleton:=true.",
+            "The manifest imports org.protege.editor.owl packages instead of embedding Protégé classes.",
+            "Example view component appears in Protégé and displays the active ontology's class count.",
+          ],
+        },
+      },
+    ],
+    capability: "You can build, inspect, install, and diagnose a minimal Protégé ViewComponent plugin.",
+    sourceRefs: [
+      src("Official plugin example class", "src/main/java/edu/stanford/bmir/protege/examples/view/ExampleViewComponent.java", 8, "View lifecycle at a fixed plugin-example commit", `${PLUGIN_EXAMPLE_URL}/src/main/java/edu/stanford/bmir/protege/examples/view/ExampleViewComponent.java#L8-L25`),
+      src("Official plugin example declaration", "src/main/resources/plugin.xml", 24, "Real ViewComponent contribution", `${PLUGIN_EXAMPLE_URL}/src/main/resources/plugin.xml#L24-L31`),
+      src("Official plugin example POM", "pom.xml", 5, "Bundle packaging and BND instructions", `${PLUGIN_EXAMPLE_URL}/pom.xml#L5-L62`),
+      src("Existential Query 2.0.0 manifest", "META-INF/MANIFEST.MF", 11, "Released JAR with bounded OWL API imports", EXISTENTIAL_QUERY_JAR_URL),
+      src("Cellfie 2.1.0 POM", "pom.xml", 72, "Real embed and import strategy", `${CELLFIE_URL}/pom.xml#L72-L111`),
+      src("Pinned core BND instructions", "protege-editor-core/pom.xml", 88, "Singleton, imports, exports, and registry directive"),
+      src("Pinned common BND instructions", "protege-common/pom.xml", 49, "Negation and optional-resolution examples"),
     ],
   },
 ];

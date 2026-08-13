@@ -6,7 +6,7 @@ modern Java after working primarily with Ruby on Rails and TypeScript/Angular.
 
 ## Course shape
 
-- Eight guided journeys, from module orientation through safe contribution
+- Nine guided journeys, from module orientation through a buildable plugin
 - Interactive architecture, runtime, extension, and edit-flow diagrams
 - Source cutaways linked to exact files in a pinned Protégé GitHub snapshot
 - Java time-capsule notes and Rails/Angular conceptual bridges
@@ -27,7 +27,9 @@ the stable paths and concepts that make the rest of the source tree navigable.
   source links
 
 Running the tutorial does not require Java, Maven, a local Protégé checkout, a
-database, environment variables, or ChatGPT authentication.
+database, environment variables, or ChatGPT authentication. The optional
+hands-on plugin exercise in Journey 9 requires JDK 11 or later, Maven 3.6.3 or
+later, and a Protégé 5.6 installation for its runtime check.
 
 ### If you use Homebrew...
 
@@ -91,7 +93,7 @@ typography checks and final visual validation.
 ## Usage
 
 1. Open the course home page and choose **Start Journey 1**.
-2. Follow the eight journeys in order. Each journey builds on the mental model
+2. Follow the nine journeys in order. Each journey builds on the mental model
    established by the previous one.
 3. Select boxes in diagrams to inspect their responsibilities, relationships,
    and source evidence.
@@ -106,6 +108,21 @@ local storage. Return to the home page and choose **Resume the course** to
 continue. Choose **Restart from Journey 1** to clear that saved position.
 Progress is specific to the current browser profile and is lost if its site
 data is cleared.
+
+### Run the plugin exercise
+
+Journey 9 includes a complete Maven project under
+`exercises/minimal-view-plugin`. From the repository root:
+
+```bash
+cd exercises/minimal-view-plugin
+mvn clean package
+jar tf target/protege-minimal-view-1.0.0.jar
+unzip -p target/protege-minimal-view-1.0.0.jar META-INF/MANIFEST.MF
+```
+
+Read the exercise's own `README.md` for installation and runtime verification.
+The web course still installs and runs with Node.js alone.
 
 ## Development commands
 

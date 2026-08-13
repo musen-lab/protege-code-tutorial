@@ -6,7 +6,7 @@ for concepts that already have an entry here.
 
 ## Course terms
 
-- **Journey**: one of the eight ordered guided lessons that form the primary
+- **Journey**: one of the nine ordered guided lessons that form the primary
   course path. Learner-facing copy says "journey"; the code's data type is
   `Lesson` in `app/lib/course.ts`.
 - **Lens**: one of the four Architecture Atlas views (Modules, Runtime,
@@ -44,6 +44,11 @@ for concepts that already have an entry here.
   the word "plugin".
 - **Singleton bundle**: a bundle whose `Bundle-SymbolicName` carries
   `singleton:=true`; Equinox reads `plugin.xml` only from these.
+- **BND instruction**: a build-time rule that controls the OSGi headers emitted
+  into a bundle manifest. The generated manifest is the runtime contract.
+- **Embedded dependency**: a library copied inside a plugin bundle. Use this
+  for private implementation libraries, not for Protégé or OWL API classes
+  shared with the host.
 - **Editor kit**: the per-window composition root pairing one model manager
   with one workspace (`EditorKit`, implemented by `OWLEditorKit`).
 - **Model manager**: the application facade over ontology state

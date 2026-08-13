@@ -19,14 +19,14 @@ Read these files before making substantial content or information-architecture
 changes:
 
 - `MISSION.md`: learner, outcome, and teaching constraints
-- `CURRICULUM.md`: the ordered eight-journey course and diagram inventory
+- `CURRICULUM.md`: the ordered nine-journey course and diagram inventory
 - `RESOURCES.md`: evidence base
 - `GLOSSARY.md`: canonical terminology
 - `docs/HANDBOOK-AUDIT.md`: consistency audit against the developer handbook
 
 ## Product invariants
 
-- The eight journeys are the primary path and should be followed in order.
+- The nine journeys are the primary path and should be followed in order.
 - The Architecture Atlas and Field notebook are supporting references, not
   competing starting points.
 - Diagrams teach architecture, ownership, dependencies, runtime flow, and event
@@ -50,6 +50,8 @@ changes:
 - `app/components/`: shared interactive and navigational components
 - `app/globals.css`: global visual system and responsive behavior
 - `tests/rendered-html.test.mjs`: production-rendering regression tests
+- `exercises/`: buildable learner exercises with their own prerequisites and
+  provenance records
 - `docs/`: audits and captured visual evidence
 - `public/`: static assets and social preview
 - `build/`, `worker/`, `vite.config.ts`: Vinext, Vite, and Cloudflare-compatible
@@ -136,7 +138,8 @@ before following the new workflow.
 - Keep course content centralized in `app/lib/course.ts` unless a real module
   boundary justifies moving it.
 - Use `sourceUrl` and `SourceRef` for Protégé source links. Do not hand-build
-  drifting branch URLs.
+  drifting branch URLs. External artifact examples must use fixed commit or
+  release URLs and record their provenance.
 - Preserve semantic HTML, keyboard operation, visible focus, readable contrast,
   and the mobile fallback for every interaction.
 - For relationship-heavy material, prefer a labeled diagram plus selectable
@@ -159,6 +162,7 @@ before following the new workflow.
 | Responsive or visual behavior | Compare the production-mode page before and after at the same viewport. Check desktop and mobile behavior. |
 | Dependency change | Use `npm install` only intentionally, inspect `package.json` and `package-lock.json`, then run the full validation suite. |
 | Build or runtime integration | Run `npm run build`, then `npm run start` and verify `http://localhost:3000` responds successfully. |
+| Buildable exercise | Run the exercise's declared build and artifact-inspection commands, then confirm its provenance against the fixed upstream source or release artifact. |
 
 The standard full validation command is:
 

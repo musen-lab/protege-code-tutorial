@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useSyncExternalStore } from "react";
+import { lessons } from "@/app/lib/course";
 
 export const COURSE_PROGRESS_KEY = "inside-protege-progress-v1";
 
@@ -35,7 +36,7 @@ export function ResumeCourse() {
       <p>
         {progress
           ? "Your last journey and reading position were saved in this browser."
-          : "Follow the eight journeys in order. Your place will be saved automatically in this browser."}
+          : `Follow the ${lessons.length} journeys in order. Your place will be saved automatically in this browser.`}
       </p>
       <div className="resume-actions">
         <a className="primary-action" href={destination}>
@@ -51,8 +52,8 @@ export function ResumeCourse() {
           </a>
         )}
       </div>
-      <div className="resume-progress" aria-label={progress ? `Journey ${progress.number} of 8` : "Course not started"}>
-        <span style={{ width: `${progress ? Math.max(6, (progress.number / 8) * 100) : 0}%` }} />
+      <div className="resume-progress" aria-label={progress ? `Journey ${progress.number} of ${lessons.length}` : "Course not started"}>
+        <span style={{ width: `${progress ? Math.max(6, (progress.number / lessons.length) * 100) : 0}%` }} />
       </div>
     </div>
   );

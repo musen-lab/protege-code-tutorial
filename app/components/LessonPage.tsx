@@ -1,5 +1,5 @@
 import type { Lesson } from "@/app/lib/course";
-import { adjacentLessons, sourceUrl } from "@/app/lib/course";
+import { adjacentLessons, lessons, sourceUrl } from "@/app/lib/course";
 import { Checkpoint } from "./Checkpoint";
 import { CourseMap } from "./CourseMap";
 import { ProgressTracker } from "./ProgressTracker";
@@ -9,12 +9,12 @@ import { SourceLink } from "./SourceLink";
 
 export function LessonPage({ lesson }: { lesson: Lesson }) {
   const { previous, next } = adjacentLessons(lesson.slug);
-  const progress = Math.round((lesson.number / 8) * 100);
+  const progress = Math.round((lesson.number / lessons.length) * 100);
 
   return (
     <div className="site-shell">
       <SiteHeader />
-      <div className="lesson-progress" aria-label={`Journey ${lesson.number} of 8`}>
+      <div className="lesson-progress" aria-label={`Journey ${lesson.number} of ${lessons.length}`}>
         <span style={{ width: `${progress}%` }} />
       </div>
       <div className="lesson-grid">
@@ -32,7 +32,7 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
         <main className="lesson-main">
           <header className="lesson-hero">
             <div className="journey-kicker">
-              <span>Journey {lesson.number} of 8</span>
+              <span>Journey {lesson.number} of {lessons.length}</span>
               <span>{lesson.duration}</span>
             </div>
             <ProgressTracker number={lesson.number} slug={lesson.slug} title={lesson.title} />
@@ -61,7 +61,7 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
                 <figure className="code-cutaway">
                   <div className="code-heading">
                     <span>Source cutaway</span>
-                    <a href={sourceUrl(section.code.path, section.code.line)} target="_blank" rel="noreferrer">
+                    <a href={section.code.url ?? sourceUrl(section.code.path, section.code.line)} target="_blank" rel="noreferrer">
                       {section.code.path}:{section.code.line} ↗
                     </a>
                   </div>
@@ -90,6 +90,23 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
                 </div>
               )}
 
+              {section.exercise && (
+                <aside className="exercise-block">
+                  <span>Hands-on exercise</span>
+                  <h3>{section.exercise.title}</h3>
+                  <p>{section.exercise.goal}</p>
+                  <code className="exercise-path">{section.exercise.path}</code>
+                  <ol>
+                    {section.exercise.steps.map((step) => <li key={step}>{step}</li>)}
+                  </ol>
+                  {section.exercise.commands && <pre><code>{section.exercise.commands}</code></pre>}
+                  <strong>Evidence of success</strong>
+                  <ul>
+                    {section.exercise.verify.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                </aside>
+              )}
+
               {section.checkpoint && <Checkpoint {...section.checkpoint} />}
             </section>
           ))}
@@ -103,7 +120,7 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
             <div>
               <span className="eyebrow">Verified source trail</span>
               <h2>Reconstruct this journey yourself</h2>
-              <p>These links point to the exact source commit used to build the tutorial.</p>
+              <p>These links point to the pinned Protégé source or exact artifact snapshots used to build the tutorial.</p>
             </div>
             <div className="source-list">
               {lesson.sourceRefs.map((source) => <SourceLink key={`${source.path}-${source.line}`} source={source} />)}

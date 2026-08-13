@@ -5,7 +5,7 @@ export function CourseMap({ currentSlug }: { currentSlug?: string }) {
     <details className="course-map" open>
       <summary>
         <span>Your course route</span>
-        <span className="course-map-summary">8 in order</span>
+        <span className="course-map-summary">{lessons.length} in order</span>
       </summary>
       <ol>
         {lessons.map((lesson) => (
