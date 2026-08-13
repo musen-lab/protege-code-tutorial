@@ -32,7 +32,7 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
 
         <main className="lesson-main">
           <header className="lesson-hero">
-            <div className="journey-kicker">
+            <div className="lesson-kicker">
               <span>Lesson {lesson.number} of {lessons.length}</span>
               <span>{lesson.duration}</span>
             </div>
@@ -132,7 +132,7 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
 
           <nav className="lesson-pagination" aria-label="Lesson navigation">
             {previous ? (
-              <a href={`/journeys/${previous.slug}`} className="previous-link">
+              <a href={`/lessons/${previous.slug}`} className="previous-link">
                 <small>← Previous</small>
                 <strong>{previous.title}</strong>
               </a>
@@ -143,7 +143,7 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
               </a>
             )}
             {next ? (
-              <a href={`/journeys/${next.slug}`} className="next-link">
+              <a href={`/lessons/${next.slug}`} className="next-link">
                 <small>Next →</small>
                 <strong>{next.title}</strong>
               </a>

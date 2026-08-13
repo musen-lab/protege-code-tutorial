@@ -6,9 +6,9 @@ for concepts that already have an entry here.
 
 ## Course terms
 
-- **Lesson**: one of the ten ordered units that form the primary course path.
-  The route remains `/journeys/[slug]` for compatibility, while learner-facing
-  copy says "lesson" and the code's data type is `Lesson`.
+- **Lesson**: one of the ten ordered units that form the primary course path,
+  served at `/lessons/[slug]`. Learner-facing copy says "lesson" and the
+  code's data type is `Lesson`.
 - **Lens**: one of the four Architecture Atlas views (Modules, Runtime,
   Extensions, Edit flow). Each lens asks one question of the same system.
 - **Source cutaway**: a short, possibly condensed code excerpt linked to the

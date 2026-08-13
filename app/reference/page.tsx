@@ -220,7 +220,7 @@ export default function ReferencePage() {
             </article>
           </div>
           <p className="reference-note">These are the 24 first-party extension points in this snapshot. Third-party bundles may declare additional points. Point ids are case-sensitive and must be fully qualified in contributions.</p>
-          <a className="inline-journey-link" href="/journeys/extension">Study the complete extension lesson →</a>
+          <a className="inline-lesson-link" href="/lessons/extension">Study the complete extension lesson →</a>
           <aside className="external-references">
             <h3>Continue with the project community</h3>
             <p>These living resources can change after the pinned source snapshot.</p>

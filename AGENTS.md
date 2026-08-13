@@ -45,8 +45,7 @@ changes:
 ## Repository map
 
 - `app/page.tsx`: course trailhead
-- `app/journeys/[slug]/page.tsx`: guided lesson route. The legacy path remains
-  stable for compatibility.
+- `app/lessons/[slug]/page.tsx`: guided lesson route
 - `app/atlas/page.tsx`: Architecture Atlas
 - `app/reference/page.tsx`: Field notebook
 - `app/search/page.tsx`: server-rendered course search

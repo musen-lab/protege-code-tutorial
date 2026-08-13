@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     : { title: "Lesson not found" };
 }
 
-export default async function JourneyPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function LessonRoutePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const lesson = getLesson(slug);
   if (!lesson) notFound();

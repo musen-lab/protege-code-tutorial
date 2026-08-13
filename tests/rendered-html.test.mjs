@@ -73,7 +73,7 @@ test("explains automatic stop and resume behavior", async () => {
   assert.match(home, /Check your understanding\. Selected lessons add a guided field exercise\./);
   assert.doesNotMatch(home, /Predict or reproduce the flow yourself/);
 
-  const lesson = await (await render("/journeys/landscape")).text();
+  const lesson = await (await render("/lessons/landscape")).text();
   assert.match(lesson, /Your place is saved in this browser\.|Saving your place/);
 
   const resumeSource = await readFile(new URL("../app/components/ResumeCourse.tsx", import.meta.url), "utf8");
@@ -104,9 +104,9 @@ test("keeps the menu actionable and offers a restart path", async () => {
 
 test("server-renders every production page type", async () => {
   const pages = [
-    ["/journeys/open-ontology", /Who receives a file after the user clicks Open\?/],
-    ["/journeys/build-plugin", /How do you turn a small Java class into a plugin Protégé can discover and run\?/],
-    ["/journeys/edit-through-frames", /How does a row in Protégé become an OWL axiom change\?/],
+    ["/lessons/open-ontology", /Who receives a file after the user clicks Open\?/],
+    ["/lessons/build-plugin", /How do you turn a small Java class into a plugin Protégé can discover and run\?/],
+    ["/lessons/edit-through-frames", /How does a row in Protégé become an OWL axiom change\?/],
     ["/atlas", /One system, four relationship lenses\./],
     ["/reference", /Details you need often, without breaking the learning trail\./],
     ["/search", /Find the lesson, concept, class, or tool you need\./],
@@ -132,13 +132,13 @@ test("searches lessons and references without client-side routing", async () => 
   assert.match(felixResults, /Matches for/);
   assert.match(felixResults, /name="q" value="Felix"/);
   assert.match(felixResults, /Apache Felix/);
-  assert.match(felixResults, /href="\/journeys\/startup#plain-jvm"/);
+  assert.match(felixResults, /href="\/lessons\/startup#plain-jvm"/);
   assert.match(felixResults, /href="\/reference#reference-technology-felix"/);
 
   const classResults = await (await render("/search?q=OWLEditorKit")).text();
   assert.match(classResults, /OWLEditorKit is the assembly point/);
-  assert.match(classResults, /href="\/journeys\/open-ontology#object-assembly"/);
-  assert.match(classResults, /href="\/journeys\/landscape#central-seam"/);
+  assert.match(classResults, /href="\/lessons\/open-ontology#object-assembly"/);
+  assert.match(classResults, /href="\/lessons\/landscape#central-seam"/);
 
   const noResults = await (await render("/search?q=definitely-not-a-course-term")).text();
   assert.match(noResults, /No course content matched that phrase/);
@@ -148,7 +148,7 @@ test("searches lessons and references without client-side routing", async () => 
 });
 
 test("teaches the frame-based ontology editing idiom", async () => {
-  const frames = await (await render("/journeys/edit-through-frames")).text();
+  const frames = await (await render("/lessons/edit-through-frames")).text();
   assert.match(frames, /Lesson 10 of 10/);
   assert.match(frames, /Frame means an entity-shaped editor, not a window/);
   assert.match(frames, /OWLFrameList&lt;OWLClass&gt;/);
@@ -164,7 +164,7 @@ test("teaches the frame-based ontology editing idiom", async () => {
 });
 
 test("teaches plugin authoring with buildable, sourced artifacts", async () => {
-  const plugin = await (await render("/journeys/build-plugin")).text();
+  const plugin = await (await render("/lessons/build-plugin")).text();
   assert.match(plugin, /Lesson 9 of 10/);
   assert.match(plugin, /From source tree to visible ViewComponent/);
   assert.match(plugin, /singleton:=true/);
@@ -236,7 +236,7 @@ test("renders handbook-aligned developer guidance", async () => {
     assert.match(reference, new RegExp(`id="extension-${id}"`), id);
   }
 
-  const extension = await (await render("/journeys/extension")).text();
+  const extension = await (await render("/lessons/extension")).text();
   assert.match(extension, /installation location contains the word plugin/);
   assert.match(extension, /three separate facts/);
   assert.match(extension, /Plugin JAR contract/);
@@ -253,13 +253,13 @@ test("renders handbook-aligned developer guidance", async () => {
   assert.match(extension, /UIManager an explicit classloader/);
   assert.match(extension, /ProtegeApplication\.java#L321/);
 
-  const change = await (await render("/journeys/change")).text();
+  const change = await (await render("/lessons/change")).text();
   assert.match(change, /A coarse-event listener that throws is logged and then removed/);
   assert.match(change, /If updates quietly stop, inspect protege\.log/);
   assert.match(change, /modelManagerChangeListeners\.remove\(listener\)/);
   assert.match(change, /OWLModelManagerImpl\.java#L188/);
 
-  const workSafely = await (await render("/journeys/work-safely")).text();
+  const workSafely = await (await render("/lessons/work-safely")).text();
   assert.match(workSafely, /Use three loops, not one build for every question/);
   assert.match(workSafely, /mvn -Pide package/);
   assert.match(workSafely, /unpacks provided dependencies into target\/dependency/);
@@ -271,35 +271,35 @@ test("renders handbook-aligned developer guidance", async () => {
 });
 
 test("introduces external technologies before relying on their vocabulary", async () => {
-  const landscape = await (await render("/journeys/landscape")).text();
+  const landscape = await (await render("/lessons/landscape")).text();
   assert.match(landscape, /OSGi is a set of Java specifications/);
   assert.match(landscape, /Protégé does not use Equinox as its OSGi framework/);
   assert.match(landscape, /OWL is a W3C language for describing ontologies/);
   assert.match(landscape, /OWL API is a Java library, not the OWL language itself/);
   assert.match(landscape, /docs\.osgi\.org\/specification\/osgi\.core/);
 
-  const startup = await (await render("/journeys/startup")).text();
+  const startup = await (await render("/lessons/startup")).text();
   assert.match(startup, /Apache Felix is an implementation of the OSGi framework specification/);
   assert.match(startup, /SAX is Java&#x27;s event-driven XML parsing API/);
 
-  const openOntology = await (await render("/journeys/open-ontology")).text();
+  const openOntology = await (await render("/lessons/open-ontology")).text();
   assert.match(openOntology, /Swing is Java&#x27;s long-standing desktop user-interface toolkit/);
   assert.match(openOntology, /Oracle Event Dispatch Thread guide/);
 
-  const workSafely = await (await render("/journeys/work-safely")).text();
+  const workSafely = await (await render("/lessons/work-safely")).text();
   assert.match(workSafely, /PDE is Eclipse&#x27;s Plug-in Development Environment/);
   assert.match(workSafely, /bnd is OSGi bundle tooling used behind Maven/);
   assert.match(workSafely, /META-INF\/MANIFEST\.MF/);
 });
 
 test("renders architecture as connected, accessible diagrams", async () => {
-  const landscape = await (await render("/journeys/landscape")).text();
+  const landscape = await (await render("/lessons/landscape")).text();
   assert.match(landscape, /Class and ownership diagram/);
   assert.match(landscape, /ModelManager/);
   assert.match(landscape, /OWLModelManagerImpl/);
   assert.match(landscape, /Core contract and OWL implementation relationships/);
 
-  const extension = await (await render("/journeys/extension")).text();
+  const extension = await (await render("/lessons/extension")).text();
   assert.match(extension, /Extension architecture diagram/);
   assert.match(extension, /Core extension point/);
   assert.match(extension, /Third-party plugin\.xml/);

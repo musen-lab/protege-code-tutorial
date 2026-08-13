@@ -38,15 +38,15 @@ export default function Home() {
           </ol>
         </section>
 
-        <section className="journey-index">
+        <section className="lesson-index">
           <div className="home-section-heading">
             <span className="eyebrow">The primary course</span>
             <h2>{`Follow all ${lessons.length} lessons in order`}</h2>
             <p>Each lesson assumes the mental model built by the one before it.</p>
           </div>
-          <div className="journey-cards">
+          <div className="lesson-cards">
             {lessons.map((lesson) => (
-              <a href={`/journeys/${lesson.slug}`} key={lesson.slug} className="journey-card">
+              <a href={`/lessons/${lesson.slug}`} key={lesson.slug} className="lesson-card">
                 <span>{String(lesson.number).padStart(2, "0")}</span>
                 <div>
                   <small>{lesson.duration}</small>

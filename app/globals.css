@@ -181,7 +181,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .course-rhythm li p { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
 
 .home-map-section,
-.journey-index,
+.lesson-index,
 .course-principles,
 .home-course-map,
 .reference-tools,
@@ -190,7 +190,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
   width: min(1180px, calc(100% - 40px));
   margin: 0 auto;
 }
-.home-map-section, .journey-index, .course-principles { padding: 90px 0; }
+.home-map-section, .lesson-index, .course-principles { padding: 90px 0; }
 .home-section-heading { max-width: 760px; margin-bottom: 34px; }
 .home-section-heading h2,
 .course-principles h2,
@@ -259,15 +259,15 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .diagram-detail a { color: var(--purple); font-size: 12px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .relationship-diagram figcaption { color: var(--muted); font-size: 12px; }
 
-.journey-cards { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); }
-.journey-card { display: grid; grid-template-columns: 58px 1fr auto; gap: 18px; min-height: 144px; padding: 26px 24px; border-bottom: 1px solid var(--line); }
-.journey-card > span { color: var(--purple); font-family: var(--font-mono); font-size: 12px; }
-.journey-card small { color: var(--muted); font-size: 10px; }
-.journey-card h3 { margin: 5px 0 7px; font-family: var(--font-display), serif; font-size: 25px; }
-.journey-card p { margin: 0; color: var(--muted); font-size: 13px; }
-.journey-card b { align-self: center; color: var(--purple); font-size: 20px; transition: transform .18s ease; }
-.journey-card:hover { background: rgba(255,255,255,.42); }
-.journey-card:hover b { transform: translateX(5px); }
+.lesson-cards { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); }
+.lesson-card { display: grid; grid-template-columns: 58px 1fr auto; gap: 18px; min-height: 144px; padding: 26px 24px; border-bottom: 1px solid var(--line); }
+.lesson-card > span { color: var(--purple); font-family: var(--font-mono); font-size: 12px; }
+.lesson-card small { color: var(--muted); font-size: 10px; }
+.lesson-card h3 { margin: 5px 0 7px; font-family: var(--font-display), serif; font-size: 25px; }
+.lesson-card p { margin: 0; color: var(--muted); font-size: 13px; }
+.lesson-card b { align-self: center; color: var(--purple); font-size: 20px; transition: transform .18s ease; }
+.lesson-card:hover { background: rgba(255,255,255,.42); }
+.lesson-card:hover b { transform: translateX(5px); }
 
 .reference-tools { padding: 40px 0 110px; border-top: 1px solid var(--line); }
 .reference-tool-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
@@ -310,7 +310,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .section-nav a:hover { color: var(--purple); }
 .lesson-main { min-width: 0; }
 .lesson-hero { padding: 48px 0 70px; border-bottom: 1px solid var(--line); }
-.journey-kicker { display: flex; justify-content: space-between; color: var(--purple); font-size: 11px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+.lesson-kicker { display: flex; justify-content: space-between; color: var(--purple); font-size: 11px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
 .progress-tracker { display: flex; gap: 8px; align-items: center; width: fit-content; margin-top: 18px; padding: 7px 10px; color: #524a54; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,253,248,.75); font-size: 11px; }
 .progress-tracker span { color: var(--teal); font-size: 9px; }
 .lesson-hero h1 { max-width: 780px; font-size: clamp(42px, 6vw, 70px); }
@@ -439,7 +439,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .extension-columns span { color: var(--purple); font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
 .extension-columns h3 { margin: 8px 0 12px; font-size: 20px; }
 .extension-columns p { color: var(--muted); font-size: 12px; }
-.extension-columns a, .inline-journey-link { color: var(--purple); font-size: 11px; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
+.extension-columns a, .inline-lesson-link { color: var(--purple); font-size: 11px; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
 .extension-starters { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); gap: 24px; margin-bottom: 20px; padding: 24px; border: 1px solid var(--purple); border-radius: 12px; background: color-mix(in srgb, var(--purple) 5%, var(--surface)); }
 .extension-starters h3 { margin: 7px 0 8px; font-size: 20px; }
 .extension-starters p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
@@ -452,7 +452,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .external-references p { margin: 0; color: var(--muted); font-size: 12px; }
 .external-references ul { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 13px 0 0; padding: 0; list-style: none; }
 .external-references a { color: var(--purple); font-size: 11px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
-.inline-journey-link { display: inline-block; margin-top: 22px; }
+.inline-lesson-link { display: inline-block; margin-top: 22px; }
 .search-recipes { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
 .search-recipes article { min-width: 0; }
 .search-recipes h3 { margin: 0 0 8px; font-size: 13px; }
@@ -479,7 +479,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
   .home-hero { padding: 70px 22px; }
   .home-hero h1 { font-size: clamp(42px, 13vw, 66px); }
   .course-rhythm { width: min(100% - 32px,1180px); }
-  .course-rhythm ol, .reference-tool-grid, .journey-cards, .course-principles, .principle-grid, .learning-notes, .reference-grid, .extension-columns, .search-recipes, .extension-starters, .technology-primer-links, .technology-index { grid-template-columns: 1fr; }
+  .course-rhythm ol, .reference-tool-grid, .lesson-cards, .course-principles, .principle-grid, .learning-notes, .reference-grid, .extension-columns, .search-recipes, .extension-starters, .technology-primer-links, .technology-index { grid-template-columns: 1fr; }
   .extension-starters ul { grid-template-columns: 1fr; }
   .lesson-grid { display: block; padding: 22px 20px 70px; }
   .lesson-rail { position: static; max-height: none; margin-bottom: 20px; overflow: visible; }
@@ -506,7 +506,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
   .lesson-pagination { grid-template-columns: 1fr; }
   .lesson-pagination a:first-child { border-right: 0; border-bottom: 1px solid var(--line); }
   .lesson-pagination .next-link { text-align: left; }
-  .atlas-page, .reference-page, .home-map-section, .journey-index, .course-principles, .home-course-map, .reference-tools { width: min(100% - 32px, 1180px); }
+  .atlas-page, .reference-page, .home-map-section, .lesson-index, .course-principles, .home-course-map, .reference-tools { width: min(100% - 32px, 1180px); }
   .search-page { width: min(100% - 32px, 980px); }
   .search-hero { padding-top: 60px; }
   .course-search > div, .search-suggestions > div { grid-template-columns: 1fr; }

@@ -27,7 +27,7 @@ export default function AtlasPage() {
           </div>
           <div className="landmark-grid">
             {lessons.map((lesson) => (
-              <a href={`/journeys/${lesson.slug}`} key={lesson.slug}>
+              <a href={`/lessons/${lesson.slug}`} key={lesson.slug}>
                 <span>{String(lesson.number).padStart(2, "0")}</span>
                 <strong>{lesson.title}</strong>
                 <small>{lesson.capability}</small>

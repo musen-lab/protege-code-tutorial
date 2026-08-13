@@ -25,7 +25,9 @@ export function ResumeCourse() {
     }
   }, [saved]);
 
-  const destination = progress ? `${progress.path}?resume=1` : "/journeys/landscape";
+  // Derive the destination from the slug rather than the stored path, so
+  // progress saved before the /journeys -> /lessons rename still resumes.
+  const destination = progress ? `/lessons/${progress.slug}?resume=1` : "/lessons/landscape";
 
   return (
     <div className="resume-course">
@@ -45,7 +47,7 @@ export function ResumeCourse() {
         {progress && (
           <a
             className="restart-action"
-            href="/journeys/landscape"
+            href="/lessons/landscape"
             onClick={restartCourse}
           >
             Restart from Lesson 1

@@ -7,7 +7,7 @@ export function ProgressTracker({ number, slug, title }: { number: number; slug:
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    const path = `/journeys/${slug}`;
+    const path = `/lessons/${slug}`;
     let restored = false;
     let saveTimer: ReturnType<typeof window.setTimeout> | undefined;
 
@@ -47,7 +47,9 @@ export function ProgressTracker({ number, slug, title }: { number: number; slug:
 
     const previous = readProgress();
     const shouldResume = new URLSearchParams(window.location.search).get("resume") === "1";
-    if (shouldResume && previous?.path === path && previous.scrollY > 0) {
+    // Match on slug, not stored path, so scroll positions saved before the
+    // /journeys -> /lessons rename still restore.
+    if (shouldResume && previous?.slug === slug && previous.scrollY > 0) {
       restored = true;
       window.requestAnimationFrame(() => {
         window.scrollTo({ top: previous.scrollY, behavior: "auto" });

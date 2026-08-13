@@ -10,7 +10,7 @@ export function CourseMap({ currentSlug }: { currentSlug?: string }) {
       <ol>
         {lessons.map((lesson) => (
           <li key={lesson.slug} className={lesson.slug === currentSlug ? "is-current" : ""}>
-            <a href={`/journeys/${lesson.slug}`} aria-current={lesson.slug === currentSlug ? "page" : undefined}>
+            <a href={`/lessons/${lesson.slug}`} aria-current={lesson.slug === currentSlug ? "page" : undefined}>
               <span>{String(lesson.number).padStart(2, "0")}</span>
               <span>
                 <strong>{lesson.title}</strong>

@@ -31,7 +31,7 @@ Introduce `inside-protege-progress-v2` with an explicit schema version:
   "version": 2,
   "lastPosition": {
     "number": 4,
-    "path": "/journeys/screen",
+    "path": "/lessons/screen",
     "scrollY": 1860,
     "slug": "screen",
     "title": "Build the screen",

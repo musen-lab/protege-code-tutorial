@@ -10,7 +10,7 @@ export type SearchRecord = {
 };
 
 const lessonRecords: SearchRecord[] = lessons.flatMap((lesson) => {
-  const lessonHref = `/journeys/${lesson.slug}`;
+  const lessonHref = `/lessons/${lesson.slug}`;
   const overview: SearchRecord = {
     href: lessonHref,
     kind: "Lesson",

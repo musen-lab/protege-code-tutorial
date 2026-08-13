@@ -45,10 +45,10 @@ implemented during maintainer review. The source baseline has not changed.
 Start with these surfaces:
 
 1. `/`: the ordered ten-lesson trailhead, course promise, resume and restart behavior, official branding, and separate search utility.
-2. `/journeys/landscape`: the first lesson and first-use technology primers. The `journeys` segment is intentionally retained for URL compatibility even though the UI says “Lesson.”
+2. `/lessons/landscape`: the first lesson and first-use technology primers. (The `journeys` URL segment was retained at review time; the maintainer later approved renaming it to `lessons` before publication.)
 3. `/search?q=OSGi`: server-rendered search across course and reference content.
-4. `/journeys/build-plugin`: the complete plugin vertical slice and links to the buildable exercise.
-5. `/journeys/edit-through-frames`: frame-based ontology editing, including class and add-sequence diagrams.
+4. `/lessons/build-plugin`: the complete plugin vertical slice and links to the buildable exercise.
+5. `/lessons/edit-through-frames`: frame-based ontology editing, including class and add-sequence diagrams.
 6. `/reference`: the technology index, Java compatibility notes, class landmarks, all 24 first-party extension points, and source-navigation recipes.
 
 Important implementation boundaries:
@@ -82,5 +82,5 @@ unzip -p target/protege-minimal-view-1.0.0.jar META-INF/MANIFEST.MF
 - Automated GUI installation and observation of the example plugin in a separately downloaded Protégé distribution. Build, packaging, manifest, and learner runtime instructions are present and verified.
 - Additional hands-on implementations for the other 23 extension points. The Field Notebook gives their sourced purposes and contracts; Lesson 9 intentionally teaches one complete vertical slice.
 - Fuzzy search, stemming, result highlighting, and a remote search service. The current deterministic local index is intentionally small and browser-native.
-- Renaming the legacy `/journeys/...` route. Learner-facing language is “Lesson,” but changing bookmarked URLs was not necessary for clarity.
+- Renaming the legacy `/journeys/...` route. Learner-facing language is “Lesson,” but changing bookmarked URLs was not necessary for clarity. (Superseded later on 2026-08-12: with the site still unpublished, the maintainer approved the rename, and the route is now `/lessons/...`.)
 - Any remote repository, branch, pull request, site publication, or access-control change. Those actions were outside the authorized local-only scope.
