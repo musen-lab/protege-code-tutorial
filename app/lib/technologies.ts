@@ -31,7 +31,7 @@ export const technologyPrimers = {
     ],
     protegeSources: [
       { label: "Framework creation and bundle start", path: "protege-launcher/src/main/java/org/protege/osgi/framework/Launcher.java", line: 97, note: "Protégé creates an OSGi framework, installs bundles by start level, and starts it." },
-      { label: "Runtime bundle search paths", path: "protege-desktop/src/main/felix/conf/config.xml", line: 23, note: "The desktop distribution groups its bundles into ordered runtime levels." },
+      { label: "Runtime bundle search paths", path: "protege-desktop/src/main/felix/conf/config.xml", line: 24, note: "The desktop distribution groups its bundles into ordered runtime levels." },
     ],
   },
   felix: {
@@ -67,7 +67,7 @@ export const technologyPrimers = {
       { label: "IExtensionRegistry API", url: "https://help.eclipse.org/latest/topic/org.eclipse.platform.doc.isv/reference/api/org/eclipse/core/runtime/IExtensionRegistry.html" },
     ],
     protegeSources: [
-      { label: "Equinox bundles in the distribution", path: "protege-desktop/src/main/felix/conf/config.xml", line: 29, note: "Common and supplement start before the Equinox registry bundle and editor-core." },
+      { label: "Equinox bundles in the distribution", path: "protege-desktop/src/main/felix/conf/config.xml", line: 33, note: "Common and supplement start before the Equinox registry bundle and editor-core." },
       { label: "Registry service lookup", path: "protege-editor-core/src/main/java/org/protege/editor/core/plugin/PluginUtilities.java", line: 97, note: "Protégé tracks the Equinox IExtensionRegistry as an OSGi service." },
     ],
   },
@@ -104,7 +104,7 @@ export const technologyPrimers = {
     ],
     protegeSources: [
       { label: "OWLModelManager boundary", path: "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManager.java", line: 42, note: "Protégé's model facade extends the generic model contract and exposes OWL API types." },
-      { label: "Ontology load through OWL API", path: "protege-editor-owl/src/main/java/org/protege/editor/owl/model/io/OntologyLoader.java", line: 89, note: "The loader obtains an OWLOntologyManager and configures IRI mapping before loading." },
+      { label: "Ontology load through OWL API", path: "protege-editor-owl/src/main/java/org/protege/editor/owl/model/io/OntologyLoader.java", line: 99, note: "The loader obtains an OWLOntologyManager and configures IRI mapping before loading." },
     ],
   },
   "swing-edt": {
@@ -135,7 +135,7 @@ export const technologyPrimers = {
     ],
     officialLinks: [
       { label: "bnd documentation", url: "https://bnd.bndtools.org/" },
-      { label: "bnd concepts", url: "https://bnd.bndtools.org/chapters/100-introduction.html" },
+      { label: "bnd concepts", url: "https://bnd.bndtools.org/chapters/110-introduction.html" },
     ],
     protegeSources: [
       { label: "editor-core bundle instructions", path: "protege-editor-core/pom.xml", line: 84, note: "The module configures maven-bundle-plugin and its generated OSGi headers." },
@@ -172,7 +172,7 @@ export const technologyPrimers = {
       { label: "Jakarta XML Binding specification", url: "https://jakarta.ee/specifications/xml-binding/" },
     ],
     protegeSources: [
-      { label: "Early XML service", path: "protege-common/src/main/java/org/protege/common/Activator.java", line: 19, note: "The common activator registers SAXParserFactory when its bundle starts." },
+      { label: "Early XML service", path: "protege-common/src/main/java/org/protege/common/Activator.java", line: 16, note: "The common activator registers SAXParserFactory when its bundle starts." },
       { label: "XML-related start order", path: "protege-desktop/src/main/felix/conf/config.xml", line: 18, note: "The configuration documents the required order and starts the JAXB compatibility bundle." },
     ],
   },
