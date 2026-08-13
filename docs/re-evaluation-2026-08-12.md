@@ -45,6 +45,11 @@ inspection. No factual error was found in any newly added claim.
 
 ## Follow-up items (none blocking)
 
+Resolution note, later the same day: items 1 through 7 below were fixed and
+validated (lint clean, 11/11 rendered-HTML tests) in the commits following
+this document. Only item 8 (optional internal rename) and item 9 (the
+progress-model product decision) remain open.
+
 1. **Undisclosed snippet condensations in Lesson 10** (`app/lib/course.ts`).
    Content is faithful, but three cutaways silently drop code: the
    `OWLFrameSection` interface snippet omits about seven members; the
