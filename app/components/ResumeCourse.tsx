@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useSyncExternalStore } from "react";
-import type { MouseEvent } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { lessons, requiredUnitIds } from "@/app/lib/course";
 import {
   clearProgress,
@@ -49,15 +48,7 @@ export function ResumeCourse() {
         <a className="primary-action" href={destination}>
           {started ? "Resume the course" : "Start Lesson 1"}
         </a>
-        {started && (
-          <a
-            className="restart-action"
-            href="/lessons/landscape"
-            onClick={restartCourse}
-          >
-            Restart from Lesson 1
-          </a>
-        )}
+        {started && <RestartControl />}
       </div>
       <div className="resume-completion">
         <span>Course completion</span>
@@ -74,13 +65,45 @@ export function ResumeCourse() {
   );
 }
 
-function restartCourse(event: MouseEvent<HTMLAnchorElement>) {
-  const confirmed = window.confirm(
-    "Restart from Lesson 1? This clears your course completion and your saved reading position in this browser.",
-  );
-  if (!confirmed) {
-    event.preventDefault();
-    return;
+const RESTART_WARNING =
+  "This clears your course completion and your saved reading position in this browser.";
+
+/** The confirmation opens in place, inside the resume card. */
+function RestartControl() {
+  const [confirming, setConfirming] = useState(false);
+
+  if (!confirming) {
+    return (
+      <a
+        className="restart-action"
+        href="/lessons/landscape"
+        onClick={(event) => {
+          event.preventDefault();
+          setConfirming(true);
+        }}
+      >
+        Restart from Lesson 1
+      </a>
+    );
   }
-  clearProgress();
+  return (
+    <div
+      className="restart-confirm"
+      role="group"
+      aria-label="Confirm restart"
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setConfirming(false);
+      }}
+    >
+      <p>{RESTART_WARNING}</p>
+      <div>
+        <a href="/lessons/landscape" onClick={() => clearProgress()}>
+          Yes, restart
+        </a>
+        <button type="button" autoFocus onClick={() => setConfirming(false)}>
+          Keep my progress
+        </button>
+      </div>
+    </div>
+  );
 }

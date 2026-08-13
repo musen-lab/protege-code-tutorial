@@ -329,6 +329,13 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .resume-completion span { color: #aba3aa; font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
 .resume-completion strong { color: #f2d898; font-size: 12px; }
 .resume-completion + .resume-progress { margin-top: 8px; }
+
+.restart-confirm { margin-top: 4px; padding: 14px 16px; border: 1px solid #8c798f; border-radius: 8px; background: rgba(255, 255, 255, .05); }
+.restart-confirm p { margin: 0 0 12px; color: #d8d0cb; font-size: 12px; line-height: 1.5; }
+.restart-confirm > div { display: flex; flex-wrap: wrap; gap: 10px; }
+.restart-confirm a, .restart-confirm button { display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border-radius: 7px; font-size: 12px; font-weight: 700; }
+.restart-confirm a { color: #2b1c12; border: 1px solid #e5b95c; background: #e5b95c; }
+.restart-confirm button { color: #fff8ea; border: 1px solid #8c798f; background: rgba(255,255,255,.05); }
 .lesson-main { min-width: 0; }
 .lesson-hero { padding: 48px 0 70px; border-bottom: 1px solid var(--line); }
 .lesson-kicker { display: flex; justify-content: space-between; color: var(--purple); font-size: 11px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
