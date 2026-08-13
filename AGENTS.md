@@ -48,10 +48,12 @@ changes:
 - `app/journeys/[slug]/page.tsx`: guided journey route
 - `app/atlas/page.tsx`: Architecture Atlas
 - `app/reference/page.tsx`: Field notebook
+- `app/search/page.tsx`: server-rendered course search
 - `app/lib/course.ts`: source snapshot, curriculum data, diagrams, checkpoints,
   code cutaways, and source-link generation
 - `app/lib/technologies.ts`: reusable technology primers, official references,
   and pinned Protégé evidence
+- `app/lib/search.ts`: searchable records and ranking across course surfaces
 - `app/components/`: shared interactive and navigational components
 - `app/globals.css`: global visual system and responsive behavior
 - `tests/rendered-html.test.mjs`: production-rendering regression tests
@@ -154,6 +156,9 @@ before following the new workflow.
   not crossed by lines or clipped by adjacent nodes.
 - Internal navigation intentionally uses browser-native anchors. Do not replace
   it with framework navigation without a verified need and regression coverage.
+- Search is server-rendered and must remain usable as an ordinary GET form
+  without client-side JavaScript. Index new lesson and reference content when
+  it introduces a term learners are likely to look up.
 - Course progress is stored under `inside-protege-progress-v1` in browser local
   storage. Treat changes to that key or data shape as a migration concern.
 - The current value records only the last reading position, not completion.

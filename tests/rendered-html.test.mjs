@@ -78,6 +78,7 @@ test("server-renders every production page type", async () => {
     ["/journeys/edit-through-frames", /How does a row in Protégé become an OWL axiom change\?/],
     ["/atlas", /One system, four relationship lenses\./],
     ["/reference", /Details you need often, without breaking the learning trail\./],
+    ["/search", /Find the lesson, concept, class, or tool you need\./],
   ];
 
   for (const [path, expected] of pages) {
@@ -88,6 +89,31 @@ test("server-renders every production page type", async () => {
     assert.doesNotMatch(html, /Inside Protégé \| Inside Protégé/, path);
     assert.doesNotMatch(html, /Application error|Internal Server Error/, path);
   }
+});
+
+test("searches lessons and references without client-side routing", async () => {
+  const emptySearch = await (await render("/search")).text();
+  assert.match(emptySearch, /Search the Protégé code tutorial/);
+  assert.match(emptySearch, /Useful starting searches/);
+  assert.match(emptySearch, /Event Dispatch Thread/);
+
+  const felixResults = await (await render("/search?q=Felix")).text();
+  assert.match(felixResults, /Matches for/);
+  assert.match(felixResults, /name="q" value="Felix"/);
+  assert.match(felixResults, /Apache Felix/);
+  assert.match(felixResults, /href="\/journeys\/startup#plain-jvm"/);
+  assert.match(felixResults, /href="\/reference#reference-technology-felix"/);
+
+  const classResults = await (await render("/search?q=OWLEditorKit")).text();
+  assert.match(classResults, /OWLEditorKit is the assembly point/);
+  assert.match(classResults, /href="\/journeys\/open-ontology#object-assembly"/);
+  assert.match(classResults, /href="\/journeys\/landscape#central-seam"/);
+
+  const noResults = await (await render("/search?q=definitely-not-a-course-term")).text();
+  assert.match(noResults, /No course content matched that phrase/);
+
+  const headerSource = await readFile(new URL("../app/components/SiteHeader.tsx", import.meta.url), "utf8");
+  assert.match(headerSource, /href="\/search"/);
 });
 
 test("teaches the frame-based ontology editing idiom", async () => {
@@ -268,6 +294,7 @@ test("internal navigation remains browser-native", async () => {
     "../app/components/CourseMap.tsx",
     "../app/components/LessonPage.tsx",
     "../app/components/SiteHeader.tsx",
+    "../app/search/page.tsx",
   ];
 
   for (const path of navigationFiles) {

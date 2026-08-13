@@ -11,6 +11,8 @@ modern Java after working primarily with Ruby on Rails and TypeScript/Angular.
 - Source cutaways linked to exact files in a pinned Protégé GitHub snapshot
 - Technology primers, Java time-capsule notes, and Rails/Angular conceptual bridges
 - Prediction checkpoints, field exercises, and a searchable reference notebook
+- Course-wide search across lessons, diagrams, source cutaways, technology
+  primers, Atlas lenses, and Field Notebook sections
 
 The tutorial is intentionally progressive rather than encyclopedic. It teaches
 the stable paths and concepts that make the rest of the source tree navigable.
@@ -107,6 +109,9 @@ typography checks and final visual validation.
    exact file and line at the verified Protégé source snapshot.
 7. Use the **Architecture Atlas** and **Field notebook** as supporting
    references. They are not alternative starting points.
+8. Choose **Search** in the header to look up a keyword, class, extension
+   point, or technology. Results link directly to the matching lesson section
+   or reference entry.
 
 The tutorial saves the current journey and scroll position in the browser's
 local storage. This is a resume position, not a record that a journey or the

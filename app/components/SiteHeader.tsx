@@ -10,6 +10,7 @@ export function SiteHeader() {
       </a>
       <nav className="top-nav" aria-label="Primary navigation">
         <a className="course-nav-link" href="/">Course</a>
+        <a href="/search">Search</a>
         <a href="/atlas">Atlas</a>
         <a href="/reference">Field notebook</a>
       </nav>
