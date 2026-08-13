@@ -59,3 +59,36 @@ Inspect `/`, `/search?q=OSGi`, and
 `/journeys/landscape#two-directions`. For the baseline, render commit
 `cd4f834` in a separate worktree with the same production commands and viewport
 sizes.
+
+## Official Protégé mark refinement
+
+The initial tutorial lockup at commit `464716f` used a custom letter P because
+the official brand reference had not yet been supplied. The revised lockup uses
+the three-color icon published by the official Protégé website, follows it with
+the Protégé wordmark treatment, and places “Code Tutorial” after a quiet
+divider. “Inside Protégé” remains the course name in the page title and course
+content instead of competing with the product logo.
+
+| Aspect | Before at `464716f` | After |
+| --- | --- | --- |
+| Mark | Custom purple P tile | Official three-color Protégé icon |
+| Name treatment | Protégé plus a small pill and a second “Inside Protégé” line | Protégé wordmark plus a separate Code Tutorial suffix |
+| Desktop fit | 1280-pixel viewport | 1280-pixel viewport, 1280-pixel document width |
+| Mobile fit | 390-pixel viewport | 390-pixel viewport, 390-pixel document width, 81-pixel wrapped header |
+
+### Desktop, 1280 by 800
+
+![Before official Protégé mark](screenshots/after-terminology-search-branding-desktop.png)
+
+![After official Protégé mark](screenshots/after-official-logo-desktop.png)
+
+### Mobile, 390 by 844
+
+![Before official Protégé mark on mobile](screenshots/after-terminology-search-branding-mobile.png)
+
+![After official Protégé mark on mobile](screenshots/after-official-logo-mobile.png)
+
+The source asset is
+`https://protege.stanford.edu/img/protege-icon.svg`. Reproduce the revised
+captures from `/` using the production commands above and the stated viewport
+sizes.

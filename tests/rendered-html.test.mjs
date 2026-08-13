@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
@@ -31,8 +32,9 @@ test("server-renders the production trailhead", async () => {
   const html = await response.text();
   assert.match(html, /<title>Protégé Code Tutorial \| Inside Protégé<\/title>/i);
   assert.match(html, /aria-label="Protégé Code Tutorial home"/);
-  assert.match(html, /<span>Protégé<\/span><em>Code Tutorial<\/em>/);
-  assert.match(html, /<small>Inside Protégé<\/small>/);
+  assert.match(html, /<img[^>]+src="\/protege-icon\.svg"/);
+  assert.match(html, /<span>Protégé<\/span>/);
+  assert.match(html, /<strong>Code Tutorial<\/strong>/);
   assert.match(html, /Learn Protégé by following one clear path\./);
   assert.match(html, /Start Lesson 1/);
   assert.match(html, /A repeated four-step learning rhythm/);
@@ -41,6 +43,12 @@ test("server-renders the production trailhead", async () => {
   assert.match(html, /Field notebook/);
   assert.match(html, /d9c9d39/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|react-loading-skeleton/);
+
+  const logo = await readFile(new URL("../public/protege-icon.svg", import.meta.url));
+  assert.equal(
+    createHash("sha256").update(logo).digest("hex"),
+    "3f7fdd08b4f232a4b9e566099ed832612ff160098667bcd36d3b2f02da1758ac",
+  );
 });
 
 test("explains automatic stop and resume behavior", async () => {

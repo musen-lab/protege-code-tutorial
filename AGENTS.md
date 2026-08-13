@@ -150,6 +150,9 @@ before following the new workflow.
   release URLs and record their provenance.
 - Preserve semantic HTML, keyboard operation, visible focus, readable contrast,
   and the mobile fallback for every interaction.
+- Preserve the official Protégé header mark in `public/protege-icon.svg` and
+  its provenance in `RESOURCES.md`. Do not redraw or replace it without
+  checking the current project brand source.
 - For relationship-heavy material, prefer a labeled diagram plus selectable
   details. Keep the diagram deterministic; learners should not need to arrange
   nodes themselves.

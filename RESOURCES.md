@@ -34,6 +34,16 @@
 - [Eclipse PDE](https://www.eclipse.org/pde/) and [m2e](https://eclipse.dev/m2e/)
   The IDE tooling targeted by Protégé's `ide` Maven profile.
 
+## Brand source
+
+- [Official Protégé website](https://protege.stanford.edu/) and its
+  [Protégé icon](https://protege.stanford.edu/img/protege-icon.svg)
+  The header combines the official three-color icon and Protégé wordmark
+  treatment with a separate “Code Tutorial” product suffix. The icon is stored
+  locally as `public/protege-icon.svg` so the course remains usable offline.
+  The local file is an exact copy retrieved on 2026-08-12, SHA-256
+  `3f7fdd08b4f232a4b9e566099ed832612ff160098667bcd36d3b2f02da1758ac`.
+
 ## Wisdom (Communities)
 
 - [Protégé GitHub issues](https://github.com/protegeproject/protege/issues)

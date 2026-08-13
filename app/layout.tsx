@@ -31,8 +31,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: "An interactive, source-backed course through Protégé Desktop architecture, runtime flows, Java idioms, and plugin development.",
     icons: {
-      icon: "/favicon.svg",
-      shortcut: "/favicon.svg",
+      icon: "/protege-icon.svg",
+      shortcut: "/protege-icon.svg",
     },
     openGraph: {
       title: "Protégé Code Tutorial | Inside Protégé",

@@ -35,3 +35,8 @@ first OSGi primer.
 
 See `../terminology-search-branding-2026-08-12.md` for the measured comparison
 and reproduction steps.
+
+The later `after-official-logo-desktop.png` and
+`after-official-logo-mobile.png` captures compare the official Protégé mark
+refinement with the earlier `after-terminology-search-branding-*` captures at
+the same 1280 by 800 and 390 by 844 viewport sizes.
