@@ -6,7 +6,7 @@ modern Java after working primarily with Ruby on Rails and TypeScript/Angular.
 
 ## Course shape
 
-- Nine guided journeys, from module orientation through a buildable plugin
+- Ten guided journeys, from module orientation through plugin and editor authoring
 - Interactive architecture, runtime, extension, and edit-flow diagrams
 - Source cutaways linked to exact files in a pinned Protégé GitHub snapshot
 - Java time-capsule notes and Rails/Angular conceptual bridges
@@ -93,7 +93,7 @@ typography checks and final visual validation.
 ## Usage
 
 1. Open the course home page and choose **Start Journey 1**.
-2. Follow the nine journeys in order. Each journey builds on the mental model
+2. Follow the ten journeys in order. Each journey builds on the mental model
    established by the previous one.
 3. Select boxes in diagrams to inspect their responsibilities, relationships,
    and source evidence.

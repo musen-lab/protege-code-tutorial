@@ -8,7 +8,7 @@ Tutorial source baseline: `protegeproject/protege@d9c9d392f9d88b5c4dc49a109009e9
 
 ## Method
 
-The handbook was converted to plain text and read in full. Its architectural, build, lifecycle, extension, and debugging claims were mapped to the nine course journeys, Architecture Atlas, and Field Notebook. Every disputed or potentially drift-prone claim was then checked in the pinned source, POM files, plugin declarations, assembly configuration, CI workflow, and fixed real-plugin artifacts.
+The handbook was converted to plain text and read in full. Its architectural, build, lifecycle, extension, and debugging claims were mapped to the ten course journeys, Architecture Atlas, and Field Notebook. Every disputed or potentially drift-prone claim was then checked in the pinned source, POM files, plugin declarations, assembly configuration, CI workflow, and fixed real-plugin artifacts.
 
 ## Findings and disposition
 
@@ -35,6 +35,7 @@ The handbook was converted to plain text and read in full. Its architectural, bu
 | Version-range diagnosis | Restored with released artifact | The handbook's incompatibility example is grounded in the released `existentialquery:2.0.0` JAR. Its recorded manifest imports OWL API packages with `[4.1,5)`, which excludes 5.0. The downloaded artifact's SHA-256 is stored with the checked excerpt. |
 | Embed versus import | Restored with Cellfie | The Cellfie 2.1.0 POM at commit `1dd0896` embeds Apache POI, Gson, mapping-master, and related private libraries while importing Protégé and OWL API packages. Journey 9 uses the concrete list and explains class identity across bundle classloaders. |
 | BND instruction vocabulary | Restored from pinned POMs | Negation, `resolution:=optional`, `registry="split"`, ordering, and the trailing wildcard are tied to `protege-common/pom.xml:49-57` and `protege-editor-core/pom.xml:104-110` at the tutorial baseline. |
+| Frame-based ontology editors | Added beyond handbook | The handbook does not explain the dominant frame, section, row, and object-editor idiom. Journey 10 now traces `OWLClassDescriptionViewComponent` through the concrete SubClass Of section and row, then into `OWLDataFactory`, `AddAxiom` or replacement changes, and `OWLModelManager.applyChanges`. |
 
 ## Source checks
 

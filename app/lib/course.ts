@@ -1323,6 +1323,251 @@ unzip -p target/protege-minimal-view-1.0.0.jar META-INF/MANIFEST.MF`,
       src("Pinned common BND instructions", "protege-common/pom.xml", 49, "Negation and optional-resolution examples"),
     ],
   },
+  {
+    slug: "edit-through-frames",
+    number: 10,
+    title: "Edit through frames",
+    question: "How does a row in Protégé become an OWL axiom change?",
+    summary: "Open the frame, section, row, and editor idiom that powers many ontology-editing screens, then trace a real SubClass Of addition and edit into OWL API changes.",
+    duration: "55 min",
+    outcomes: [
+      "Explain the distinct jobs of OWLFrame, OWLFrameSection, OWLFrameSectionRow, and OWLFrameList.",
+      "Trace an add or edit from an OWLObjectEditor to model-manager changes.",
+      "Construct an OWL axiom through OWLDataFactory at the correct UI seam.",
+    ],
+    sections: [
+      {
+        id: "frame-anatomy",
+        eyebrow: "Reusable UI idiom",
+        title: "Frame means an entity-shaped editor, not a window",
+        paragraphs: [
+          "In this package, frame does not mean java.awt.Frame. An OWLFrame holds one root object and an ordered list of sections. Each section obtains axioms relevant to that root and turns them into rows. Each row represents one axiom, its ontology, editability, deletion changes, and manipulatable OWL objects. OWLFrameList is the Swing list that flattens section headers and rows into one interactive component.",
+          "OWLClassDescriptionViewComponent shows the composition in one line: it creates an OWLFrameList around an OWLClassDescriptionFrame. A selection change calls list.setRootObject(selectedClass); disposal calls list.dispose(). The list owns interaction and rendering, while the frame family owns ontology-specific structure and edits.",
+        ],
+        code: {
+          path: "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/view/cls/OWLClassDescriptionViewComponent.java",
+          line: 33,
+          language: "java",
+          snippet: `private OWLFrameList<OWLClass> list;
+
+public void initialiseClassView() throws Exception {
+    list = new OWLFrameList<>(
+        getOWLEditorKit(),
+        new OWLClassDescriptionFrame(getOWLEditorKit()));
+    add(new JScrollPane(list));
+}
+
+protected OWLClass updateView(OWLClass selectedClass) {
+    list.setRootObject(selectedClass);
+    return selectedClass;
+}
+
+public void disposeView() {
+    list.dispose();
+}`,
+          focus: "The view supplies a selected OWLClass. The frame defines its sections; the frame list renders and edits them; disposal tears down the list, frame, sections, and listeners.",
+        },
+        diagram: {
+          title: "Anatomy of a class description editor",
+          question: "Which object owns selection, structure, displayed axioms, and editing behavior?",
+          kind: "Class and containment diagram",
+          columns: 3,
+          nodes: [
+            { title: "Class description view", subtitle: "selection-aware view", detail: "OWLClassDescriptionViewComponent receives the selected OWLClass, creates the frame list, and disposes it with the view.", tone: "ui", position: { column: 1, row: 1 }, source: src("Class description view", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/view/cls/OWLClassDescriptionViewComponent.java", 27, "View composition") },
+            { title: "OWLFrameList", subtitle: "interaction and rendering", detail: "OWLFrameList<OWLClass> displays section headers and rows; it handles add, edit, delete, selection, dialogs, drag and drop, and refresh.", tone: "ui", position: { column: 2, row: 1 }, source: src("Frame list", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/framelist/OWLFrameList.java", 62, "Common list component") },
+            { title: "Class description frame", subtitle: "root plus section set", detail: "OWLClassDescriptionFrame holds the selected OWLClass and assembles equivalent, subclass, general, inherited, member, key, disjoint, and disjoint-union sections.", tone: "owl", position: { column: 3, row: 1 }, source: src("Class frame", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/cls/OWLClassDescriptionFrame.java", 14, "Concrete section assembly") },
+            { title: "SubClass Of section", subtitle: "one axiom category", detail: "OWLSubClassAxiomFrameSection finds asserted subclass axioms, adds inferred rows, supplies an editor, and builds new OWLSubClassOfAxiom values.", tone: "owl", position: { column: 2, row: 2 }, source: src("Subclass section", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/cls/OWLSubClassAxiomFrameSection.java", 21, "Subclass axiom section") },
+            { title: "SubClass Of row", subtitle: "one displayed axiom", detail: "OWLSubClassAxiomFrameSectionRow retains root, ontology, and axiom; it edits the superclass expression and recreates the subclass axiom.", tone: "data", position: { column: 3, row: 2 }, source: src("Subclass row", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/cls/OWLSubClassAxiomFrameSectionRow.java", 22, "Concrete axiom row") },
+            { title: "Class expression editor", subtitle: "validated editing UI", detail: "OWLObjectEditor<OWLClassExpression> supplies a Swing component and returns one or more edited class expressions to its registered handler.", tone: "core", position: { column: 1, row: 2 }, source: src("Object editor", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/editor/OWLObjectEditor.java", 15, "Editor contract") },
+          ],
+          edges: [],
+          connections: [
+            { from: "Class description view", label: "owns", to: "OWLFrameList" },
+            { from: "OWLFrameList", label: "renders", to: "Class description frame" },
+            { from: "Class description frame", label: "contains", to: "SubClass Of section" },
+            { from: "SubClass Of section", label: "contains", to: "SubClass Of row" },
+            { from: "SubClass Of section", label: "opens", to: "Class expression editor" },
+            { from: "SubClass Of row", label: "opens", to: "Class expression editor" },
+          ],
+          caption: "The view chooses the root. The frame organizes categories. Sections and rows translate editor results into OWL axioms. The frame list supplies the shared Swing interaction shell.",
+        },
+      },
+      {
+        id: "generic-contract",
+        eyebrow: "Java generics",
+        title: "Read the three type parameters as root, axiom, and edited value",
+        paragraphs: [
+          "OWLFrameSection<R, A, E> and OWLFrameSectionRow<R, A, E> use the same three roles. R is the frame's root object. A is the OWLAxiom subtype displayed by the section. E is the value the editor returns before the section or row converts it into an axiom.",
+          "For the subclass section, R is OWLClassExpression, A is OWLSubClassOfAxiom, and E is OWLClassExpression. The selected class is the root; the row stores a subclass axiom; the editor edits only the superclass expression. This separation lets one generic dialog and change pipeline serve many concrete axiom types.",
+        ],
+        code: {
+          path: "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/OWLFrameSection.java",
+          line: 17,
+          language: "java",
+          snippet: `public interface OWLFrameSection<
+        R,
+        A extends OWLAxiom,
+        E>
+    extends OWLFrameObject<R, A, E>, MListSectionHeader {
+
+    List<OWLFrameSectionRow<R, A, E>> getRows();
+    List<A> getAxioms();
+    OWLObjectEditor<E> getEditor();
+}`,
+          focus: "Think R = selected root, A = stored axiom type, E = value edited in the dialog.",
+        },
+        bridge: {
+          title: "Rails and Angular bridge",
+          useful: "A frame section resembles a typed presenter plus form adapter: it queries domain objects, produces rows, supplies an editor, and translates submitted values into changes.",
+          limit: "It is not a stateless serializer or reactive component. It registers ontology listeners, caches an editor in some cases, and must be disposed explicitly.",
+        },
+      },
+      {
+        id: "add-superclass",
+        eyebrow: "Add flow",
+        title: "Adding a superclass starts on the section header",
+        paragraphs: [
+          "When the selected list value is a section, OWLFrameList asks whether the section can add, obtains its OWLObjectEditor, wraps the editor component in a VerifyingOptionPane, and passes the edited objects to the section's handler. The subclass section asks OWLComponentFactory for a class-description editor with no initial value.",
+          "AbstractOWLFrameSection handles the submitted set. For each class expression, the concrete section calls OWLDataFactory.getOWLSubClassOfAxiom(root, editedExpression). A fresh-axiom strategy chooses the target ontology, the section creates AddAxiom, and OWLModelManager.applyChanges sends the list through the normal history, dirty-state, and notification path from Journey 5.",
+        ],
+        code: {
+          path: "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/cls/OWLSubClassAxiomFrameSection.java",
+          line: 87,
+          language: "java",
+          snippet: `protected OWLSubClassOfAxiom createAxiom(
+        OWLClassExpression object) {
+    return getOWLDataFactory()
+        .getOWLSubClassOfAxiom(getRootObject(), object);
+}
+
+public OWLObjectEditor<OWLClassExpression> getObjectEditor() {
+    return getOWLEditorKit().getWorkspace()
+        .getOWLComponentFactory()
+        .getOWLClassDescriptionEditor(null, AxiomType.SUBCLASS_OF);
+}`,
+          focus: "The section edits a superclass expression, then combines it with the selected root class through OWLDataFactory.",
+        },
+        diagram: {
+          title: "Add one SubClass Of axiom",
+          question: "Which object transforms a confirmed dialog value into an ontology change?",
+          kind: "Editing sequence diagram",
+          columns: 3,
+          nodes: [
+            { title: "1. Section header", subtitle: "user chooses add", detail: "The selected OWLFrameSection says whether adding is allowed and supplies its editor.", tone: "ui", position: { column: 1, row: 1 } },
+            { title: "2. OWLFrameList", subtitle: "open verified dialog", detail: "The shared list hosts the editor component and forwards confirmed edited objects to the registered handler.", tone: "ui", position: { column: 2, row: 1 } },
+            { title: "3. OWLObjectEditor", subtitle: "return class expression", detail: "The class-description editor validates input and returns a Set<OWLClassExpression>.", tone: "core", position: { column: 3, row: 1 } },
+            { title: "4. Subclass section", subtitle: "create axiom", detail: "createAxiom combines the selected root and edited superclass through OWLDataFactory.", tone: "owl", position: { column: 1, row: 2 } },
+            { title: "5. AddAxiom", subtitle: "target ontology", detail: "FreshAxiomLocationStrategy chooses the ontology; the section records one AddAxiom change.", tone: "data", position: { column: 2, row: 2 } },
+            { title: "6. OWLModelManager", subtitle: "apply change list", detail: "The model facade applies the change and drives undo history, dirty state, ontology listeners, and UI refresh.", tone: "owl", position: { column: 3, row: 2 } },
+          ],
+          edges: [],
+          connections: [
+            { from: "1. Section header", label: "select", to: "2. OWLFrameList" },
+            { from: "2. OWLFrameList", label: "show", to: "3. OWLObjectEditor" },
+            { from: "3. OWLObjectEditor", label: "submit", to: "4. Subclass section" },
+            { from: "4. Subclass section", label: "build", to: "5. AddAxiom" },
+            { from: "5. AddAxiom", label: "apply", to: "6. OWLModelManager" },
+          ],
+          caption: "OWLFrameList owns the dialog, but the concrete section owns semantic translation from an edited value to an OWL axiom.",
+        },
+      },
+      {
+        id: "edit-row",
+        eyebrow: "Edit flow",
+        title: "Editing a row replaces an axiom as one change list",
+        paragraphs: [
+          "Double-click or Enter on an editable row follows the same shared dialog path, but the row supplies an editor initialized with the current superclass. OWLSubClassAxiomFrameSectionRow then recreates the whole OWLSubClassOfAxiom from the root and edited expression.",
+          "AbstractOWLFrameSectionRow preserves annotations from the old axiom, creates RemoveAxiom followed by AddAxiom for the same ontology, and applies both together through OWLModelManager. If the row is inferred and has no asserted ontology, it cannot be edited; isEditable returns true only when getOntology() is non-null.",
+        ],
+        code: {
+          path: "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/AbstractOWLFrameSectionRow.java",
+          line: 93,
+          language: "java",
+          snippet: `public void handleEditingFinished(Set<E> editedObjects) {
+    OWLAxiom newAxiom = createAxiom(
+        editedObjects.iterator().next());
+    A oldAxiom = getAxiom();
+    if (!oldAxiom.getAnnotations().isEmpty()) {
+        newAxiom = newAxiom.getAnnotatedAxiom(
+            oldAxiom.getAnnotations());
+    }
+    List<OWLOntologyChange> changes = new ArrayList<>();
+    changes.add(new RemoveAxiom(getOntology(), oldAxiom));
+    changes.add(new AddAxiom(getOntology(), newAxiom));
+    getOWLModelManager().applyChanges(changes);
+}`,
+          focus: "An edit is not an in-place mutation. The row recreates an axiom, retains annotations, and applies remove plus add as one list.",
+        },
+        checkpoint: {
+          prompt: "Why does a frame row store both an axiom and an ontology?",
+          answer: "The axiom supplies the displayed and edited statement. The ontology identifies where an asserted axiom can be removed or replaced. An inferred row has no asserting ontology and is therefore not editable by this default path.",
+        },
+      },
+      {
+        id: "data-factory",
+        eyebrow: "OWL API construction",
+        title: "Ask OWLDataFactory to construct model objects",
+        paragraphs: [
+          "Frame sections and rows reach OWLDataFactory through OWLModelManager. The factory is the OWL API construction surface for class expressions, axioms, entities, literals, and related objects. In the subclass flow, the editor returns an OWLClassExpression and the factory combines it with the frame root to produce OWLSubClassOfAxiom.",
+          "Construct the semantic value first, then wrap the intended state transition in AddAxiom or RemoveAxiom, and finally submit the list through OWLModelManager.applyChanges. This keeps OWL API object creation separate from application policy such as target-ontology choice, history, dirty state, and notification.",
+        ],
+        code: {
+          path: "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/AbstractOWLFrameSection.java",
+          line: 178,
+          language: "java",
+          snippet: `for (E editedObject : editedObjects) {
+    A axiom = createAxiom(editedObject);
+    FreshAxiomLocationStrategy strategy =
+        strategySelector.getFreshAxiomLocationStrategy();
+    OWLOntology ontology = strategy.getFreshAxiomLocation(
+        axiom, getOWLModelManager());
+    changes.add(new AddAxiom(ontology, axiom));
+}
+getOWLModelManager().applyChanges(changes);`,
+          focus: "Concrete sections define createAxiom; the abstract base supplies ontology selection and the shared change-application path.",
+        },
+      },
+      {
+        id: "frame-recipe",
+        eyebrow: "Implementation recipe",
+        title: "Find the narrowest existing section before inventing UI",
+        paragraphs: [
+          "For a new entity-editing feature, first find the description frame for that entity type and the section nearest your axiom. Read its getObjectEditor, createAxiom, refill or getClassAxioms, isResettingChange, and row class together. Reuse OWLFrameList unless the interaction truly cannot fit its section-and-row model.",
+          "Your lifecycle checklist is concrete: register ontology listeners in the section constructor, remove them in dispose, dispose editors, represent inferred rows without an ontology, preserve annotations on replacement, and apply changes through the model manager. The existing abstract bases implement much of this contract, so subclass at their intended hooks before copying it.",
+        ],
+        exercise: {
+          title: "Trace a sibling axiom editor",
+          goal: "Prove that the frame idiom transfers beyond subclass axioms by reconstructing one neighboring edit flow from source.",
+          path: "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame",
+          steps: [
+            "Choose one section under cls, objectproperty, dataproperty, individual, datatype, or annotationproperty.",
+            "Record its R, A, and E types and the description frame that installs it.",
+            "Find the editor returned for adding and the editor returned for editing an existing row.",
+            "Find the exact OWLDataFactory call that constructs its axiom.",
+            "Write the AddAxiom or RemoveAxiom plus AddAxiom sequence and identify which base class applies it.",
+          ],
+          verify: [
+            "Every class and method in the trace has a pinned path and line.",
+            "The trace distinguishes the selected root, stored axiom, and edited value.",
+            "The trace names the disposal path for listeners and editors.",
+            "The final state transition crosses OWLModelManager.applyChanges.",
+          ],
+        },
+      },
+    ],
+    capability: "You can read and extend the frame-based ontology editing pattern from selection through OWL API changes.",
+    sourceRefs: [
+      src("Class description view", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/view/cls/OWLClassDescriptionViewComponent.java", 27, "View, frame list, selection, and disposal"),
+      src("OWLFrame contract", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/OWLFrame.java", 12, "Root and section ownership"),
+      src("OWLFrameSection contract", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/OWLFrameSection.java", 17, "Typed section and editor contract"),
+      src("OWLFrameSectionRow contract", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/OWLFrameSectionRow.java", 15, "Axiom row responsibilities"),
+      src("Frame list edit dialog", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/framelist/OWLFrameList.java", 349, "Shared add and edit workflow"),
+      src("Abstract section change handler", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/AbstractOWLFrameSection.java", 178, "Add flow and target ontology"),
+      src("Abstract row change handler", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/AbstractOWLFrameSectionRow.java", 93, "Edit replacement flow"),
+      src("Concrete subclass section", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/cls/OWLSubClassAxiomFrameSection.java", 87, "OWLDataFactory and editor selection"),
+      src("Concrete subclass row", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/cls/OWLSubClassAxiomFrameSectionRow.java", 31, "Existing-row editor and axiom recreation"),
+    ],
+  },
 ];
 
 export function getLesson(slug: string) {

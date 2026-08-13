@@ -1,6 +1,6 @@
 # Inside Protégé: Production Curriculum
 
-The default route is nine causal journeys. Reference material stays available through the Atlas and Field Notebook without interrupting Next and Previous navigation.
+The default route is ten causal journeys. Reference material stays available through the Atlas and Field Notebook without interrupting Next and Previous navigation.
 
 ## Journeys
 
@@ -13,6 +13,7 @@ The default route is nine causal journeys. Reference material stays available th
 7. **Work safely**: IDE/debugger, plugin-JAR, and full-distribution loops; Maven reactor, bundle exports, dependency packaging, tests, logging, and Swing thread rules.
 8. **Navigate independently**: task-to-module recipes, source searches, failure signatures, and a capstone investigation.
 9. **Build a view plugin**: minimal view lifecycle, complete `plugin.xml`, Maven and BND packaging, manifest inspection, compatibility ranges, installation, and runtime observation.
+10. **Edit through frames**: frame, section, row, and editor roles; concrete subclass-axiom add/edit flows; OWLDataFactory construction; model-manager changes; reusable implementation recipe.
 
 ## Diagram inventory
 
@@ -31,5 +32,7 @@ The default route is nine causal journeys. Reference material stays available th
 - IDE, plugin-only, and release feedback-loop selector
 - Task-to-change-point atlas
 - Source-to-visible-view build and discovery pipeline
+- Frame, section, row, and object-editor class map
+- SubClass Of editor-to-model change sequence
 
 Every diagram answers one named question, uses stable semantic colors, and links important nodes to the exact source snapshot.

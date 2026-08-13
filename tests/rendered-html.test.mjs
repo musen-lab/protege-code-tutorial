@@ -33,7 +33,7 @@ test("server-renders the production trailhead", async () => {
   assert.match(html, /Learn Protégé by following one clear path\./);
   assert.match(html, /Start Journey 1/);
   assert.match(html, /A repeated four-step learning rhythm/);
-  assert.match(html, /Follow these nine journeys in order/);
+  assert.match(html, /Follow all 10 journeys in order/);
   assert.match(html, /Architecture Atlas/);
   assert.match(html, /Field notebook/);
   assert.match(html, /d9c9d39/);
@@ -61,6 +61,7 @@ test("server-renders every production page type", async () => {
   const pages = [
     ["/journeys/open-ontology", /Who receives a file after the user clicks Open\?/],
     ["/journeys/build-plugin", /How do you turn a small Java class into a plugin Protégé can discover and run\?/],
+    ["/journeys/edit-through-frames", /How does a row in Protégé become an OWL axiom change\?/],
     ["/atlas", /One system, four relationship lenses\./],
     ["/reference", /Details you need often, without breaking the learning trail\./],
   ];
@@ -75,9 +76,25 @@ test("server-renders every production page type", async () => {
   }
 });
 
+test("teaches the frame-based ontology editing idiom", async () => {
+  const frames = await (await render("/journeys/edit-through-frames")).text();
+  assert.match(frames, /Journey 10 of 10/);
+  assert.match(frames, /Frame means an entity-shaped editor, not a window/);
+  assert.match(frames, /OWLFrameList&lt;OWLClass&gt;/);
+  assert.match(frames, /Anatomy of a class description editor/);
+  assert.match(frames, /R = selected root, A = stored axiom type, E = value edited/);
+  assert.match(frames, /Add one SubClass Of axiom/);
+  assert.match(frames, /getOWLDataFactory/);
+  assert.match(frames, /FreshAxiomLocationStrategy/);
+  assert.match(frames, /RemoveAxiom followed by AddAxiom/);
+  assert.match(frames, /An inferred row has no asserting ontology/);
+  assert.match(frames, /Trace a sibling axiom editor/);
+  assert.match(frames, /OWLModelManager\.applyChanges/);
+});
+
 test("teaches plugin authoring with buildable, sourced artifacts", async () => {
   const plugin = await (await render("/journeys/build-plugin")).text();
-  assert.match(plugin, /Journey 9 of 9/);
+  assert.match(plugin, /Journey 9 of 10/);
   assert.match(plugin, /From source tree to visible ViewComponent/);
   assert.match(plugin, /singleton:=true/);
   assert.match(plugin, /generated manifest, not the POM text, is the runtime source of truth/i);

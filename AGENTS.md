@@ -19,14 +19,14 @@ Read these files before making substantial content or information-architecture
 changes:
 
 - `MISSION.md`: learner, outcome, and teaching constraints
-- `CURRICULUM.md`: the ordered nine-journey course and diagram inventory
+- `CURRICULUM.md`: the ordered ten-journey course and diagram inventory
 - `RESOURCES.md`: evidence base
 - `GLOSSARY.md`: canonical terminology
 - `docs/HANDBOOK-AUDIT.md`: consistency audit against the developer handbook
 
 ## Product invariants
 
-- The nine journeys are the primary path and should be followed in order.
+- The ten journeys are the primary path and should be followed in order.
 - The Architecture Atlas and Field notebook are supporting references, not
   competing starting points.
 - Diagrams teach architecture, ownership, dependencies, runtime flow, and event

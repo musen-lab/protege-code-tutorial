@@ -6,7 +6,7 @@ for concepts that already have an entry here.
 
 ## Course terms
 
-- **Journey**: one of the nine ordered guided lessons that form the primary
+- **Journey**: one of the ten ordered guided lessons that form the primary
   course path. Learner-facing copy says "journey"; the code's data type is
   `Lesson` in `app/lib/course.ts`.
 - **Lens**: one of the four Architecture Atlas views (Modules, Runtime,
@@ -60,6 +60,12 @@ for concepts that already have an entry here.
   contributed feature panel inside it.
 - **Viewconfig**: an XML layout resource that places view ids in a tab's
   default layout.
+- **Frame**: an OWL editor structure with one root object and ordered axiom
+  sections. It is unrelated to `java.awt.Frame`.
+- **Frame section**: one axiom category within a frame. It loads rows, supplies
+  an object editor, and translates submitted values into changes.
+- **Frame row**: one displayed axiom plus its asserting ontology and edit,
+  delete, copy, and navigation behavior.
 - **EDT**: Swing's Event Dispatch Thread; the only thread that may touch
   visible UI state.
 - **Change list**: one logical `List<OWLOntologyChange>` applied through the
