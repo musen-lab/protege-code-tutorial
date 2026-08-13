@@ -3,7 +3,7 @@ import { technologyPrimers, type TechnologyPrimerId } from "@/app/lib/technologi
 
 export function TechnologyPrimerGroup({ ids }: { ids: TechnologyPrimerId[] }) {
   return (
-    <div className="technology-primer-group" aria-label="Technology primers">
+    <div className="technology-primer-group" role="group" aria-label="Technology primers">
       {ids.map((id) => {
         const primer = technologyPrimers[id];
         return (

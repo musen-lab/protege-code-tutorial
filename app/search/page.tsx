@@ -15,7 +15,7 @@ type SearchPageProps = {
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
-  const query = Array.isArray(params.q) ? params.q[0] ?? "" : params.q ?? "";
+  const query = (Array.isArray(params.q) ? params.q[0] ?? "" : params.q ?? "").trim();
   const results = searchCourse(query);
 
   return (

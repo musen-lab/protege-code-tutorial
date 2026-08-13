@@ -24,7 +24,8 @@ The default route is ten causal lessons. Reference material stays available thro
 
 The first important use of each external platform includes a reusable primer. The Field Notebook collects the same material for later lookup.
 
-- OWL and OWL API
+- OWL
+- OWL API
 - OSGi
 - Apache Felix
 - Eclipse Equinox extension registry
