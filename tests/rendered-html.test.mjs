@@ -157,6 +157,13 @@ test("renders handbook-aligned developer guidance", async () => {
   assert.match(reference, /Protégé Developer Documentation wiki/);
   assert.match(reference, /protege-dev mailing list and support/);
   assert.match(reference, /README\.md#L11/);
+  assert.match(reference, /Names the codebase assumes you already know/);
+  assert.match(reference, /OSGi Core framework overview/);
+  assert.match(reference, /Eclipse Equinox extension registry/);
+  assert.match(reference, /Apache Felix/);
+  assert.match(reference, /Swing and the Event Dispatch Thread/);
+  assert.match(reference, /bnd OSGi bundle tooling/);
+  assert.match(reference, /target="_blank"/);
   assert.doesNotMatch(reference, /Java 11 is the ceiling/);
 
   const extensionPointIds = [
@@ -204,6 +211,28 @@ test("renders handbook-aligned developer guidance", async () => {
   assert.match(workSafely, /The shortest faithful feedback loop/);
   assert.match(workSafely, /mvn -Prelease clean package/);
   assert.match(workSafely, /\.Protege\/logs\/protege\.log/);
+});
+
+test("introduces external technologies before relying on their vocabulary", async () => {
+  const landscape = await (await render("/journeys/landscape")).text();
+  assert.match(landscape, /OSGi is a set of Java specifications/);
+  assert.match(landscape, /Protégé does not use Equinox as its OSGi framework/);
+  assert.match(landscape, /OWL is a W3C language for describing ontologies/);
+  assert.match(landscape, /OWL API is a Java library, not the OWL language itself/);
+  assert.match(landscape, /docs\.osgi\.org\/specification\/osgi\.core/);
+
+  const startup = await (await render("/journeys/startup")).text();
+  assert.match(startup, /Apache Felix is an implementation of the OSGi framework specification/);
+  assert.match(startup, /SAX is Java&#x27;s event-driven XML parsing API/);
+
+  const openOntology = await (await render("/journeys/open-ontology")).text();
+  assert.match(openOntology, /Swing is Java&#x27;s long-standing desktop user-interface toolkit/);
+  assert.match(openOntology, /Oracle Event Dispatch Thread guide/);
+
+  const workSafely = await (await render("/journeys/work-safely")).text();
+  assert.match(workSafely, /PDE is Eclipse&#x27;s Plug-in Development Environment/);
+  assert.match(workSafely, /bnd is OSGi bundle tooling used behind Maven/);
+  assert.match(workSafely, /META-INF\/MANIFEST\.MF/);
 });
 
 test("renders architecture as connected, accessible diagrams", async () => {

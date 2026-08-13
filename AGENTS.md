@@ -26,7 +26,7 @@ changes:
 
 ## Product invariants
 
-- The ten journeys are the primary path and should be followed in order.
+- The ten lessons are the primary path and should be followed in order.
 - The Architecture Atlas and Field notebook are supporting references, not
   competing starting points.
 - Diagrams teach architecture, ownership, dependencies, runtime flow, and event
@@ -35,6 +35,9 @@ changes:
   source snapshot.
 - Source complexity may be staged, but it must not be simplified into an
   incorrect mental model.
+- Introduce an external platform or tool at its first important use. Separate
+  its general meaning from its verified role in Protégé, and link to an
+  authoritative source of record in a new tab.
 - Progress remains device-local unless a separately approved requirement
   changes that behavior.
 - Navigation must remain usable without JavaScript-specific routing behavior.
@@ -47,6 +50,8 @@ changes:
 - `app/reference/page.tsx`: Field notebook
 - `app/lib/course.ts`: source snapshot, curriculum data, diagrams, checkpoints,
   code cutaways, and source-link generation
+- `app/lib/technologies.ts`: reusable technology primers, official references,
+  and pinned Protégé evidence
 - `app/components/`: shared interactive and navigational components
 - `app/globals.css`: global visual system and responsive behavior
 - `tests/rendered-html.test.mjs`: production-rendering regression tests

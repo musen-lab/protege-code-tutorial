@@ -17,6 +17,23 @@
 - [OWL API](https://github.com/owlcs/owlapi)
   Primary library source for ontology objects, managers, changes, formats, and reasoner interfaces used by `protege-editor-owl`.
 
+## Technology sources of record
+
+- [OSGi Core framework overview](https://docs.osgi.org/specification/osgi.core/8.0.0/framework.introduction.html)
+  The specification-level introduction to bundles, package visibility, lifecycle, and services.
+- [Apache Felix documentation](https://felix.apache.org/documentation/)
+  The framework implementation Protégé ships and launches.
+- [Eclipse runtime components](https://help.eclipse.org/latest/topic/org.eclipse.platform.doc.isv/guide/runtime_components.htm) and [extension registry guide](https://help.eclipse.org/latest/topic/org.eclipse.platform.doc.isv/guide/runtime_registry.htm)
+  Official documentation for the Equinox registry components and `plugin.xml` extension model embedded by Protégé.
+- [W3C OWL 2 overview](https://www.w3.org/TR/owl2-overview/) and [OWL API documentation](https://owlcs.github.io/owlapi/)
+  The ontology language specification and the Java library used to represent and change it.
+- [Oracle Swing tutorial](https://docs.oracle.com/javase/tutorial/uiswing/) and [Event Dispatch Thread guide](https://docs.oracle.com/javase/tutorial/uiswing/concurrency/dispatch.html)
+  The desktop UI toolkit and its single-threaded interaction model.
+- [bnd documentation](https://bnd.bndtools.org/)
+  The bytecode analysis and OSGi manifest tooling exposed through the Maven bundle plugin.
+- [Eclipse PDE](https://www.eclipse.org/pde/) and [m2e](https://eclipse.dev/m2e/)
+  The IDE tooling targeted by Protégé's `ide` Maven profile.
+
 ## Wisdom (Communities)
 
 - [Protégé GitHub issues](https://github.com/protegeproject/protege/issues)

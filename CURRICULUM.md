@@ -1,8 +1,8 @@
 # Inside Protégé: Production Curriculum
 
-The default route is ten causal journeys. Reference material stays available through the Atlas and Field Notebook without interrupting Next and Previous navigation.
+The default route is ten causal lessons. Reference material stays available through the Atlas and Field Notebook without interrupting Next and Previous navigation.
 
-## Journeys
+## Lessons
 
 1. **Survey the landscape**: five modules, three integration mechanisms, and the framework-to-OWL boundary.
 2. **Start the application**: launch script, plain-JVM launcher, Felix start levels, deferred application startup.
@@ -18,7 +18,20 @@ The default route is ten causal journeys. Reference material stays available thr
 ## Supporting references
 
 - **Architecture Atlas**: alternate dependency, ownership, lifecycle, and extension lenses over the same pinned source snapshot.
-- **Field Notebook**: Java compatibility notes, class landmarks, search recipes, and all 24 first-party extension points with purposes, declarations, and every available `.exsd` contract. Its “start with these four” guide offers a practical entry into the larger plugin surface without changing the ten-journey order.
+- **Field Notebook**: technology primers, Java compatibility notes, class landmarks, search recipes, and all 24 first-party extension points with purposes, declarations, and every available `.exsd` contract. Its “start with these four” guide offers a practical entry into the larger plugin surface without changing the ten-lesson order.
+
+## Technology primer inventory
+
+The first important use of each external platform includes a reusable primer. The Field Notebook collects the same material for later lookup.
+
+- OWL and OWL API
+- OSGi
+- Apache Felix
+- Eclipse Equinox extension registry
+- SAX and JAXB XML support
+- Swing and the Event Dispatch Thread
+- Eclipse PDE and m2e
+- bnd OSGi bundle tooling
 
 ## Diagram inventory
 

@@ -6,10 +6,10 @@ modern Java after working primarily with Ruby on Rails and TypeScript/Angular.
 
 ## Course shape
 
-- Ten guided journeys, from module orientation through plugin and editor authoring
+- Ten guided lessons, from module orientation through plugin and editor authoring
 - Interactive architecture, runtime, extension, and edit-flow diagrams
 - Source cutaways linked to exact files in a pinned Protégé GitHub snapshot
-- Java time-capsule notes and Rails/Angular conceptual bridges
+- Technology primers, Java time-capsule notes, and Rails/Angular conceptual bridges
 - Prediction checkpoints, field exercises, and a searchable reference notebook
 
 The tutorial is intentionally progressive rather than encyclopedic. It teaches
@@ -97,12 +97,15 @@ typography checks and final visual validation.
    established by the previous one.
 3. Select boxes in diagrams to inspect their responsibilities, relationships,
    and source evidence.
-4. Use the prediction checkpoints before revealing their answers. Journeys 9
-   and 10 also include guided field exercises; the other journeys do not claim
+4. Use the prediction checkpoints before revealing their answers. Lessons 9
+   and 10 also include guided field exercises; the other lessons do not claim
    to provide reproduce-style practice.
-5. Follow source links when you want the full implementation. They open the
+5. Read a technology primer when the course first introduces an external
+   platform such as OSGi, Felix, Equinox, OWL API, Swing, or bnd. The
+   authoritative documentation and pinned Protégé evidence open in new tabs.
+6. Follow source links when you want the full implementation. They open the
    exact file and line at the verified Protégé source snapshot.
-6. Use the **Architecture Atlas** and **Field notebook** as supporting
+7. Use the **Architecture Atlas** and **Field notebook** as supporting
    references. They are not alternative starting points.
 
 The tutorial saves the current journey and scroll position in the browser's

@@ -301,6 +301,19 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .section-copy > p { margin: 0; color: #463f47; font-size: 16px; }
 .section-copy > p + p { margin-top: 16px; }
 
+.technology-primer-group { display: grid; gap: 16px; margin: 32px 0; }
+.technology-primer { overflow: hidden; border: 1px solid #9c80ae; border-radius: 14px; background: var(--surface); box-shadow: 0 12px 32px rgba(59, 36, 78, .08); }
+.technology-primer-heading { padding: 22px 24px 18px; border-bottom: 1px solid #d8c7e1; background: linear-gradient(120deg, var(--purple-soft), #f8f1e5); }
+.technology-primer-heading > span { color: var(--purple); font-size: 9px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+.technology-primer-heading h3 { margin: 6px 0 5px; font-family: var(--font-display), Georgia, serif; font-size: 25px; line-height: 1.2; }
+.technology-primer-heading p { margin: 0; color: var(--muted); font-size: 13px; }
+.technology-primer-copy { padding: 20px 24px 8px; }
+.technology-primer-copy p { margin: 0 0 14px; color: #463f47; font-size: 14px; }
+.technology-primer-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding: 14px 24px 22px; }
+.technology-primer-links > div { display: grid; align-content: start; gap: 6px; }
+.technology-primer-links strong { color: var(--muted); font-size: 9px; letter-spacing: .09em; text-transform: uppercase; }
+.technology-primer-links a { color: var(--purple); font-size: 11px; font-weight: 700; overflow-wrap: anywhere; text-decoration: underline; text-underline-offset: 3px; }
+
 .code-cutaway { margin: 34px 0; overflow: hidden; border-radius: 14px; background: var(--code); box-shadow: var(--shadow); }
 .code-heading { display: flex; justify-content: space-between; gap: 16px; padding: 13px 18px; color: #c9d2cc; border-bottom: 1px solid #343b37; font-size: 10px; }
 .code-heading span { color: var(--code-accent); font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
@@ -380,6 +393,16 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .reference-grid article { min-height: 170px; padding: 24px; background: var(--surface); }
 .reference-grid h3 { margin: 0 0 10px; font-size: 15px; }
 .reference-grid p { margin: 0; color: var(--muted); font-size: 12px; }
+.reference-heading > p { color: var(--muted); }
+.technology-index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.technology-index article { scroll-margin-top: 132px; padding: 24px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.technology-index article > span { color: var(--purple); font-family: var(--font-mono); font-size: 10px; font-weight: 800; }
+.technology-index h3 { margin: 8px 0 7px; font-family: var(--font-display), Georgia, serif; font-size: 22px; line-height: 1.2; }
+.technology-index article > p, .technology-index details p { color: var(--muted); font-size: 12px; }
+.technology-index details { margin: 16px 0; padding-top: 14px; border-top: 1px solid var(--line); }
+.technology-index summary { color: var(--purple); cursor: pointer; font-size: 11px; font-weight: 800; }
+.technology-index-links { display: grid; gap: 6px; }
+.technology-index-links a { color: var(--purple); font-size: 10px; font-weight: 700; overflow-wrap: anywhere; text-decoration: underline; text-underline-offset: 3px; }
 .class-table-wrap { overflow-x: auto; }
 .class-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .class-table th, .class-table td { padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -429,7 +452,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
   .home-hero { padding: 70px 22px; }
   .home-hero h1 { font-size: clamp(42px, 13vw, 66px); }
   .course-rhythm { width: min(100% - 32px,1180px); }
-  .course-rhythm ol, .reference-tool-grid, .journey-cards, .course-principles, .principle-grid, .learning-notes, .reference-grid, .extension-columns, .search-recipes, .extension-starters { grid-template-columns: 1fr; }
+  .course-rhythm ol, .reference-tool-grid, .journey-cards, .course-principles, .principle-grid, .learning-notes, .reference-grid, .extension-columns, .search-recipes, .extension-starters, .technology-primer-links, .technology-index { grid-template-columns: 1fr; }
   .extension-starters ul { grid-template-columns: 1fr; }
   .lesson-grid { display: block; padding: 22px 20px 70px; }
   .lesson-rail { position: static; max-height: none; margin-bottom: 20px; overflow: visible; }

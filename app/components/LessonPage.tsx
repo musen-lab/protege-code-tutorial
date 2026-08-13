@@ -6,6 +6,7 @@ import { ProgressTracker } from "./ProgressTracker";
 import { RelationshipDiagram } from "./RelationshipDiagram";
 import { SiteHeader } from "./SiteHeader";
 import { SourceLink } from "./SourceLink";
+import { TechnologyPrimerGroup } from "./TechnologyPrimer";
 
 export function LessonPage({ lesson }: { lesson: Lesson }) {
   const { previous, next } = adjacentLessons(lesson.slug);
@@ -54,6 +55,8 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
                 <h2>{section.title}</h2>
                 {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </div>
+
+              {section.technologyIds && <TechnologyPrimerGroup ids={section.technologyIds} />}
 
               {section.diagram && <RelationshipDiagram diagram={section.diagram} />}
 

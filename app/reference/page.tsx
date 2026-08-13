@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/app/components/SiteHeader";
 import { SOURCE_COMMIT, sourceUrl } from "@/app/lib/course";
+import { sourceRefUrl } from "@/app/lib/course";
+import { technologyPrimerList } from "@/app/lib/technologies";
 
 export const metadata: Metadata = {
   title: "Field Notebook",
@@ -118,6 +120,7 @@ export default function ReferencePage() {
 
         <nav className="reference-nav" aria-label="Field notebook sections">
           <a href="#java">Java time capsule</a>
+          <a href="#technologies">Technology desk</a>
           <a href="#classes">Class landmarks</a>
           <a href="#extensions">Extension points</a>
           <a href="#search">Search recipes</a>
@@ -131,6 +134,35 @@ export default function ReferencePage() {
           <div className="reference-grid">
             {javaNotes.map(([title, body]) => (
               <article key={title}><h3>{title}</h3><p>{body}</p></article>
+            ))}
+          </div>
+        </section>
+
+        <section id="technologies" className="reference-section">
+          <div className="reference-heading">
+            <span className="eyebrow">Technology desk</span>
+            <h2>Names the codebase assumes you already know</h2>
+            <p>Use this index when a platform or tool name interrupts the code trace. Each entry separates the general technology from the exact role it plays in Protégé.</p>
+          </div>
+          <div className="technology-index">
+            {technologyPrimerList.map((primer) => (
+              <article id={`reference-technology-${primer.id}`} key={primer.id}>
+                <span>{primer.shortName}</span>
+                <h3>{primer.name}</h3>
+                <p>{primer.description}</p>
+                <details>
+                  <summary>Read the primer</summary>
+                  {primer.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                </details>
+                <div className="technology-index-links">
+                  {primer.officialLinks.map((link) => (
+                    <a href={link.url} key={link.url} target="_blank" rel="noreferrer">{link.label} ↗</a>
+                  ))}
+                  {primer.protegeSources.map((source) => (
+                    <a href={sourceRefUrl(source)} key={`${source.path}-${source.line}`} target="_blank" rel="noreferrer">Protégé source: {source.path}:{source.line} ↗</a>
+                  ))}
+                </div>
+              </article>
             ))}
           </div>
         </section>

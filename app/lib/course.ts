@@ -1,5 +1,7 @@
 export const SOURCE_COMMIT = "d9c9d392f9d88b5c4dc49a109009e9c460b6fb2b";
 
+import type { TechnologyPrimerId } from "./technologies";
+
 export type Tone = "runtime" | "core" | "owl" | "ui" | "data";
 
 export type SourceRef = {
@@ -47,6 +49,7 @@ export type LessonSection = {
   eyebrow: string;
   title: string;
   paragraphs: string[];
+  technologyIds?: TechnologyPrimerId[];
   diagram?: DiagramSpec;
   code?: {
     path: string;
@@ -134,6 +137,7 @@ export const lessons: Lesson[] = [
           "The repository is one Maven reactor, but its five modules do not form five equal application layers. Launcher creates the runtime. Common supplies one early XML service. Editor-core supplies a domain-neutral desktop framework. Editor-owl supplies the ontology model and almost all visible features. Desktop packages the result.",
           "The first useful compression is to remember responsibility, not file count. A packaging problem begins in desktop. A framework or plugin-loading problem begins in editor-core. An ontology or visible editor behavior usually begins in editor-owl.",
         ],
+        technologyIds: ["owl", "owl-api"],
         diagram: {
           title: "The five-part responsibility map",
           question: "If a behavior changes, which module should you inspect first?",
@@ -168,6 +172,7 @@ export const lessons: Lesson[] = [
           "Maven dependencies are deliberately one-way. Editor-owl depends on editor-core, common, and launcher. Editor-core and common each depend on launcher. Desktop depends on all four modules so it can package them. Core imports no OWL classes. At runtime, core discovers an OWL editor factory through the Equinox extension registry. The implementation therefore plugs back into the framework without a reverse compile-time dependency.",
           "This distinction prevents a common reading mistake. A source import answers who can call whose exported Java API. A plugin.xml contribution answers who can appear at runtime without the host importing the contributor.",
         ],
+        technologyIds: ["osgi", "equinox"],
         diagram: {
           title: "Two wiring systems over the same modules",
           question: "How can editor-core create an OWL editor without importing it?",
@@ -257,6 +262,7 @@ export const lessons: Lesson[] = [
           "The distribution's run script builds a deliberately small classpath and invokes Launcher.main. Launcher records command-line arguments as system properties, parses conf/config.xml, finds the OSGi FrameworkFactory through Java's service-provider mechanism, creates a fresh Felix cache, and installs bundles.",
           "This plain-JVM phase explains why launcher is both bootstrap code and a dependency carrier. Everything after framework.start runs behind OSGi classloaders and exported-package rules.",
         ],
+        technologyIds: ["felix"],
         code: {
           path: "protege-launcher/src/main/java/org/protege/osgi/framework/Launcher.java",
           line: 234,
@@ -286,6 +292,7 @@ export const lessons: Lesson[] = [
           "Each bundles element in config.xml becomes one start level. Common registers SAXParserFactory first. Equinox starts next. Registry, JAXB, and editor-core start after that. Application bundles follow. User and bundled plugins start last.",
           "The ordering is not inferred from Java dependencies. It is hand-authored configuration using literal post-assembly JAR names. That makes config.xml part of the architecture, not incidental deployment detail.",
         ],
+        technologyIds: ["xml-stack"],
         diagram: {
           title: "Felix start-level staircase",
           question: "What must exist before extensions can be enumerated?",
@@ -438,6 +445,7 @@ workspace.initialise();`,
           "OntologyLoader requires its public entry point to be called on Swing's Event Dispatch Thread. It then submits the expensive OWL API load to a single-thread executor and shows a modal progress dialog. The dialog runs a nested event loop, so the EDT can continue painting and processing UI events while result.get waits in the calling stack.",
           "The worker creates a separate loading manager, installs ordered IRI mappers, loads the root and imports, moves them into the application's ontology manager, sets the active ontology, and emits ONTOLOGY_LOADED.",
         ],
+        technologyIds: ["swing-edt"],
         diagram: {
           title: "Ontology load across thread lanes",
           question: "Why does loadOntology both assert the EDT and use an executor?",
@@ -915,6 +923,7 @@ else {
           "Use the IDE profile when changing core or OWL editor code and you need debugger breakpoints. The profile does not launch Protégé by itself. It generates the bundle manifest under META-INF, unpacks provided dependencies into target/dependency, and copies plugin.xml to the module root so Eclipse PDE, m2e, and an OSGi Framework launch configuration can see the expected project layout.",
           "Use the plugin-only loop for a standalone plugin: build its JAR, copy it into the installed distribution's plugins directory or ~/.Protege/plugins, restart Protégé, and read the log. The pinned config explicitly scans both locations, so the Protégé reactor does not need to rebuild. Reserve the release loop for launcher, start-level, assembly, bundled dependency, and distribution changes.",
         ],
+        technologyIds: ["eclipse-ide"],
         code: {
           path: "pom.xml",
           line: 565,
@@ -978,6 +987,7 @@ cd protege-desktop/target/\
           "A dependency can be available to Maven while absent from the runtime distribution. The root dependencyManagement fixes its version. A module dependency puts it on that module's build path. BND instructions decide whether it is embedded or imported. Desktop assembly descriptors decide whether a separate JAR ships.",
           "The macOS assembly duplicates the bundle include list, so a separate shipping dependency often needs edits in both dependency-sets.xml and protege-os-x.xml. Omitting an assembly edit can produce a successful build and a runtime NoClassDefFoundError.",
         ],
+        technologyIds: ["bnd"],
         diagram: {
           title: "From Maven coordinate to runtime class",
           question: "At which boundary did a dependency disappear?",

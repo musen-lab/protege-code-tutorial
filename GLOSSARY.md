@@ -6,9 +6,9 @@ for concepts that already have an entry here.
 
 ## Course terms
 
-- **Journey**: one of the ten ordered guided lessons that form the primary
-  course path. Learner-facing copy says "journey"; the code's data type is
-  `Lesson` in `app/lib/course.ts`.
+- **Lesson**: one of the ten ordered units that form the primary course path.
+  The route remains `/journeys/[slug]` for compatibility, while learner-facing
+  copy says "lesson" and the code's data type is `Lesson`.
 - **Lens**: one of the four Architecture Atlas views (Modules, Runtime,
   Extensions, Edit flow). Each lens asks one question of the same system.
 - **Source cutaway**: a short, possibly condensed code excerpt linked to the
@@ -24,8 +24,20 @@ for concepts that already have an entry here.
   experience, always paired with where the analogy breaks.
 - **Java time capsule**: a note explaining a Java idiom for a reader returning
   to Java after years away.
+- **Technology primer**: a short introduction shown at a technology's first
+  important use. It distinguishes the general technology from its verified
+  role in Protégé and links to both official documentation and pinned source.
 
 ## Protégé terms
+
+- **OSGi**: the Java module, lifecycle, and service specifications implemented
+  by the framework Protégé launches. It is not a build tool or a synonym for
+  Felix.
+- **Felix**: the Apache implementation of the OSGi framework shipped and
+  launched by Protégé.
+- **Equinox extension registry**: the Eclipse runtime component Protégé uses to
+  index `plugin.xml` extension points and contributions. Protégé does not use
+  Equinox as its OSGi framework.
 
 - **Module**: one of the five Maven modules (`protege-launcher`,
   `protege-common`, `protege-editor-core`, `protege-editor-owl`,
