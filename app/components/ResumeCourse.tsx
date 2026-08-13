@@ -6,6 +6,7 @@ import {
   clearProgress,
   completionSummary,
   getProgressSnapshot,
+  isResumablePosition,
   readProgress,
   subscribeToProgress,
 } from "@/app/lib/progress-client";
@@ -25,17 +26,19 @@ export function ResumeCourse() {
 
   const position = progress?.lastPosition ?? null;
   const summary = completionSummary(progress?.completedUnitIds ?? [], requiredUnitIds);
-  const started = Boolean(position) || summary.completed > 0;
+  // Sitting at the top of Lesson 1 with nothing completed is a pristine
+  // start, not something to resume: right after a restart, offer Start.
+  const started = isResumablePosition(position) || summary.completed > 0;
 
   // Derive the destination from the slug rather than the stored path, so
   // progress saved before the /journeys -> /lessons rename still resumes.
-  const destination = position ? `/lessons/${position.slug}?resume=1` : "/lessons/landscape";
+  const destination = started && position ? `/lessons/${position.slug}?resume=1` : "/lessons/landscape";
 
   return (
     <div className="resume-course">
       <span>{started ? "Continue where you stopped" : "Your recommended starting point"}</span>
       <strong>
-        {position
+        {started && position
           ? `Lesson ${position.number}: ${position.title}`
           : "Lesson 1: Survey the landscape"}
       </strong>

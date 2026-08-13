@@ -126,3 +126,12 @@ export function withLastPosition(progress, position, now) {
 export function isUnitComplete(progress, unitId) {
   return Boolean(progress && progress.completedUnitIds.includes(unitId));
 }
+
+/**
+ * A position worth resuming. Sitting at the top of Lesson 1 is
+ * indistinguishable from a pristine start, so it does not count: the home
+ * page should offer Start, not Resume, right after a restart.
+ */
+export function isResumablePosition(position) {
+  return isValidPosition(position) && (position.number > 1 || position.scrollY > 0);
+}

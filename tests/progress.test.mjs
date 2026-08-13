@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   completionSummary,
+  isResumablePosition,
   isUnitComplete,
   isValidPosition,
   parseStoredProgress,
@@ -76,6 +77,14 @@ test("isValidPosition rejects incomplete shapes", () => {
   assert.equal(isValidPosition(null), false);
   assert.equal(isValidPosition({ ...V1, scrollY: "high" }), false);
   assert.equal(isValidPosition({ ...V1, slug: "" }), false);
+});
+
+test("a pristine Lesson 1 position is not resumable, an advanced one is", () => {
+  const lessonOneTop = { ...V1, number: 1, slug: "landscape", scrollY: 0 };
+  assert.equal(isResumablePosition(lessonOneTop), false);
+  assert.equal(isResumablePosition({ ...lessonOneTop, scrollY: 400 }), true);
+  assert.equal(isResumablePosition({ ...lessonOneTop, number: 2 }), true);
+  assert.equal(isResumablePosition(null), false);
 });
 
 test("completionSummary ignores unknown and duplicate unit ids", () => {

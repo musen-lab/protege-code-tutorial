@@ -6,6 +6,7 @@ import {
   PROGRESS_V1_KEY,
   PROGRESS_V2_KEY,
   completionSummary,
+  isResumablePosition,
   isUnitComplete,
   parseStoredProgress,
   withLastPosition,
@@ -123,4 +124,4 @@ export function subscribeToAnnouncements(onAnnouncement: (message: string) => vo
   return () => window.removeEventListener(PROGRESS_EVENT, handler);
 }
 
-export { completionSummary, isUnitComplete };
+export { completionSummary, isResumablePosition, isUnitComplete };
