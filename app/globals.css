@@ -121,8 +121,11 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 
 .home-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
-  gap: clamp(40px, 8vw, 110px);
+  /* Bounded tracks + centering keep the copy and the card together on very
+     wide monitors instead of letting the gap between them grow with 'fr'. */
+  grid-template-columns: minmax(0, 740px) minmax(320px, 470px);
+  justify-content: center;
+  gap: clamp(40px, 7vw, 110px);
   align-items: center;
   min-height: 660px;
   padding: clamp(64px, 9vw, 120px) clamp(24px, 8vw, 120px);
