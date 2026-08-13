@@ -77,9 +77,12 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
   font-size: 23px;
   font-weight: 700;
 }
-.brand strong, .brand small { display: block; line-height: 1.15; }
-.brand strong { font-size: 15px; }
-.brand small { margin-top: 4px; color: var(--muted); font-size: 11px; }
+.brand-copy { display: block; }
+.brand strong, .brand small { line-height: 1.15; }
+.brand strong { display: flex; gap: 8px; align-items: center; font-size: 15px; }
+.brand strong span { white-space: nowrap; }
+.brand strong em { padding: 3px 6px; color: var(--purple); border: 1px solid #b9a4c5; border-radius: 999px; font-size: 8px; font-style: normal; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+.brand small { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
 .top-nav { display: flex; align-items: center; gap: clamp(12px, 2.5vw, 28px); }
 .top-nav a { color: var(--muted); font-size: 13px; font-weight: 600; }
 .top-nav a:hover { color: var(--purple); }

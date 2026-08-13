@@ -2,9 +2,9 @@
 
 Status: proposal only, not approved or implemented.
 
-The current application stores the most recently visited journey and scroll
+The current application stores the most recently visited lesson and scroll
 position under `inside-protege-progress-v1`. That makes Resume useful, but a
-visit to a late journey can make the progress bar look like course completion.
+visit to a late lesson can make the progress bar look like course completion.
 This proposal separates reading position from demonstrated course progress.
 
 ## Completion criterion
@@ -14,12 +14,12 @@ reading section completes only when the learner activates **Mark section
 complete**. A prediction checkpoint completes when its answer is revealed. A
 field exercise completes only when the learner explicitly checks **I completed
 this exercise**; the browser should not pretend to verify work performed in an
-IDE or terminal. A journey completes when every required section, checkpoint,
-and exercise in that journey is complete. Course completion is the number of
+IDE or terminal. A lesson completes when every required section, checkpoint,
+and exercise in that lesson is complete. Course completion is the number of
 completed required units divided by the total number of required units.
 
 The explicit action is intentionally modest evidence. It avoids awarding
-credit for merely opening Journey 10, while remaining usable offline and
+credit for merely opening Lesson 10, while remaining usable offline and
 without accounts, telemetry, or server-side grading.
 
 ## Storage shape and v1 migration
@@ -59,7 +59,7 @@ sections cannot break the page. Add new required units as incomplete.
 - Add an accessible completion control to each required section. Checkpoints
   and exercises use their purpose-specific actions instead of a second generic
   checkbox.
-- Mark completed sections and journeys in the table of contents, and announce
+- Mark completed sections and lessons in the table of contents, and announce
   changes through a polite live region without moving focus.
 - Make Restart confirmation state that it clears both completion and the saved
   reading position.

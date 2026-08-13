@@ -1,11 +1,11 @@
 export function SiteHeader() {
   return (
     <header className="site-header">
-      <a className="brand" href="/" aria-label="Inside Protégé home">
+      <a className="brand" href="/" aria-label="Protégé Code Tutorial home">
         <span className="brand-mark" aria-hidden="true">P</span>
-        <span>
-          <strong>Inside Protégé</strong>
-          <small>A source-guided field course</small>
+        <span className="brand-copy">
+          <strong><span>Protégé</span><em>Code Tutorial</em></strong>
+          <small>Inside Protégé</small>
         </span>
       </a>
       <nav className="top-nav" aria-label="Primary navigation">

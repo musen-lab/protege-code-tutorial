@@ -19,7 +19,7 @@ Read these files before making substantial content or information-architecture
 changes:
 
 - `MISSION.md`: learner, outcome, and teaching constraints
-- `CURRICULUM.md`: the ordered ten-journey course and diagram inventory
+- `CURRICULUM.md`: the ordered ten-lesson course and diagram inventory
 - `RESOURCES.md`: evidence base
 - `GLOSSARY.md`: canonical terminology
 - `docs/HANDBOOK-AUDIT.md`: consistency audit against the developer handbook
@@ -45,7 +45,8 @@ changes:
 ## Repository map
 
 - `app/page.tsx`: course trailhead
-- `app/journeys/[slug]/page.tsx`: guided journey route
+- `app/journeys/[slug]/page.tsx`: guided lesson route. The legacy path remains
+  stable for compatibility.
 - `app/atlas/page.tsx`: Architecture Atlas
 - `app/reference/page.tsx`: Field notebook
 - `app/search/page.tsx`: server-rendered course search

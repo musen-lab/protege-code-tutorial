@@ -15,7 +15,7 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
   return (
     <div className="site-shell">
       <SiteHeader />
-      <div className="lesson-progress" aria-label={`Journey ${lesson.number} of ${lessons.length}`}>
+      <div className="lesson-progress" aria-label={`Lesson ${lesson.number} of ${lessons.length}`}>
         <span style={{ width: `${progress}%` }} />
       </div>
       <div className="lesson-grid">
@@ -33,14 +33,14 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
         <main className="lesson-main">
           <header className="lesson-hero">
             <div className="journey-kicker">
-              <span>Journey {lesson.number} of {lessons.length}</span>
+              <span>Lesson {lesson.number} of {lessons.length}</span>
               <span>{lesson.duration}</span>
             </div>
             <ProgressTracker number={lesson.number} slug={lesson.slug} title={lesson.title} />
             <h1>{lesson.question}</h1>
             <p>{lesson.summary}</p>
             <div className="outcomes">
-              <span>After this journey, you can</span>
+              <span>After this lesson, you can</span>
               <ul>
                 {lesson.outcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}
               </ul>
@@ -122,7 +122,7 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
           <section id="sources" className="source-trail">
             <div>
               <span className="eyebrow">Verified source trail</span>
-              <h2>Reconstruct this journey yourself</h2>
+              <h2>Reconstruct this lesson yourself</h2>
               <p>These links point to the pinned Protégé source or exact artifact snapshots used to build the tutorial.</p>
             </div>
             <div className="source-list">
@@ -130,7 +130,7 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
             </div>
           </section>
 
-          <nav className="lesson-pagination" aria-label="Journey navigation">
+          <nav className="lesson-pagination" aria-label="Lesson navigation">
             {previous ? (
               <a href={`/journeys/${previous.slug}`} className="previous-link">
                 <small>← Previous</small>

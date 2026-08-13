@@ -19,13 +19,13 @@ conditions.
 
 ![After Atlas modules](after-diagram-atlas-modules.png)
 
-## Journey 1, five-part responsibility map
+## Lesson 1, five-part responsibility map
 
 ![Before landscape](before-diagram-landscape.png)
 
 ![After landscape](after-diagram-landscape.png)
 
-## Journey 6, bundle lifecycle diagnostic diagram
+## Lesson 6, bundle lifecycle diagnostic diagram
 
 ![Before extension](before-diagram-extension.png)
 

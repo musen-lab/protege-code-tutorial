@@ -1365,7 +1365,7 @@ rg -n "artifact-name|package.name" \
             "List the JAR and confirm plugin.xml is at its root.",
             "Read META-INF/MANIFEST.MF and find Bundle-SymbolicName plus Import-Package.",
             "Copy the JAR to the plugins directory of a Protégé 5.6 installation, then restart Protégé.",
-            "Open Window > Views and add Example view component. If it is absent, inspect ~/.Protege/logs/protege.log and revisit Journey 6's discovery gates.",
+            "Open Window > Views and add Example view component. If it is absent, inspect ~/.Protege/logs/protege.log and revisit Lesson 6's discovery gates.",
           ],
           commands: `cd exercises/minimal-view-plugin
 mvn clean package
@@ -1496,7 +1496,7 @@ public void disposeView() {
         title: "Adding a superclass starts on the section header",
         paragraphs: [
           "When the selected list value is a section, OWLFrameList asks whether the section can add, obtains its OWLObjectEditor, wraps the editor component in a VerifyingOptionPane, and passes the edited objects to the section's handler. The subclass section asks OWLComponentFactory for a class-description editor with no initial value.",
-          "AbstractOWLFrameSection handles the submitted set. For each class expression, the concrete section calls OWLDataFactory.getOWLSubClassOfAxiom(root, editedExpression). A fresh-axiom strategy chooses the target ontology, the section creates AddAxiom, and OWLModelManager.applyChanges sends the list through the normal history, dirty-state, and notification path from Journey 5.",
+          "AbstractOWLFrameSection handles the submitted set. For each class expression, the concrete section calls OWLDataFactory.getOWLSubClassOfAxiom(root, editedExpression). A fresh-axiom strategy chooses the target ontology, the section creates AddAxiom, and OWLModelManager.applyChanges sends the list through the normal history, dirty-state, and notification path from Lesson 5.",
         ],
         code: {
           path: "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/frame/cls/OWLSubClassAxiomFrameSection.java",

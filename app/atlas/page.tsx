@@ -23,7 +23,7 @@ export default function AtlasPage() {
         <section className="atlas-landmarks">
           <div className="home-section-heading">
             <span className="eyebrow">Landmark index</span>
-            <h2>Return to the journey that teaches each mechanism</h2>
+            <h2>Return to the lesson that teaches each mechanism</h2>
           </div>
           <div className="landmark-grid">
             {lessons.map((lesson) => (

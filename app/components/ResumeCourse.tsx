@@ -31,16 +31,16 @@ export function ResumeCourse() {
     <div className="resume-course">
       <span>{progress ? "Continue where you stopped" : "Your recommended starting point"}</span>
       <strong>
-        {progress ? `Journey ${progress.number}: ${progress.title}` : "Journey 1: Survey the landscape"}
+        {progress ? `Lesson ${progress.number}: ${progress.title}` : "Lesson 1: Survey the landscape"}
       </strong>
       <p>
         {progress
-          ? "Your last journey and reading position were saved in this browser."
-          : `Follow the ${lessons.length} journeys in order. Your place will be saved automatically in this browser.`}
+          ? "Your last lesson and reading position were saved in this browser."
+          : `Follow the ${lessons.length} lessons in order. Your place will be saved automatically in this browser.`}
       </p>
       <div className="resume-actions">
         <a className="primary-action" href={destination}>
-          {progress ? "Resume the course" : "Start Journey 1"}
+          {progress ? "Resume the course" : "Start Lesson 1"}
         </a>
         {progress && (
           <a
@@ -48,11 +48,11 @@ export function ResumeCourse() {
             href="/journeys/landscape"
             onClick={restartCourse}
           >
-            Restart from Journey 1
+            Restart from Lesson 1
           </a>
         )}
       </div>
-      <div className="resume-progress" aria-label={progress ? `Journey ${progress.number} of ${lessons.length}` : "Course not started"}>
+      <div className="resume-progress" aria-label={progress ? `Lesson ${progress.number} of ${lessons.length}` : "Course not started"}>
         <span style={{ width: `${progress ? Math.max(6, (progress.number / lessons.length) * 100) : 0}%` }} />
       </div>
     </div>

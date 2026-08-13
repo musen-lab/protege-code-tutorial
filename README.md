@@ -1,6 +1,6 @@
-# Inside Protégé
+# Protégé Code Tutorial
 
-An interactive, source-guided field course for learning the Protégé Desktop
+Inside Protégé is an interactive, source-guided course for learning the Protégé Desktop
 codebase. The course is designed for an experienced programmer returning to
 modern Java after working primarily with Ruby on Rails and TypeScript/Angular.
 
@@ -30,7 +30,7 @@ the stable paths and concepts that make the rest of the source tree navigable.
 
 Running the tutorial does not require Java, Maven, a local Protégé checkout, a
 database, environment variables, or ChatGPT authentication. The optional
-hands-on plugin exercise in Journey 9 requires JDK 11 or later, Maven 3.6.3 or
+hands-on plugin exercise in Lesson 9 requires JDK 11 or later, Maven 3.6.3 or
 later, and a Protégé 5.6 installation for its runtime check.
 
 ### If you use Homebrew...
@@ -94,8 +94,8 @@ typography checks and final visual validation.
 
 ## Usage
 
-1. Open the course home page and choose **Start Journey 1**.
-2. Follow the ten journeys in order. Each journey builds on the mental model
+1. Open the course home page and choose **Start Lesson 1**.
+2. Follow the ten lessons in order. Each lesson builds on the mental model
    established by the previous one.
 3. Select boxes in diagrams to inspect their responsibilities, relationships,
    and source evidence.
@@ -113,16 +113,16 @@ typography checks and final visual validation.
    point, or technology. Results link directly to the matching lesson section
    or reference entry.
 
-The tutorial saves the current journey and scroll position in the browser's
-local storage. This is a resume position, not a record that a journey or the
+The tutorial saves the current lesson and scroll position in the browser's
+local storage. This is a resume position, not a record that a lesson or the
 course was completed. Return to the home page and choose **Resume the course**
-to continue. Choose **Restart from Journey 1** to clear that saved position.
+to continue. Choose **Restart from Lesson 1** to clear that saved position.
 The saved position is specific to the current browser profile and is lost if
 its site data is cleared.
 
 ### Run the plugin exercise
 
-Journey 9 includes a complete Maven project under
+Lesson 9 includes a complete Maven project under
 `exercises/minimal-view-plugin`. From the repository root:
 
 ```bash
@@ -156,7 +156,7 @@ npm test
 ```
 
 `npm test` creates the production build and verifies rendered HTML for the
-trailhead, guided journeys, the Architecture Atlas, and the Field notebook.
+trailhead, guided lessons, the Architecture Atlas, the Field notebook, and search.
 Run `npm run build` before `npm run start`; `npm run dev` does not require a
 production build but must not be used as the final typography or visual
 baseline.

@@ -29,11 +29,14 @@ test("server-renders the production trailhead", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>Inside Protégé \| A source-guided field course<\/title>/i);
+  assert.match(html, /<title>Protégé Code Tutorial \| Inside Protégé<\/title>/i);
+  assert.match(html, /aria-label="Protégé Code Tutorial home"/);
+  assert.match(html, /<span>Protégé<\/span><em>Code Tutorial<\/em>/);
+  assert.match(html, /<small>Inside Protégé<\/small>/);
   assert.match(html, /Learn Protégé by following one clear path\./);
-  assert.match(html, /Start Journey 1/);
+  assert.match(html, /Start Lesson 1/);
   assert.match(html, /A repeated four-step learning rhythm/);
-  assert.match(html, /Follow all 10 journeys in order/);
+  assert.match(html, /Follow all 10 lessons in order/);
   assert.match(html, /Architecture Atlas/);
   assert.match(html, /Field notebook/);
   assert.match(html, /d9c9d39/);
@@ -43,7 +46,7 @@ test("server-renders the production trailhead", async () => {
 test("explains automatic stop and resume behavior", async () => {
   const home = await (await render()).text();
   assert.match(home, /Your place will be saved automatically in this browser\./);
-  assert.match(home, /Check your understanding\. Selected journeys add a guided field exercise\./);
+  assert.match(home, /Check your understanding\. Selected lessons add a guided field exercise\./);
   assert.doesNotMatch(home, /Predict or reproduce the flow yourself/);
 
   const lesson = await (await render("/journeys/landscape")).text();
@@ -67,7 +70,7 @@ test("keeps the menu actionable and offers a restart path", async () => {
   assert.doesNotMatch(home, />References<\/span>/);
 
   const resumeSource = await readFile(new URL("../app/components/ResumeCourse.tsx", import.meta.url), "utf8");
-  assert.match(resumeSource, /Restart from Journey 1/);
+  assert.match(resumeSource, /Restart from Lesson 1/);
   assert.match(resumeSource, /removeItem\(COURSE_PROGRESS_KEY\)/);
 });
 
@@ -118,7 +121,7 @@ test("searches lessons and references without client-side routing", async () => 
 
 test("teaches the frame-based ontology editing idiom", async () => {
   const frames = await (await render("/journeys/edit-through-frames")).text();
-  assert.match(frames, /Journey 10 of 10/);
+  assert.match(frames, /Lesson 10 of 10/);
   assert.match(frames, /Frame means an entity-shaped editor, not a window/);
   assert.match(frames, /OWLFrameList&lt;OWLClass&gt;/);
   assert.match(frames, /Anatomy of a class description editor/);
@@ -134,7 +137,7 @@ test("teaches the frame-based ontology editing idiom", async () => {
 
 test("teaches plugin authoring with buildable, sourced artifacts", async () => {
   const plugin = await (await render("/journeys/build-plugin")).text();
-  assert.match(plugin, /Journey 9 of 10/);
+  assert.match(plugin, /Lesson 9 of 10/);
   assert.match(plugin, /From source tree to visible ViewComponent/);
   assert.match(plugin, /singleton:=true/);
   assert.match(plugin, /generated manifest, not the POM text, is the runtime source of truth/i);

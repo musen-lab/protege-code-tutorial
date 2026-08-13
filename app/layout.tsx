@@ -26,8 +26,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: {
-      default: "Inside Protégé | A source-guided field course",
-      template: "%s | Inside Protégé",
+      default: "Protégé Code Tutorial | Inside Protégé",
+      template: "%s | Protégé Code Tutorial",
     },
     description: "An interactive, source-backed course through Protégé Desktop architecture, runtime flows, Java idioms, and plugin development.",
     icons: {
@@ -35,15 +35,15 @@ export async function generateMetadata(): Promise<Metadata> {
       shortcut: "/favicon.svg",
     },
     openGraph: {
-      title: "Inside Protégé",
-      description: "A source-guided field course through Protégé Desktop architecture and runtime flows.",
-      images: [{ url: imageUrl, width: 1730, height: 909, alt: "Inside Protégé course cover" }],
+      title: "Protégé Code Tutorial | Inside Protégé",
+      description: "A source-guided course through Protégé Desktop architecture and runtime flows.",
+      images: [{ url: imageUrl, width: 1730, height: 909, alt: "Protégé Code Tutorial cover" }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "Inside Protégé",
-      description: "A source-guided field course through Protégé Desktop architecture and runtime flows.",
+      title: "Protégé Code Tutorial | Inside Protégé",
+      description: "A source-guided course through Protégé Desktop architecture and runtime flows.",
       images: [imageUrl],
     },
   };

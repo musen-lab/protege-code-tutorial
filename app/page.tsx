@@ -10,10 +10,10 @@ export default function Home() {
       <main>
         <section className="home-hero">
           <div className="home-hero-copy">
-            <span className="eyebrow">{`One course · ${lessons.length} journeys · one recommended order`}</span>
+            <span className="eyebrow">{`Inside Protégé · ${lessons.length} lessons · one recommended order`}</span>
             <h1>Learn Protégé by following one clear path.</h1>
             <p>
-              {`${lessons.length} source-backed journeys move from a user action to the modules, classes, runtime wiring, ontology state, and UI reactions that make it work. Start at Journey 1 and continue in order.`}
+              {`${lessons.length} source-backed lessons move from a user action to the modules, classes, runtime wiring, ontology state, and UI reactions that make it work. Start at Lesson 1 and continue in order.`}
             </p>
             <div className="snapshot-note">
               <span>Verified snapshot</span>
@@ -26,23 +26,23 @@ export default function Home() {
 
         <section className="course-rhythm" aria-labelledby="course-rhythm-title">
           <div>
-            <span className="eyebrow">How every journey works</span>
+            <span className="eyebrow">How every lesson works</span>
             <h2 id="course-rhythm-title">A repeated four-step learning rhythm</h2>
-            <p>This is the method used inside each journey, not another place to navigate.</p>
+            <p>This is the method used inside each lesson, not another place to navigate.</p>
           </div>
           <ol>
             <li><span>1</span><strong>Observe</strong><p>Begin with something Protégé visibly does.</p></li>
             <li><span>2</span><strong>Trace</strong><p>Follow that behavior through modules and objects.</p></li>
             <li><span>3</span><strong>Read</strong><p>Inspect the small source cutaway that explains it.</p></li>
-            <li><span>4</span><strong>Practice</strong><p>Check your understanding. Selected journeys add a guided field exercise.</p></li>
+            <li><span>4</span><strong>Practice</strong><p>Check your understanding. Selected lessons add a guided field exercise.</p></li>
           </ol>
         </section>
 
         <section className="journey-index">
           <div className="home-section-heading">
             <span className="eyebrow">The primary course</span>
-            <h2>{`Follow all ${lessons.length} journeys in order`}</h2>
-            <p>Each journey assumes the mental model built by the one before it.</p>
+            <h2>{`Follow all ${lessons.length} lessons in order`}</h2>
+            <p>Each lesson assumes the mental model built by the one before it.</p>
           </div>
           <div className="journey-cards">
             {lessons.map((lesson) => (
@@ -71,7 +71,7 @@ export default function Home() {
         <section className="reference-tools">
           <div className="home-section-heading">
             <span className="eyebrow">Supporting references</span>
-            <h2>Use these when a journey points you there</h2>
+            <h2>Use these when a lesson points you there</h2>
             <p>They deepen or refresh the course. They are not competing starting points.</p>
           </div>
           <div className="reference-tool-grid">
