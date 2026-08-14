@@ -79,11 +79,12 @@ test("isValidPosition rejects incomplete shapes", () => {
   assert.equal(isValidPosition({ ...V1, slug: "" }), false);
 });
 
-test("a pristine Lesson 1 position is not resumable, an advanced one is", () => {
+test("only a scrolled position is resumable; drive-by visits are not", () => {
   const lessonOneTop = { ...V1, number: 1, slug: "landscape", scrollY: 0 };
   assert.equal(isResumablePosition(lessonOneTop), false);
   assert.equal(isResumablePosition({ ...lessonOneTop, scrollY: 400 }), true);
-  assert.equal(isResumablePosition({ ...lessonOneTop, number: 2 }), true);
+  assert.equal(isResumablePosition({ ...lessonOneTop, number: 3 }), false);
+  assert.equal(isResumablePosition({ ...lessonOneTop, number: 3, scrollY: 200 }), true);
   assert.equal(isResumablePosition(null), false);
 });
 

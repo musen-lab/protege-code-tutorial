@@ -128,10 +128,11 @@ export function isUnitComplete(progress, unitId) {
 }
 
 /**
- * A position worth resuming. Sitting at the top of Lesson 1 is
- * indistinguishable from a pristine start, so it does not count: the home
- * page should offer Start, not Resume, right after a restart.
+ * A position worth resuming. Opening a lesson and leaving without scrolling
+ * is a drive-by visit, not reading progress, so it does not flip the home
+ * card from Start to Resume; only a scrolled position (or, at the caller,
+ * completed sections) counts.
  */
 export function isResumablePosition(position) {
-  return isValidPosition(position) && (position.number > 1 || position.scrollY > 0);
+  return isValidPosition(position) && position.scrollY > 0;
 }
