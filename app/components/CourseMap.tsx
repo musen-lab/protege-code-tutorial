@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { lessonUnitIds, lessons } from "@/app/lib/course";
 import {
   getProgressSnapshot,
@@ -9,6 +9,15 @@ import {
 } from "@/app/lib/progress-client";
 
 export function CourseMap({ currentSlug }: { currentSlug?: string }) {
+  // On narrow screens the full route list fills the first viewport and makes
+  // a successful lesson navigation look like nothing happened, so the map
+  // collapses to its summary bar there. Desktop keeps it open, and without
+  // JavaScript the list stays open everywhere.
+  const [open, setOpen] = useState(true);
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 760px)").matches) setOpen(false);
+  }, []);
+
   const snapshot = useSyncExternalStore(subscribeToProgress, getProgressSnapshot, () => null);
   const completedSlugs = useMemo(() => {
     if (snapshot === null) return new Set<string>();
@@ -23,11 +32,19 @@ export function CourseMap({ currentSlug }: { currentSlug?: string }) {
     );
   }, [snapshot]);
 
+  const current = lessons.find((lesson) => lesson.slug === currentSlug);
+
   return (
-    <details className="course-map" open>
+    <details
+      className="course-map"
+      open={open}
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
       <summary>
         <span>Your course route</span>
-        <span className="course-map-summary">{lessons.length} in order</span>
+        <span className="course-map-summary">
+          {current ? `Lesson ${current.number} of ${lessons.length}` : `${lessons.length} in order`}
+        </span>
       </summary>
       <ol>
         {lessons.map((lesson) => {
