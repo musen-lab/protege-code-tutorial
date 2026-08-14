@@ -74,7 +74,7 @@ test("explains automatic stop and resume behavior", async () => {
   assert.doesNotMatch(home, /Predict or reproduce the flow yourself/);
 
   const lesson = await (await render("/lessons/landscape")).text();
-  assert.match(lesson, /Your place is saved in this browser\.|Saving your place/);
+  assert.match(lesson, /Your place is saved in this browser\.|Your place saves as you read\./);
 
   // The completion model is implemented: the client reads v2, migrates v1,
   // and completion is counted only from explicitly completed units.
