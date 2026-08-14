@@ -151,7 +151,7 @@ export const technologyPrimers = {
       "Protégé's ide Maven profile prepares module projects for this workflow. It writes manifests where PDE expects them, copies provided dependencies, and exposes plugin.xml at the project root. The profile prepares an IDE launch; it does not itself start Protégé.",
     ],
     officialLinks: [
-      { label: "Eclipse PDE", url: "https://www.eclipse.org/pde/" },
+      { label: "Eclipse PDE", url: "https://projects.eclipse.org/projects/eclipse.pde" },
       { label: "Eclipse m2e", url: "https://eclipse.dev/m2e/" },
     ],
     protegeSources: [
