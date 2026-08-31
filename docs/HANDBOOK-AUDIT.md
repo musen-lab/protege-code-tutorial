@@ -54,6 +54,7 @@ The handbook was converted to plain text and read in full. Its architectural, bu
 | Reflection invisible to BND | Restored with the handbook's concrete example | Lesson 7 labels this as a developer-handbook warning and ties the runtime example to `ProtegeApplication.java:315-336`: a look-and-feel class name comes from preferences, one branch uses `Class.forName`, and both branches provide `UIManager` with an explicit classloader. The course directs authors to add explicit imports for string-only runtime dependencies. |
 | Frame-based ontology editors | Added beyond handbook | The handbook does not explain the dominant frame, section, row, and object-editor idiom. Lesson 10 now traces `OWLClassDescriptionViewComponent` through the concrete SubClass Of section and row, then into `OWLDataFactory`, `AddAxiom` or replacement changes, and `OWLModelManager.applyChanges`. |
 | Runnable OWL API companion | Added with source correction | The OWL API primer and Lesson 9 now link Matthew Horridge's fixed tutorial content at `1953d8f`: ten runnable classes, three guides, tests, provided-scope rationale, and standalone Lesson 6 changes. Its absolute claim that raw manager calls bypass history is narrowed against this tutorial's pin: `OWLModelManagerImpl.java:157` registers the listener, lines 702-730 add facade rewrite/minimization, and lines 736-749 still record history and dirty state for underlying-manager changes. The course retains `OWLModelManager` as the safe plugin boundary without teaching behavior the snapshot contradicts. |
+| Delayed diagnostic questions | Added as optional retrieval practice | Lessons 1 through 4 now include all 38 independently prepared questions: 6 architecture and extension questions, 9 runtime questions, 8 Swing questions, a 6-question cross-lesson recap, and 9 workspace questions. Answers stay concealed until requested and cite exact pinned source lines. Two incorrect source premises were repaired rather than repeated: the `sun.*` result is stated as the combination of boot delegation and an optional import, and only seven built-in `OWLWorkspaceViewsTab` declarations are active at `plugin.xml:309-385`; the eighth occurrence at lines 1540-1550 is commented out. The diagnostics save no response, add no required unit, and leave `inside-protege-progress-v2` unchanged. |
 
 ## Source checks
 
@@ -79,6 +80,7 @@ The handbook was converted to plain text and read in full. Its architectural, bu
 - Official example lifecycle, contribution, and bundle POM: `protegeproject/protege-plugin-examples@d879601324d0c45d99e0d0879219ef15763ced50`
 - Cellfie embed/import instructions: `protegeproject/cellfie-plugin@1dd0896c8dd07b4f764d40225e374a5dc15a5d28`, `pom.xml:72-111`
 - Released compatibility manifest: `edu.stanford.protege:existentialquery:2.0.0`, `META-INF/MANIFEST.MF`, SHA-256 recorded in `docs/source-artifacts/existentialquery-2.0.0-manifest.txt`
+- Diagnostic answer evidence: the exact `SourceRef` entries in `app/lib/quizzes.ts`, each linked to the pinned tutorial baseline
 
 ## Conclusion
 

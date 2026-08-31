@@ -9,6 +9,8 @@ import { SectionNav } from "./SectionNav";
 import { SiteHeader } from "./SiteHeader";
 import { SourceLink } from "./SourceLink";
 import { TechnologyPrimerGroup } from "./TechnologyPrimer";
+import { LessonQuiz } from "./LessonQuiz";
+import { getQuizGroups } from "@/app/lib/quizzes";
 
 function SectionBody({ lessonSlug, section }: { lessonSlug: string; section: LessonSection }) {
   const isFoundation = section.depth === "foundation";
@@ -133,6 +135,7 @@ function SectionBody({ lessonSlug, section }: { lessonSlug: string; section: Les
 export function LessonPage({ lesson }: { lesson: Lesson }) {
   const { previous, next } = adjacentLessons(lesson.slug);
   const progress = Math.round((lesson.number / lessons.length) * 100);
+  const quizGroups = getQuizGroups(lesson.slug);
 
   return (
     <div className="site-shell">
@@ -186,6 +189,8 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
               )}
             </section>
           ))}
+
+          <LessonQuiz groups={quizGroups} />
 
           <section className="capability-banner">
             <span>You can now</span>

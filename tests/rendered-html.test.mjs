@@ -416,6 +416,53 @@ test("links the runnable OWL API companion without overstating raw-change behavi
   assert.match(plugin, /OWLModelManager\.java#L702|OWLModelManagerImpl\.java#L702/);
 });
 
+test("renders all 38 source-backed diagnostics without changing completion", async () => {
+  const pages = [
+    ["/lessons/landscape", 6],
+    ["/lessons/startup", 9],
+    ["/lessons/open-ontology", 14],
+    ["/lessons/screen", 9],
+  ];
+
+  let total = 0;
+  for (const [path, expectedCount] of pages) {
+    const html = await (await render(path)).text();
+    const count = html.match(/class="quiz-item"/g)?.length ?? 0;
+    assert.equal(count, expectedCount, path);
+    total += count;
+    assert.match(html, /Optional diagnostic/);
+    assert.match(html, /do not affect course completion or save any response/);
+    assert.match(html, /aria-label="Answer sources"/);
+    assert.match(html, /target="_blank"/);
+  }
+  assert.equal(total, 38);
+
+  const landscape = await (await render("/lessons/landscape")).text();
+  assert.match(landscape, /contrast an extension point with an extension class/);
+
+  const startup = await (await render("/lessons/startup")).text();
+  assert.match(startup, /quiz-marker quiz-marker-distractor/);
+  assert.match(startup, /quiz-marker quiz-marker-synthesis/);
+  assert.match(startup, /Cold retest: state the Launcher, Felix, and core roles again/);
+
+  const ontology = await (await render("/lessons/open-ontology")).text();
+  assert.match(ontology, /Lesson 3 diagnostic/);
+  assert.match(ontology, /Block 1 recap/);
+  assert.match(ontology, /These mixed questions deliberately cross lesson boundaries/);
+
+  const screen = await (await render("/lessons/screen")).text();
+  assert.match(screen, /seven active built-in tab declarations/);
+  assert.match(screen, /eighth occurrence belongs to a commented-out SPARQL tab block/);
+
+  const progressCore = await readFile(new URL("../app/lib/progress.mjs", import.meta.url), "utf8");
+  assert.match(progressCore, /inside-protege-progress-v2/);
+  assert.doesNotMatch(progressCore, /inside-protege-progress-v3/);
+
+  const courseSource = await readFile(new URL("../app/lib/course.ts", import.meta.url), "utf8");
+  assert.doesNotMatch(courseSource, /from "\.\/quizzes"/);
+  assert.match(courseSource, /filter\(\(section\) => section\.depth !== "foundation"\)/);
+});
+
 test("internal navigation remains browser-native", async () => {
   const navigationFiles = [
     "../app/page.tsx",

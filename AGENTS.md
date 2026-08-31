@@ -155,6 +155,10 @@ section before following it.
 - Keep TypeScript strict and prefer existing components and data shapes.
 - Keep course content centralized in `app/lib/course.ts` unless a real module
   boundary justifies moving it.
+- Keep optional diagnostic questions in `app/lib/quizzes.ts`. Every answer must
+  cite the pinned source with exact path and line, question ids must stay out of
+  `requiredUnitIds`, and diagnostics must not persist responses or affect course
+  completion without an explicit product and migration decision.
 - Use `sourceUrl` and `SourceRef` for Protégé source links. Do not hand-build
   drifting branch URLs. External artifact examples must use fixed commit or
   release URLs and record their provenance.
