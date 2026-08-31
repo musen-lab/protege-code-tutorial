@@ -111,3 +111,17 @@ test("withLastPosition preserves completion state", () => {
   assert.deepEqual(moved.completedUnitIds, ["a:1"]);
   assert.deepEqual(moved.lastPosition, V1);
 });
+
+test("existing v2 completion survives when the required unit catalogue changes", () => {
+  const saved = {
+    ...V2,
+    completedUnitIds: ["landscape:five-parts", "removed:legacy", "startup:plain-jvm"],
+  };
+  const { progress, migratedFromV1 } = parseStoredProgress(JSON.stringify(saved), null, NOW);
+  assert.equal(migratedFromV1, false);
+  assert.deepEqual(progress.completedUnitIds, saved.completedUnitIds);
+  assert.deepEqual(
+    completionSummary(progress.completedUnitIds, ["landscape:five-parts", "startup:plain-jvm"]),
+    { completed: 2, total: 2, percent: 100 },
+  );
+});

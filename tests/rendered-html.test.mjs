@@ -87,6 +87,16 @@ test("explains automatic stop and resume behavior", async () => {
   assert.match(home2, /0 of \d+ sections/);
 });
 
+test("keeps optional foundation material out of required v2 progress", async () => {
+  const courseSource = await readFile(new URL("../app/lib/course.ts", import.meta.url), "utf8");
+  assert.match(courseSource, /depth\?: "foundation" \| "core"/);
+  assert.match(courseSource, /filter\(\(section\) => section\.depth !== "foundation"\)/);
+
+  const progressCore = await readFile(new URL("../app/lib/progress.mjs", import.meta.url), "utf8");
+  assert.match(progressCore, /inside-protege-progress-v2/);
+  assert.doesNotMatch(progressCore, /inside-protege-progress-v3/);
+});
+
 test("offers explicit completion controls on lesson pages", async () => {
   const landscape = await (await render("/lessons/landscape")).text();
   assert.match(landscape, /Mark section complete/);

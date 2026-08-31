@@ -1,4 +1,4 @@
-import type { Lesson } from "@/app/lib/course";
+import type { Lesson, LessonSection } from "@/app/lib/course";
 import { adjacentLessons, lessons, sectionUnitId, sourceUrl } from "@/app/lib/course";
 import { Checkpoint } from "./Checkpoint";
 import { CourseMap } from "./CourseMap";
@@ -9,6 +9,95 @@ import { SectionNav } from "./SectionNav";
 import { SiteHeader } from "./SiteHeader";
 import { SourceLink } from "./SourceLink";
 import { TechnologyPrimerGroup } from "./TechnologyPrimer";
+
+function SectionBody({ lessonSlug, section }: { lessonSlug: string; section: LessonSection }) {
+  const isFoundation = section.depth === "foundation";
+
+  return (
+    <>
+      {!isFoundation && (
+        <div className="section-copy">
+          <span className="eyebrow">{section.eyebrow}</span>
+          <h2>{section.title}</h2>
+          {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+      )}
+
+      {isFoundation && (
+        <div className="section-copy foundation-copy">
+          {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+      )}
+
+      {section.technologyIds && <TechnologyPrimerGroup ids={section.technologyIds} />}
+
+      {section.diagram && <RelationshipDiagram diagram={section.diagram} />}
+
+      {section.code && (
+        <figure className="code-cutaway">
+          <div className="code-heading">
+            <span>Source cutaway</span>
+            <a href={section.code.url ?? sourceUrl(section.code.path, section.code.line)} target="_blank" rel="noreferrer">
+              {section.code.path}:{section.code.line} ↗
+            </a>
+          </div>
+          <pre><code>{section.code.snippet}</code></pre>
+          <figcaption>{section.code.focus}</figcaption>
+        </figure>
+      )}
+
+      {(section.javaNote || section.bridge) && (
+        <div className="learning-notes">
+          {section.javaNote && (
+            <aside className="learning-note java-note">
+              <span>Java time capsule</span>
+              <h3>{section.javaNote.title}</h3>
+              <p>{section.javaNote.body}</p>
+            </aside>
+          )}
+          {section.bridge && (
+            <aside className="learning-note bridge-note">
+              <span>Transfer bridge</span>
+              <h3>{section.bridge.title}</h3>
+              <p><strong>Useful:</strong> {section.bridge.useful}</p>
+              <p><strong>Where it breaks:</strong> {section.bridge.limit}</p>
+            </aside>
+          )}
+        </div>
+      )}
+
+      {section.exercise && (
+        <aside className="exercise-block">
+          <span>Hands-on exercise</span>
+          <h3>{section.exercise.title}</h3>
+          <p>{section.exercise.goal}</p>
+          <code className="exercise-path">{section.exercise.path}</code>
+          <ol>
+            {section.exercise.steps.map((step) => <li key={step}>{step}</li>)}
+          </ol>
+          {section.exercise.commands && <pre><code>{section.exercise.commands}</code></pre>}
+          <strong>Evidence of success</strong>
+          <ul>
+            {section.exercise.verify.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+          {!isFoundation && <ExerciseCompletion unitId={sectionUnitId(lessonSlug, section.id)} />}
+        </aside>
+      )}
+
+      {section.checkpoint && (
+        <Checkpoint
+          {...section.checkpoint}
+          unitId={sectionUnitId(lessonSlug, section.id)}
+          completesSection={!isFoundation && !section.exercise}
+        />
+      )}
+
+      {!isFoundation && !section.exercise && !section.checkpoint && (
+        <SectionCompletion unitId={sectionUnitId(lessonSlug, section.id)} />
+      )}
+    </>
+  );
+}
 
 export function LessonPage({ lesson }: { lesson: Lesson }) {
   const { previous, next } = adjacentLessons(lesson.slug);
@@ -48,79 +137,21 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
           </header>
 
           {lesson.sections.map((section, index) => (
-            <section className="lesson-section" id={section.id} key={section.id}>
+            <section className={`lesson-section${section.depth === "foundation" ? " lesson-section-foundation" : ""}`} id={section.id} key={section.id}>
               <div className="section-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</div>
-              <div className="section-copy">
-                <span className="eyebrow">{section.eyebrow}</span>
-                <h2>{section.title}</h2>
-                {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-              </div>
-
-              {section.technologyIds && <TechnologyPrimerGroup ids={section.technologyIds} />}
-
-              {section.diagram && <RelationshipDiagram diagram={section.diagram} />}
-
-              {section.code && (
-                <figure className="code-cutaway">
-                  <div className="code-heading">
-                    <span>Source cutaway</span>
-                    <a href={section.code.url ?? sourceUrl(section.code.path, section.code.line)} target="_blank" rel="noreferrer">
-                      {section.code.path}:{section.code.line} ↗
-                    </a>
+              {section.depth === "foundation" ? (
+                <details className="foundation-section">
+                  <summary>
+                    <span>{section.eyebrow}</span>
+                    <strong>{section.title}</strong>
+                    <small>{section.skipIf ?? "Skip this if the background is already familiar."}</small>
+                  </summary>
+                  <div className="foundation-section-body">
+                    <SectionBody lessonSlug={lesson.slug} section={section} />
                   </div>
-                  <pre><code>{section.code.snippet}</code></pre>
-                  <figcaption>{section.code.focus}</figcaption>
-                </figure>
-              )}
-
-              {(section.javaNote || section.bridge) && (
-                <div className="learning-notes">
-                  {section.javaNote && (
-                    <aside className="learning-note java-note">
-                      <span>Java time capsule</span>
-                      <h3>{section.javaNote.title}</h3>
-                      <p>{section.javaNote.body}</p>
-                    </aside>
-                  )}
-                  {section.bridge && (
-                    <aside className="learning-note bridge-note">
-                      <span>Transfer bridge</span>
-                      <h3>{section.bridge.title}</h3>
-                      <p><strong>Useful:</strong> {section.bridge.useful}</p>
-                      <p><strong>Where it breaks:</strong> {section.bridge.limit}</p>
-                    </aside>
-                  )}
-                </div>
-              )}
-
-              {section.exercise && (
-                <aside className="exercise-block">
-                  <span>Hands-on exercise</span>
-                  <h3>{section.exercise.title}</h3>
-                  <p>{section.exercise.goal}</p>
-                  <code className="exercise-path">{section.exercise.path}</code>
-                  <ol>
-                    {section.exercise.steps.map((step) => <li key={step}>{step}</li>)}
-                  </ol>
-                  {section.exercise.commands && <pre><code>{section.exercise.commands}</code></pre>}
-                  <strong>Evidence of success</strong>
-                  <ul>
-                    {section.exercise.verify.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                  <ExerciseCompletion unitId={sectionUnitId(lesson.slug, section.id)} />
-                </aside>
-              )}
-
-              {section.checkpoint && (
-                <Checkpoint
-                  {...section.checkpoint}
-                  unitId={sectionUnitId(lesson.slug, section.id)}
-                  completesSection={!section.exercise}
-                />
-              )}
-
-              {!section.exercise && !section.checkpoint && (
-                <SectionCompletion unitId={sectionUnitId(lesson.slug, section.id)} />
+                </details>
+              ) : (
+                <SectionBody lessonSlug={lesson.slug} section={section} />
               )}
             </section>
           ))}

@@ -49,6 +49,8 @@ export type LessonSection = {
   eyebrow: string;
   title: string;
   paragraphs: string[];
+  depth?: "foundation" | "core";
+  skipIf?: string;
   technologyIds?: TechnologyPrimerId[];
   diagram?: DiagramSpec;
   code?: {
@@ -1642,19 +1644,27 @@ export function getLesson(slug: string) {
   return lessons.find((lesson) => lesson.slug === slug);
 }
 
-// Every section is one required completion unit. Ids are stable as long as
-// lesson slugs and section ids are stable; treat renames as a data migration.
+// Every core section is one required completion unit. Foundation sections are
+// optional background and never change the saved progress schema. Ids are
+// stable as long as lesson slugs and section ids are stable; treat renames as
+// a data migration.
 export function sectionUnitId(lessonSlug: string, sectionId: string) {
   return `${lessonSlug}:${sectionId}`;
 }
 
 export const requiredUnitIds: string[] = lessons.flatMap((lesson) =>
-  lesson.sections.map((section) => sectionUnitId(lesson.slug, section.id)),
+  lesson.sections
+    .filter((section) => section.depth !== "foundation")
+    .map((section) => sectionUnitId(lesson.slug, section.id)),
 );
 
 export function lessonUnitIds(slug: string): string[] {
   const lesson = getLesson(slug);
-  return lesson ? lesson.sections.map((section) => sectionUnitId(lesson.slug, section.id)) : [];
+  return lesson
+    ? lesson.sections
+      .filter((section) => section.depth !== "foundation")
+      .map((section) => sectionUnitId(lesson.slug, section.id))
+    : [];
 }
 
 export function adjacentLessons(slug: string) {
