@@ -401,6 +401,21 @@ test("renders the precise cross-lesson corrections from the teaching pass", asyn
   assert.match(plugin, /root cause has not been established/);
 });
 
+test("links the runnable OWL API companion without overstating raw-change behavior", async () => {
+  const reference = await (await render("/reference")).text();
+  assert.match(reference, /For runnable practice from zero, Matthew Horridge&#x27;s OWL API 4\.x tutorial/);
+  assert.match(reference, /ten ordered main classes, three written guides, and tests/);
+  assert.match(reference, /protege-owlapi-tutorial\/tree\/1953d8f93da9efee147ade7dba4f763b033ac91f/);
+
+  const plugin = await (await render("/lessons/build-plugin")).text();
+  assert.match(plugin, /independently reaches the same provided-scope rule/);
+  assert.match(plugin, /Runnable Lesson 6: changes and undo/);
+  assert.match(plugin, /Use OWLModelManager even though raw changes still notify listeners/);
+  assert.match(plugin, /records history and dirty state/);
+  assert.match(plugin, /stronger claim that every raw call skips undo and UI is therefore not supported/);
+  assert.match(plugin, /OWLModelManager\.java#L702|OWLModelManagerImpl\.java#L702/);
+});
+
 test("internal navigation remains browser-native", async () => {
   const navigationFiles = [
     "../app/page.tsx",

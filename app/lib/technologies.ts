@@ -97,10 +97,13 @@ export const technologyPrimers = {
     paragraphs: [
       "OWL API is a Java library, not the OWL language itself. It supplies Java interfaces such as OWLOntology, OWLClass, OWLAxiom, and OWLOntologyManager, plus parsers, serializers, change objects, and listener APIs.",
       "Protégé wraps those library objects in application policy. OWLModelManager is the facade used by editor code for active ontology state, dirty tracking, history, rendering, events, and change application. When reading a trace, distinguish a semantic OWL object, an OWL API Java object, and a Protégé manager or Swing component.",
+      "For runnable practice from zero, Matthew Horridge's OWL API 4.x tutorial provides ten ordered main classes, three written guides, and tests against OWL API 4.5.29 on Java 11. It teaches ontology-as-axioms, entities-as-names, data factories, loading, changes, and asserted versus entailed knowledge before translating those ideas to Protégé 5.6.6 plugin work.",
     ],
     officialLinks: [
       { label: "OWL API documentation", url: "https://owlcs.github.io/owlapi/" },
       { label: "OWL API source repository", url: "https://github.com/owlcs/owlapi" },
+      { label: "Horridge's runnable OWL API tutorial", url: "https://github.com/protegeproject/protege-owlapi-tutorial/tree/1953d8f93da9efee147ade7dba4f763b033ac91f" },
+      { label: "Runnable Lesson 6: changes and undo", url: "https://github.com/protegeproject/protege-owlapi-tutorial/blob/1953d8f93da9efee147ade7dba4f763b033ac91f/src/main/java/edu/stanford/protege/tutorial/Lesson06_Changes.java" },
     ],
     protegeSources: [
       { label: "OWLModelManager boundary", path: "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManager.java", line: 42, note: "Protégé's model facade extends the generic model contract and exposes OWL API types." },

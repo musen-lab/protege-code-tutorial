@@ -127,6 +127,8 @@ const PLUGIN_EXAMPLE_URL = `https://github.com/protegeproject/protege-plugin-exa
 const CELLFIE_COMMIT = "1dd0896c8dd07b4f764d40225e374a5dc15a5d28";
 const CELLFIE_URL = `https://github.com/protegeproject/cellfie-plugin/blob/${CELLFIE_COMMIT}`;
 const EXISTENTIAL_QUERY_JAR_URL = "https://repo1.maven.org/maven2/edu/stanford/protege/existentialquery/2.0.0/existentialquery-2.0.0.jar";
+const OWL_API_TUTORIAL_COMMIT = "1953d8f93da9efee147ade7dba4f763b033ac91f";
+const OWL_API_TUTORIAL_URL = `https://github.com/protegeproject/protege-owlapi-tutorial/blob/${OWL_API_TUTORIAL_COMMIT}`;
 
 export const lessons: Lesson[] = [
   {
@@ -1495,7 +1497,9 @@ rg -n '^import (org\\.protege\\.editor\\.owl|org\\.semanticweb\\.owlapi)\\.' \
         paragraphs: [
           "Cellfie 2.1.0 provides a concrete separation. Its BND instructions embed libraries such as Apache POI, Gson, and mapping-master inside the plugin while importing org.protege.editor.*, OWL API, and optional external packages. The plugin carries its private implementation dependencies but shares the host's API types through OSGi imports.",
           "Never embed Protégé or OWL API classes in a plugin. Two bundles can then load two distinct Class objects with the same fully qualified name. Crossing the extension boundary with those lookalike types can cause ClassCastException because Java type identity includes the defining classloader.",
+          "Horridge's runnable OWL API tutorial independently reaches the same provided-scope rule for Protégé plugins. Its standalone Lesson 6 then lets you run change objects, batching, listeners, and change inversion before bringing that model back into the host application.",
         ],
+        technologyIds: ["owl-api"],
         code: {
           path: "pom.xml",
           line: 72,
@@ -1512,6 +1516,11 @@ rg -n '^import (org\\.protege\\.editor\\.owl|org\\.semanticweb\\.owlapi)\\.' \
 </Import-Package>`,
           focus: "This is a shortened, line-preserving excerpt from Cellfie 2.1.0's real POM. The full lists remain available at the linked fixed commit.",
           url: `${CELLFIE_URL}/pom.xml#L72-L111`,
+        },
+        callout: {
+          label: "Protégé source nuance",
+          title: "Use OWLModelManager even though raw changes still notify listeners",
+          body: "The safe plugin rule is to route edits through OWLModelManager.applyChange or applyChanges. At this pin, those methods rewrite and minimize changes before calling the OWL API manager. A raw manager change still reaches OWLModelManagerImpl's registered ontology-change listener, which records history and dirty state, while OWL API listeners receive the exact changes. The stronger claim that every raw call skips undo and UI is therefore not supported by this snapshot. The facade remains the stable policy boundary.",
         },
       },
       {
@@ -1586,6 +1595,11 @@ unzip -p target/protege-minimal-view-1.0.0.jar META-INF/MANIFEST.MF`,
       src("Cellfie 2.1.0 POM", "pom.xml", 72, "Real embed and import strategy", `${CELLFIE_URL}/pom.xml#L72-L111`),
       src("Pinned core BND instructions", "protege-editor-core/pom.xml", 88, "Singleton, imports, exports, and registry directive"),
       src("Pinned common BND instructions", "protege-common/pom.xml", 49, "Negation and optional-resolution examples"),
+      src("Facade change application", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManagerImpl.java", 702, "OWLModelManager rewrites and minimizes changes before delegating"),
+      src("Registered ontology listener", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManagerImpl.java", 157, "The model facade listens to changes made through the underlying manager"),
+      src("History notification path", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManagerImpl.java", 736, "The registered OWL API listener records history and dirty state"),
+      src("Runnable OWL API plugin guide", "docs/03-protege-plugins.md", 28, "Provided-scope rationale and Protégé change guidance at a fixed tutorial commit", `${OWL_API_TUTORIAL_URL}/docs/03-protege-plugins.md#L28-L70`),
+      src("Runnable OWL API Lesson 6", "src/main/java/edu/stanford/protege/tutorial/Lesson06_Changes.java", 60, "Executable change lists, listeners, inversion, rename, and delete", `${OWL_API_TUTORIAL_URL}/src/main/java/edu/stanford/protege/tutorial/Lesson06_Changes.java#L60-L152`),
       src("AutoValue dependency versions", "pom.xml", 291, "The pinned processor and annotation artifact versions"),
       src("AutoValue source declarations", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/identifiers/IdoNamespace.java", 16, "One of twelve @AutoValue declarations requiring generated implementations"),
     ],

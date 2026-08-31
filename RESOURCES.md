@@ -16,6 +16,10 @@
   Oracle's language and platform reference for the project's Java baseline.
 - [OWL API](https://github.com/owlcs/owlapi)
   Primary library source for ontology objects, managers, changes, formats, and reasoner interfaces used by `protege-editor-owl`.
+- [Matthew Horridge's runnable OWL API tutorial](https://github.com/protegeproject/protege-owlapi-tutorial/tree/1953d8f93da9efee147ade7dba4f763b033ac91f)
+  A fixed, executable companion for OWL API 4.5.29 and Protégé 5.6.6: ten
+  lesson classes, three written guides, and tests. Its standalone Lesson 6 is
+  the practical bridge into this course's Protégé change-application path.
 
 ## Technology sources of record
 
