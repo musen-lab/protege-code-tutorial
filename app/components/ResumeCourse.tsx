@@ -94,16 +94,13 @@ function RestartControl() {
       className="restart-confirm"
       role="group"
       aria-label="Confirm restart"
-      onKeyDown={(event) => {
-        if (event.key === "Escape") setConfirming(false);
-      }}
     >
       <p>{RESTART_WARNING}</p>
       <div>
         <a href="/lessons/landscape" onClick={() => clearProgress()}>
           Yes, restart
         </a>
-        <button type="button" autoFocus onClick={() => setConfirming(false)}>
+        <button type="button" onClick={() => setConfirming(false)}>
           Keep my progress
         </button>
       </div>

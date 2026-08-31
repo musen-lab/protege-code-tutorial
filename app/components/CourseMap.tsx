@@ -15,7 +15,10 @@ export function CourseMap({ currentSlug }: { currentSlug?: string }) {
   // JavaScript the list stays open everywhere.
   const [open, setOpen] = useState(true);
   useEffect(() => {
-    if (window.matchMedia("(max-width: 760px)").matches) setOpen(false);
+    const collapseOnMobile = window.setTimeout(() => {
+      if (window.matchMedia("(max-width: 760px)").matches) setOpen(false);
+    }, 0);
+    return () => window.clearTimeout(collapseOnMobile);
   }, []);
 
   const snapshot = useSyncExternalStore(subscribeToProgress, getProgressSnapshot, () => null);
