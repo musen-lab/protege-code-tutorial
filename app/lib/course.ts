@@ -71,6 +71,7 @@ export type LessonSection = {
     snippet: string;
     focus: string;
     url?: string;
+    wrap?: boolean;
   };
   exercise?: {
     title: string;
@@ -137,7 +138,7 @@ export const lessons: Lesson[] = [
     title: "Survey the landscape",
     question: "What kind of system is Protégé, and where does responsibility live?",
     summary: "Build the stable map you will reuse in every later trace: five Maven modules, three runtime integration mechanisms, and one crucial framework boundary.",
-    duration: "25 min",
+    duration: "40 min",
     outcomes: [
       "Place an unfamiliar class in one of the five modules.",
       "Distinguish Maven dependencies from OSGi runtime wiring.",
@@ -308,7 +309,7 @@ export const lessons: Lesson[] = [
     title: "Start the application",
     question: "How does a shell script become a populated Swing window?",
     summary: "Trace the boundary from the plain JVM classpath into Felix, through ordered bundles, and finally into deferred application startup.",
-    duration: "30 min",
+    duration: "55 min + 10 min optional",
     outcomes: [
       "Trace run.sh through Launcher.main and Felix.",
       "Explain the five OSGi start levels.",
@@ -375,7 +376,7 @@ Import-Package: org.osgi.framework;version="[1.10,2)",
  org.slf4j;version="[1.7,2)",
  sun.misc;resolution:=optional
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"`,
-          focus: "These headers were emitted from the pinned source. The normalized, provenance-recorded extract is stored in docs/source-artifacts/protege-common-manifest.txt.",
+          focus: "Abridged generated headers from the pinned source. This excerpt omits the java.lang, java.lang.invoke, java.util, and javax.xml.parsers imports plus Export-Package's uses:= directive. The complete normalized extract is stored in docs/source-artifacts/protege-common-manifest.txt.",
           url: sourceUrl("protege-common/pom.xml", 43),
         },
         callout: {
@@ -450,6 +451,31 @@ Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"`,
           ],
           caption: "A named bundle narrows a search block. A block containing only search paths starts every matching bundle in those directories.",
         },
+        code: {
+          path: "protege-desktop/src/main/felix/conf/config.xml",
+          line: 11,
+          language: "xml",
+          wrap: true,
+          snippet: `<property
+  name="org.osgi.framework.bootdelegation"
+  value="sun.*,com.sun.*,apple.*,com.apple.*"/>
+
+<!-- lines 12-22 omitted -->
+<bundles>
+  <search path="bundles"/>
+  <search
+    path="\${user.home}/.Protege/bundles"/>
+  <bundle name="protege-common.jar"/>
+</bundles>
+
+<!-- start blocks 2-4 omitted -->
+<bundles>
+  <search path="plugins"/>
+  <search
+    path="\${user.home}/.Protege/plugins"/>
+</bundles>`,
+          focus: "Pinned config.xml content from lines 11, 23-28, and 48-51, reformatted only for the cutaway. The added comments identify omitted spans. A search path names a directory; a bundle child narrows that start block to one post-assembly JAR.",
+        },
         checkpoint: {
           prompt: "Why would moving editor-core to the final start level risk an empty application?",
           answer: "Core owns the extension registry adapters and application startup listener. Its real startup waits for all bundles, but the bundle and registry services must already exist before the final application assembly begins.",
@@ -516,7 +542,7 @@ Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"`,
     title: "Open an ontology",
     question: "Who receives a file after the user clicks Open?",
     summary: "Follow the most important end-to-end path through core, editor-owl, Swing threading, OWL API loading, IRI mapping, and model events.",
-    duration: "40 min",
+    duration: "60 min + 10 min optional",
     outcomes: [
       "Trace Open from generic action to OWL API.",
       "Explain the EditorKitFactory runtime seam.",
@@ -672,7 +698,7 @@ workspace.initialise();`,
     title: "Build the screen",
     question: "Where do Protégé's tabs and panels actually come from?",
     summary: "See how a small set of Java abstractions combines with hundreds of plugin.xml entries and XML layouts to assemble the UI at runtime.",
-    duration: "35 min",
+    duration: "50 min",
     outcomes: [
       "Place WorkspaceFrame, Workspace, tab, view, and component in a containment model.",
       "Trace a plugin.xml ViewComponent into a live Java instance.",

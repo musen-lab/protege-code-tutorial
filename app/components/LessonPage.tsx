@@ -74,7 +74,7 @@ function SectionBody({ lessonSlug, section }: { lessonSlug: string; section: Les
               {section.code.path}:{section.code.line} ↗
             </a>
           </div>
-          <pre><code>{section.code.snippet}</code></pre>
+          <pre className={section.code.wrap ? "code-wrap" : undefined}><code>{section.code.snippet}</code></pre>
           <figcaption>{section.code.focus}</figcaption>
         </figure>
       )}
@@ -148,7 +148,7 @@ export function LessonPage({ lesson }: { lesson: Lesson }) {
           <CourseMap currentSlug={lesson.slug} />
           <SectionNav
             slug={lesson.slug}
-            sections={lesson.sections.map(({ id, title }) => ({ id, title }))}
+            sections={lesson.sections.map(({ id, title, depth }) => ({ id, title, depth }))}
           />
         </aside>
 

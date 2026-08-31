@@ -159,6 +159,11 @@ section before following it.
   cite the pinned source with exact path and line, question ids must stay out of
   `requiredUnitIds`, and diagnostics must not persist responses or affect course
   completion without an explicit product and migration decision.
+- Keep lesson duration estimates in five-minute increments. Preserve the prior
+  estimate for unchanged material, allow about 1.25 minutes per diagnostic
+  question, and add five-minute blocks for substantial new core artifacts.
+  Exclude foundation tracks from the main estimate and show them separately as
+  `N min + M min optional`.
 - Use `sourceUrl` and `SourceRef` for Protégé source links. Do not hand-build
   drifting branch URLs. External artifact examples must use fixed commit or
   release URLs and record their provenance.

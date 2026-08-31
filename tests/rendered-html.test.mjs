@@ -463,6 +463,38 @@ test("renders all 38 source-backed diagnostics without changing completion", asy
   assert.match(courseSource, /filter\(\(section\) => section\.depth !== "foundation"\)/);
 });
 
+test("renders the accepted round-one follow-up corrections", async () => {
+  const landscape = await (await render("/lessons/landscape")).text();
+  assert.match(landscape, /40 min/);
+  assert.doesNotMatch(landscape, /section-nav-optional/);
+
+  const startup = await (await render("/lessons/startup")).text();
+  assert.match(startup, /55 min \+ 10 min optional/);
+  assert.match(startup, /org\.osgi\.framework\.bootdelegation/);
+  assert.match(startup, /search path=&quot;bundles&quot;/);
+  assert.match(startup, /bundle name=&quot;protege-common\.jar&quot;/);
+  assert.match(startup, /\$\{user\.home\}\/\.Protege\/plugins/);
+  assert.match(startup, /Pinned config\.xml content from lines 11, 23-28, and 48-51/);
+  assert.match(startup, /class="code-wrap"/);
+  assert.match(startup, /Abridged generated headers from the pinned source/);
+  assert.match(startup, /java\.lang, java\.lang\.invoke, java\.util, and javax\.xml\.parsers/);
+  assert.match(startup, /Export-Package&#x27;s uses:= directive/);
+  assert.equal(startup.match(/class="section-nav-optional"/g)?.length, 1);
+  assert.match(startup, /class="section-nav-optional">optional<\/span>/);
+
+  const ontology = await (await render("/lessons/open-ontology")).text();
+  assert.match(ontology, /60 min \+ 10 min optional/);
+  assert.equal(ontology.match(/class="section-nav-optional"/g)?.length, 1);
+
+  const screen = await (await render("/lessons/screen")).text();
+  assert.match(screen, /50 min/);
+  assert.doesNotMatch(screen, /section-nav-optional/);
+
+  const audit = await readFile(new URL("../docs/HANDBOOK-AUDIT.md", import.meta.url), "utf8");
+  assert.match(audit, /Audit date: 2026-08-12/);
+  assert.match(audit, /Round 2 audit additions: 2026-08-31/);
+});
+
 test("internal navigation remains browser-native", async () => {
   const navigationFiles = [
     "../app/page.tsx",

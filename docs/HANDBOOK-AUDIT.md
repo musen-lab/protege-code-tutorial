@@ -2,6 +2,8 @@
 
 Audit date: 2026-08-12
 
+Round 2 audit additions: 2026-08-31
+
 Handbook reviewed: `Protege Developer Handbook 2026-08-11 (Matthew Horridge).html`
 
 Tutorial source baseline: `protegeproject/protege@d9c9d392f9d88b5c4dc49a109009e9c460b6fb2b`

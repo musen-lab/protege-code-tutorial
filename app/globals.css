@@ -316,6 +316,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .section-nav a { color: var(--muted); font-size: 14px; line-height: 1.45; }
 .section-nav a:hover { color: var(--purple); }
 .section-nav a.is-complete { color: var(--teal); }
+.section-nav-optional { display: inline-block; margin-left: 7px; padding: 2px 6px; color: #735d7e; border: 1px solid #cdbed5; border-radius: 999px; background: var(--purple-soft); font-size: 9px; font-weight: 800; letter-spacing: .06em; line-height: 1.2; text-transform: uppercase; vertical-align: 2px; }
 
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
@@ -406,6 +407,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .code-heading span { color: var(--code-accent); font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
 .code-heading a { overflow-wrap: anywhere; text-align: right; text-decoration: underline; text-underline-offset: 3px; }
 .code-cutaway pre { box-sizing: border-box; width: 100%; margin: 0; padding: 24px; overflow-x: auto; color: var(--code-ink); background: var(--code); font-size: 13px; line-height: 1.75; }
+.code-cutaway pre.code-wrap { white-space: pre-wrap; overflow-wrap: anywhere; }
 .code-cutaway pre code { display: block; max-width: 100%; color: var(--code-ink); background: transparent; }
 .code-cutaway figcaption { padding: 14px 18px; color: #d9d2c5; border-top: 1px solid #343b37; background: #202622; font-size: 11px; }
 
@@ -591,6 +593,7 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
   .diagram-detail { min-height: auto; padding: 18px 0 8px; }
   .code-heading { display: grid; }
   .code-heading a { text-align: left; }
+  .code-cutaway pre.code-wrap { padding-inline: 14px; font-size: 10px; }
   .capability-banner { padding: 30px 24px; }
   .lesson-pagination { grid-template-columns: 1fr; }
   .lesson-pagination a:first-child { border-right: 0; border-bottom: 1px solid var(--line); }
