@@ -342,6 +342,41 @@ test("renders architecture as connected, accessible diagrams", async () => {
   assert.match(styles, /\.code-cutaway pre code \{[^}]*display: block;[^}]*max-width: 100%/);
 });
 
+test("teaches the first three lessons from the motivating mechanisms", async () => {
+  const landscape = await (await render("/lessons/landscape")).text();
+  assert.ok(
+    landscape.indexOf("How can Protégé display code it has never heard of?")
+      < landscape.indexOf("Five modules, three different jobs"),
+  );
+  assert.match(landscape, /186 extension declarations across 1,898 lines/);
+  assert.match(landscape, /Fifty-one of those declarations offer view panels/);
+  assert.match(landscape, /default Classes-tab layout places only five/);
+  assert.match(landscape, /OWLClassAnnotationsViewComponent/);
+  assert.match(landscape, /Two attributes, two different questions/);
+  assert.match(landscape, /The compiler protects types, not strings/);
+  assert.match(landscape, /0 OWL or OWL API imports in editor-core and 516 editor-core imports in editor-owl/);
+
+  const startup = await (await render("/lessons/startup")).text();
+  assert.match(startup, /34 dependency artifacts/);
+  assert.match(startup, /One classpath cannot safely host an open-ended application/);
+  assert.match(startup, /OSGi from zero: loaders, needs, and offers/);
+  assert.match(startup, /Skip this if you already understand bundle classloaders/);
+  assert.match(startup, /Bundle-SymbolicName: org\.protege\.common/);
+  assert.match(startup, /org\.osgi\.framework;version=&quot;\[1\.10,2\)&quot;/);
+  assert.match(startup, /An unresolved required import means no bundle start/);
+  assert.match(startup, /\.Protege\/logs\/protege\.log/);
+  assert.match(startup, /sun\.\*, com\.sun\.\*, apple\.\*, and com\.apple\.\*/);
+  assert.match(startup, /The five configured start blocks/);
+  assert.match(startup, /org\.eclipse\.equinox\.common\.jar; org\.eclipse\.equinox\.supplement\.jar/);
+
+  const ontology = await (await render("/lessons/open-ontology")).text();
+  assert.match(ontology, /Swing from zero: one event loop, one UI thread/);
+  assert.match(ontology, /What invokeLater actually does/);
+  assert.match(ontology, /\[paint A, updateView\]/);
+  assert.match(ontology, /invokeLater returns immediately/);
+  assert.match(ontology, /receives an already-unwrapped EditorKitFactory/);
+});
+
 test("internal navigation remains browser-native", async () => {
   const navigationFiles = [
     "../app/page.tsx",

@@ -373,6 +373,21 @@ code, pre { font-family: var(--font-mono), ui-monospace, monospace; }
 .foundation-section-body { padding: 0 22px 24px; border-top: 1px solid var(--line); }
 .foundation-copy { padding-top: 22px; }
 
+.course-callout { margin: 28px 0; padding: 22px 24px; border: 1px solid #c5a564; border-radius: 12px; background: var(--gold-soft); }
+.course-callout > span { color: #78500d; font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.course-callout h3 { margin: 7px 0 9px; font-size: 16px; }
+.course-callout p { margin: 0; color: #463f47; font-size: 14px; }
+
+.course-table { margin: 32px 0; }
+.course-table h3 { margin: 0 0 14px; font-family: var(--font-display), Georgia, serif; font-size: 24px; }
+.course-table > div { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.course-table table { width: 100%; border-collapse: collapse; font-size: 12px; line-height: 1.5; }
+.course-table th, .course-table td { padding: 13px 15px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.course-table thead th { color: var(--purple); background: var(--purple-soft); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+.course-table tbody th { min-width: 72px; font-weight: 800; }
+.course-table tbody tr:last-child th, .course-table tbody tr:last-child td { border-bottom: 0; }
+.course-table figcaption { margin-top: 10px; color: var(--muted); font-size: 11px; }
+
 .technology-primer-group { display: grid; gap: 16px; margin: 32px 0; }
 .technology-primer { overflow: hidden; border: 1px solid #9c80ae; border-radius: 14px; background: var(--surface); box-shadow: 0 12px 32px rgba(59, 36, 78, .08); }
 .technology-primer-heading { padding: 22px 24px 18px; border-bottom: 1px solid #d8c7e1; background: linear-gradient(120deg, var(--purple-soft), #f8f1e5); }

@@ -1,0 +1,18 @@
+Artifact: protege-common-5.6.10-SNAPSHOT.jar
+Source: protegeproject/protege@d9c9d392f9d88b5c4dc49a109009e9c460b6fb2b
+Generated: 2026-08-31 from a git archive of the pinned source
+Command: JAVA_HOME=<JDK 21> mvn -q -pl protege-common -am -DskipTests package
+Generated JAR SHA-256: 907a6dfa342c4c5decbfcf6834109b2ae92546adb83b29b116e433dec76c5b69
+Raw manifest SHA-256: 57942438938093d6f1c04c4920e4e9c1f7821cf315716bab28fc25b8a4966ea3
+
+The following runtime headers are copied from META-INF/MANIFEST.MF. Lines
+folded by the JAR manifest format have been joined for readability. Volatile
+build metadata such as Bnd-LastModified is intentionally omitted.
+
+Bundle-Activator: org.protege.common.Activator
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.protege.common
+Bundle-Version: 5.6.10.SNAPSHOT
+Export-Package: org.protege.common;version="5.6.10.SNAPSHOT";uses:="org.osgi.framework"
+Import-Package: java.lang,java.lang.invoke,java.util,javax.xml.parsers,org.osgi.framework;version="[1.10,2)",org.slf4j;version="[1.7,2)",sun.misc;resolution:=optional
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"

@@ -34,6 +34,14 @@
 - [Eclipse PDE](https://www.eclipse.org/pde/) and [m2e](https://eclipse.dev/m2e/)
   The IDE tooling targeted by Protégé's `ide` Maven profile.
 
+## Recorded build artifacts
+
+- `docs/source-artifacts/protege-common-manifest.txt`
+  A normalized extract of the real `protege-common` OSGi manifest generated
+  from a git archive of the pinned source. The file records the build command,
+  source commit, JAR checksum, raw manifest checksum, and the emitted package
+  version ranges used in Lesson 2.
+
 ## Brand source
 
 - [Official Protégé website](https://protege.stanford.edu/) and its

@@ -51,6 +51,17 @@ export type LessonSection = {
   paragraphs: string[];
   depth?: "foundation" | "core";
   skipIf?: string;
+  callout?: {
+    label: string;
+    title: string;
+    body: string;
+  };
+  table?: {
+    title: string;
+    columns: string[];
+    rows: string[][];
+    caption: string;
+  };
   technologyIds?: TechnologyPrimerId[];
   diagram?: DiagramSpec;
   code?: {
@@ -132,6 +143,43 @@ export const lessons: Lesson[] = [
     ],
     sections: [
       {
+        id: "unknown-panel",
+        eyebrow: "The problem",
+        title: "How can Protégé display code it has never heard of?",
+        paragraphs: [
+          "Protégé is built so people outside its own team can add features without changing Protégé's source. That creates the puzzle for this course: how can a running program display a panel whose Java class was not present when the program was compiled and whose name appears nowhere in the host code?",
+          "Use a panel you already know as the concrete example. The Annotations panel on the Classes tab is offered by the small XML entry below. The full editor-owl file contains 186 extension declarations across 1,898 lines. Fifty-one of those declarations offer view panels, but the default Classes-tab layout places only five. The catalogue is therefore much larger than any one screen.",
+          "Reading an offer and building its object are separate events. At startup, the registry records the id, the kind of contribution, and the class name as catalogue data. Much later, when a tab layout asks for that id, Protégé follows the recorded class name through the contributing JAR's classloader and constructs the panel.",
+        ],
+        code: {
+          path: "protege-editor-owl/src/main/resources/plugin.xml",
+          line: 431,
+          language: "xml",
+          snippet: `<extension id="OWLClassAnnotations"
+           point="org.protege.editor.core.application.ViewComponent">
+    <label value="Annotations"/>
+    <class value="org.protege.editor.owl.ui.view.cls.OWLClassAnnotationsViewComponent"/>
+    <headerColor value="@org.protege.classcolor"/>
+    <category value="@org.protege.classcategory"/>
+    <help value="http://protegeproject.github.io/protege/views/annotations"/>
+</extension>`,
+          focus: "This is an offer in a catalogue. It does not create the panel when the XML is read.",
+        },
+        table: {
+          title: "Two attributes, two different questions",
+          columns: ["Attribute", "Question it answers", "Whose name appears"],
+          rows: [
+            ["point=", "What kind of thing is being offered?", "The host's extension-point socket, never your implementation class"],
+            ["class value=", "What Java object should be built later?", "The contributor's implementation class"],
+          ],
+          caption: "Read point as the socket and class as the plug. They are not interchangeable class names.",
+        },
+        checkpoint: {
+          prompt: "In the Annotations declaration, which attribute names Protégé's socket, and which value names the Java class that will be constructed?",
+          answer: "point names the host socket: org.protege.editor.core.application.ViewComponent. The nested class value names the contributed Java class: org.protege.editor.owl.ui.view.cls.OWLClassAnnotationsViewComponent.",
+        },
+      },
+      {
         id: "five-parts",
         eyebrow: "Orientation",
         title: "Five modules, three different jobs",
@@ -171,7 +219,7 @@ export const lessons: Lesson[] = [
         eyebrow: "Architecture",
         title: "Build-time arrows and runtime arrows point differently",
         paragraphs: [
-          "Maven dependencies are deliberately one-way. Editor-owl depends on editor-core, common, and launcher. Editor-core and common each depend on launcher. Desktop depends on all four modules so it can package them. Core imports no OWL classes. At runtime, core discovers an OWL editor factory through the Equinox extension registry. The implementation therefore plugs back into the framework without a reverse compile-time dependency.",
+          "Maven dependencies are deliberately one-way. Editor-owl depends on editor-core, common, and launcher. Editor-core and common each depend on launcher. Desktop depends on all four modules so it can package them. A source count at the pinned commit finds 0 OWL or OWL API imports in editor-core and 516 editor-core imports in editor-owl. At runtime, core discovers an OWL editor factory through the Equinox extension registry. The implementation therefore plugs back into the framework without a reverse compile-time dependency.",
           "This distinction prevents a common reading mistake. A source import answers who can call whose exported Java API. A plugin.xml contribution answers who can appear at runtime without the host importing the contributor.",
         ],
         technologyIds: ["osgi", "equinox"],
@@ -187,6 +235,11 @@ export const lessons: Lesson[] = [
           ],
           edges: ["compile-time use", "declares point", "discovers", "creates"],
           caption: "The compile-time dependency stays one-way. The runtime registry supplies the reverse connection.",
+        },
+        callout: {
+          label: "Boundary leak",
+          title: "The compiler protects types, not strings",
+          body: "ProtegeApplication in editor-core reads the renderer font preference from a bucket named by the literal string org.protege.editor.owl.ui.renderer.OWLRendererPreferences. The OWL class asks PreferencesManager for a bucket keyed by its Class. If that class were renamed without updating core's string, the two lookups would address different buckets: core would fall back to font size 12 and no missing-type error could expose the mismatch.",
         },
         checkpoint: {
           prompt: "A new OWL-specific view needs AbstractOWLViewComponent. Which module owns it, and does core need to change?",
@@ -239,8 +292,12 @@ export const lessons: Lesson[] = [
     capability: "You can place new code in the correct module and explain the core-to-OWL boundary.",
     sourceRefs: [
       src("Parent reactor", "pom.xml", 86, "Five-module build order"),
+      src("Annotations view offer", "protege-editor-owl/src/main/resources/plugin.xml", 431, "The concrete panel declaration and the source of the extension counts"),
+      src("Classes-tab layout", "protege-editor-owl/src/main/resources/viewconfig-classestab.xml", 1, "Five default component placements"),
       src("Core plugin declarations", "protege-editor-core/src/main/resources/plugin.xml", 4, "Framework extension points"),
       src("OWL editor contribution", "protege-editor-owl/src/main/resources/plugin.xml", 36, "Runtime link into core"),
+      src("String-keyed renderer preference", "protege-editor-core/src/main/java/org/protege/editor/core/ProtegeApplication.java", 366, "Core reaches across the boundary through a literal preference key"),
+      src("Class-keyed renderer preference", "protege-editor-owl/src/main/java/org/protege/editor/owl/ui/renderer/OWLRendererPreferences.java", 230, "The OWL class selects its preference bucket from its Class object"),
     ],
   },
   {
@@ -256,6 +313,75 @@ export const lessons: Lesson[] = [
       "Explain why ProtegeApplication waits for FrameworkEvent.STARTED.",
     ],
     sections: [
+      {
+        id: "bundle-problem",
+        eyebrow: "The runtime problem",
+        title: "One classpath cannot safely host an open-ended application",
+        paragraphs: [
+          "The desktop assembly explicitly gathers 34 dependency artifacts into its bundles directory, and users can add more JARs that Protégé's developers have never tested together. On one shared classpath, two plugins that need incompatible versions of the same library cannot both control which version wins. The result is version conflict and load-order roulette.",
+          "OSGi changes the unit of visibility. Each bundle has a classloader and declares the Java packages it needs and offers. The framework wires an import to one compatible export, so a class is found through the bundle itself or an explicit package wire instead of whichever JAR happened to appear first on a global classpath.",
+        ],
+        diagram: {
+          title: "From one global lookup to explicit package wiring",
+          question: "How can two plugins depend on different library versions without load order deciding the winner?",
+          kind: "Classloading comparison",
+          columns: 3,
+          nodes: [
+            { title: "Shared classpath", subtitle: "one global search order", detail: "Every JAR competes to provide a class name. The first matching definition wins even when another plugin expected a different version.", tone: "runtime", position: { column: 1, row: 1 } },
+            { title: "Plugin A bundle", subtitle: "its own classloader", detail: "Loads its private classes and imports only the external packages named in its manifest.", tone: "core", position: { column: 1, row: 2 } },
+            { title: "OSGi resolver", subtitle: "matches need to offer", detail: "Selects an export whose package name and version satisfy each import contract.", tone: "runtime", position: { column: 2, row: 2 } },
+            { title: "Plugin B bundle", subtitle: "separate class identity", detail: "Can receive a different compatible export without relying on Plugin A's classpath order.", tone: "owl", position: { column: 3, row: 2 } },
+          ],
+          edges: [],
+          connections: [
+            { from: "Plugin A bundle", label: "imports", to: "OSGi resolver" },
+            { from: "Plugin B bundle", label: "imports", to: "OSGi resolver" },
+          ],
+          caption: "The manifest makes package visibility an explicit contract. Separate loaders alone are not enough; the resolver supplies controlled connections between them.",
+        },
+      },
+      {
+        id: "osgi-from-zero",
+        eyebrow: "Foundation track",
+        title: "OSGi from zero: loaders, needs, and offers",
+        depth: "foundation",
+        skipIf: "Skip this if you already understand bundle classloaders and Import-Package wiring.",
+        paragraphs: [
+          "Start with the failure OSGi is designed to prevent. A traditional Java application gives one classloader a list of JARs. If two JARs contain the same fully qualified class name, the search order chooses one. That is tolerable while one team controls every dependency, but not when third-party plugins arrive independently. Matthew Horridge's Developer Handbook records that Protégé 2.0 and earlier encountered this shared-classloader problem in practice.",
+          "A bundle is still a JAR, but its manifest turns implicit classpath assumptions into needs and offers. Import-Package says which packages this bundle needs, including acceptable versions. Export-Package says which packages other bundles may use and at what version. The framework resolves compatible pairs before starting the dependent bundle.",
+          "OSGi is not a Protégé invention and it is not an API that most feature plugins call. It is a Java modularity and lifecycle specification implemented here by Felix. Plugin authors mostly encounter its generated manifest contract, dependency visibility rules, and bundle lifecycle rather than writing resolver code.",
+        ],
+        technologyIds: ["osgi"],
+      },
+      {
+        id: "bundle-contract",
+        eyebrow: "Runtime contract",
+        title: "The manifest tells the resolver what a bundle needs and offers",
+        paragraphs: [
+          "protege-common is the smallest readable example: one Java class and a short generated OSGi manifest. Export-Package offers org.protege.common at the bundle version. Import-Package requires OSGi in the range [1.10,2) and SLF4J in [1.7,2). A square bracket includes the lower bound; a parenthesis excludes the upper bound.",
+          "sun.misc is different: resolution:=optional says absence must not prevent resolution. By contrast, if any required import cannot be wired, the bundle does not start. Launcher catches that failure and logs it, including the resolver exception that names the unsatisfied package, to the file log configured at ~/.Protege/logs/protege.log.",
+        ],
+        code: {
+          path: "protege-common/target/META-INF/MANIFEST.MF",
+          line: 1,
+          language: "manifest",
+          snippet: `Bundle-Activator: org.protege.common.Activator
+Bundle-SymbolicName: org.protege.common
+Bundle-Version: 5.6.10.SNAPSHOT
+Export-Package: org.protege.common;version="5.6.10.SNAPSHOT"
+Import-Package: org.osgi.framework;version="[1.10,2)",
+ org.slf4j;version="[1.7,2)",
+ sun.misc;resolution:=optional
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"`,
+          focus: "These headers were emitted from the pinned source. The normalized, provenance-recorded extract is stored in docs/source-artifacts/protege-common-manifest.txt.",
+          url: sourceUrl("protege-common/pom.xml", 43),
+        },
+        callout: {
+          label: "Failure rule",
+          title: "An unresolved required import means no bundle start",
+          body: "Do not expect a later ClassNotFoundException from feature code. Resolution fails first, Launcher logs that the core bundle failed to start, and the resolver message identifies the missing package. When startup stops before the UI exists, inspect ~/.Protege/logs/protege.log.",
+        },
+      },
       {
         id: "plain-jvm",
         eyebrow: "Execution trace",
@@ -291,8 +417,9 @@ export const lessons: Lesson[] = [
         eyebrow: "Runtime architecture",
         title: "Start order is application architecture",
         paragraphs: [
-          "Each bundles element in config.xml becomes one start level. Common registers SAXParserFactory first. Equinox starts next. Registry, JAXB, and editor-core start after that. Application bundles follow. User and bundled plugins start last.",
-          "The ordering is not inferred from Java dependencies. It is hand-authored configuration using literal post-assembly JAR names. That makes config.xml part of the architecture, not incidental deployment detail.",
+          "Once package wiring makes the bundles compatible, startup order remains. Each bundles element in config.xml becomes one start level. A search path says where Launcher looks; an optional bundle name restricts that block to specific post-assembly JAR names. With no bundle children, the block starts everything it finds in those paths.",
+          "The file contains five literal blocks. The first four search bundles/ and the per-user ~/.Protege/bundles directory. The last searches plugins/ and ${user.home}/.Protege/plugins. This ordering is hand-authored deployment architecture, not something Maven or the resolver infers from Java dependencies.",
+          "config.xml also declares boot delegation for sun.*, com.sun.*, apple.*, and com.apple.*. Those packages bypass normal bundle import wiring and delegate to the parent framework classloader. A class can therefore be found in three ways here: inside the bundle, through an OSGi package wire, or through this explicit parent-loader escape hatch.",
         ],
         technologyIds: ["xml-stack"],
         diagram: {
@@ -308,6 +435,18 @@ export const lessons: Lesson[] = [
           ],
           edges: ["before", "before", "before", "before"],
           caption: "Felix begins at the highest configured level, which guarantees lower levels have already started.",
+        },
+        table: {
+          title: "The five configured start blocks",
+          columns: ["Block", "Literal contents", "Why the next block can proceed"],
+          rows: [
+            ["1", "protege-common.jar", "SAXParserFactory is registered before Equinox parses extension metadata."],
+            ["2", "org.eclipse.equinox.common.jar; org.eclipse.equinox.supplement.jar", "Shared Equinox runtime support exists before the registry starts."],
+            ["3", "org.eclipse.equinox.registry.jar; org.protege.jaxb.jar; protege-editor-core.jar", "The extension registry, XML binding support, and domain-neutral host exist before application bundles."],
+            ["4", "Everything else found in bundles/ and ~/.Protege/bundles", "The OWL application and all shipped runtime bundles exist before third-party plugins start."],
+            ["5", "Everything found in plugins/ and ${user.home}/.Protege/plugins", "No next block: plugin contributions start against their already-running host."],
+          ],
+          caption: "A named bundle narrows a search block. A block containing only search paths starts every matching bundle in those directories.",
         },
         checkpoint: {
           prompt: "Why would moving editor-core to the final start level risk an empty application?",
@@ -359,9 +498,14 @@ export const lessons: Lesson[] = [
     ],
     capability: "You can diagnose which startup layer failed before chasing UI code.",
     sourceRefs: [
+      src("Desktop bundle inventory", "protege-desktop/src/main/assembly/dependency-sets.xml", 4, "The 34 dependency entries assembled into bundles"),
+      src("Common manifest instructions", "protege-common/pom.xml", 43, "BND source for the generated needs and offers"),
       src("Launcher startup", "protege-launcher/src/main/java/org/protege/osgi/framework/Launcher.java", 97, "Install and start bundles"),
       src("Start-level configuration", "protege-desktop/src/main/felix/conf/config.xml", 1, "Runtime order"),
+      src("Bundle start failure logging", "protege-launcher/src/main/java/org/protege/osgi/framework/Launcher.java", 177, "Launcher logs bundles that fail to start"),
+      src("File log destination", "protege-desktop/src/main/logging/conf/logback.xml", 11, "Startup diagnostics remain available without a UI"),
       src("Deferred application start", "protege-editor-core/src/main/java/org/protege/editor/core/ProtegeApplication.java", 85, "Framework listener"),
+      src("Historical shared-classloader record", "Protege Developer Handbook 2026-08-11 (Matthew Horridge).html", undefined, "Handbook sections 3.2 and 5 record the Protégé 2.0-and-earlier plugin conflict", "https://protegewiki.stanford.edu/wiki/PluginAnatomy"),
     ],
   },
   {
@@ -382,7 +526,7 @@ export const lessons: Lesson[] = [
         eyebrow: "Runtime discovery",
         title: "Core asks for an editor kind, not an OWL class",
         paragraphs: [
-          "ProtegeManager loads EditorKitFactory plugins from the registry. Editor-owl contributes OWLEditorKitFactory in plugin.xml. When a URI is opened, the manager instantiates that factory, asks it for an editor kit, and calls the generic handleLoadFrom contract.",
+          "ProtegeManager loads EditorKitFactory plugins from the registry. Editor-owl contributes OWLEditorKitFactory in plugin.xml. The overload that accepts a plugin unwraps its factory, then calls createAndSetupNewEditorKit with that EditorKitFactory. The receiving method asks the factory for an editor kit and calls the generic handleLoadFrom contract.",
           "The call becomes OWL-specific only after dynamic instantiation. This is the same boundary you protect when adding new behavior: core owns the workflow, while editor-owl owns ontology semantics.",
         ],
         diagram: {
@@ -391,8 +535,8 @@ export const lessons: Lesson[] = [
           kind: "Runtime handoff diagram",
           nodes: [
             { title: "OpenAction", subtitle: "core UI action", detail: "Asks ProtegeManager to open an editor kit. It does not import OWL classes.", tone: "core" },
-            { title: "ProtegeManager", subtitle: "editor lifecycle", detail: "Gets an EditorKitFactory from its plugin wrapper and creates a new kit for the URI.", tone: "core", source: src("Create for URI", "protege-editor-core/src/main/java/org/protege/editor/core/ProtegeManager.java", 164, "Generic load workflow") },
-            { title: "EditorKitFactoryPlugin", subtitle: "registry wrapper", detail: "Represents the EditorKitFactory contribution declared by editor-owl.", tone: "runtime" },
+            { title: "ProtegeManager", subtitle: "editor lifecycle", detail: "The URI-loading method receives an already-unwrapped EditorKitFactory, creates its kit, and invokes the generic load contract.", tone: "core", source: src("Create for URI", "protege-editor-core/src/main/java/org/protege/editor/core/ProtegeManager.java", 164, "Generic load workflow") },
+            { title: "EditorKitFactoryPlugin", subtitle: "registry wrapper", detail: "Represents the contribution declared by editor-owl. A caller overload unwraps it before entering the URI-loading method.", tone: "runtime" },
             { title: "OWLEditorKitFactory", subtitle: "OWL implementation", detail: "Constructs OWLEditorKit. This is the first concrete OWL class in the trace.", tone: "owl", source: src("OWL factory", "protege-editor-owl/src/main/java/org/protege/editor/owl/OWLEditorKitFactory.java", 25, "Concrete editor factory") },
             { title: "OWLEditorKit.handleLoadFrom", subtitle: "OWL load entry", detail: "Delegates physical URI loading to OWLModelManagerImpl and updates recent-file state.", tone: "owl" },
           ],
@@ -437,6 +581,30 @@ registration = ProtegeOWL.getBundleContext()
     .registerService(EditorKit.class.getCanonicalName(), this, new Hashtable<>());
 workspace.initialise();`,
           focus: "Construction order creates plugin seams before loading tabs and views.",
+        },
+      },
+      {
+        id: "edt-from-zero",
+        eyebrow: "Foundation track",
+        title: "Swing from zero: one event loop, one UI thread",
+        depth: "foundation",
+        skipIf: "Skip this if you already understand event queues, the EDT, and invokeLater.",
+        paragraphs: [
+          "An event loop repeatedly removes one item from a queue, runs it, then removes the next. Swing uses one such loop on one Event Dispatch Thread, abbreviated EDT. The operating system adds input and repaint work; application threads can add Runnable objects. The EDT is the queue's single consumer.",
+          "Most Swing component access is confined to that one thread. A long task blocks the consumer and the interface stops processing input and repaints. Background work therefore happens elsewhere, and SwingUtilities.invokeLater places a small UI task at the back of the EDT queue.",
+        ],
+        technologyIds: ["swing-edt"],
+        table: {
+          title: "What invokeLater actually does",
+          columns: ["Time", "Worker thread", "EDT queue", "EDT activity"],
+          rows: [
+            ["t1", "Prepares updateView", "[paint A]", "Finishing the current click handler"],
+            ["t2", "Calls invokeLater(updateView)", "[paint A, updateView]", "Still finishing the click handler"],
+            ["t3", "invokeLater returns; worker continues", "[paint A, updateView]", "Finishes the click handler"],
+            ["t4", "Continues unrelated work", "[updateView]", "Removes and runs paint A"],
+            ["t5", "May already be finished", "[]", "Removes and runs updateView"],
+          ],
+          caption: "Three takeaways: invokeLater returns immediately; its Runnable joins the back of the queue rather than jumping the line; and the event loop executes that Runnable on the EDT, which is why Swing access inside it is safe.",
         },
       },
       {
@@ -490,8 +658,10 @@ workspace.initialise();`,
     capability: "You can trace and debug an ontology-open failure across registry, UI, worker, and model layers.",
     sourceRefs: [
       src("Generic URI load", "protege-editor-core/src/main/java/org/protege/editor/core/ProtegeManager.java", 164, "Framework side of the seam"),
+      src("Factory-plugin overload", "protege-editor-core/src/main/java/org/protege/editor/core/ProtegeManager.java", 191, "The caller overload unwraps a plugin before the URI-loading method"),
       src("OWL assembly", "protege-editor-owl/src/main/java/org/protege/editor/owl/OWLEditorKit.java", 83, "Composition root"),
       src("Ontology loading", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/io/OntologyLoader.java", 57, "Thread and OWL API path"),
+      src("Swing event dispatch guidance", "Oracle Swing tutorial: The Event Dispatch Thread", undefined, "Official event-loop and thread-confinement guidance", "https://docs.oracle.com/javase/tutorial/uiswing/concurrency/dispatch.html"),
     ],
   },
   {

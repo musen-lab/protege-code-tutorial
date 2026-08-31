@@ -33,6 +33,37 @@ function SectionBody({ lessonSlug, section }: { lessonSlug: string; section: Les
 
       {section.diagram && <RelationshipDiagram diagram={section.diagram} />}
 
+      {section.callout && (
+        <aside className="course-callout">
+          <span>{section.callout.label}</span>
+          <h3>{section.callout.title}</h3>
+          <p>{section.callout.body}</p>
+        </aside>
+      )}
+
+      {section.table && (
+        <figure className="course-table">
+          <h3>{section.table.title}</h3>
+          <div>
+            <table>
+              <thead>
+                <tr>{section.table.columns.map((column) => <th key={column} scope="col">{column}</th>)}</tr>
+              </thead>
+              <tbody>
+                {section.table.rows.map((row, rowIndex) => (
+                  <tr key={`${section.table?.title}-${rowIndex}`}>
+                    {row.map((cell, cellIndex) => cellIndex === 0
+                      ? <th key={cellIndex} scope="row">{cell}</th>
+                      : <td key={cellIndex}>{cell}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <figcaption>{section.table.caption}</figcaption>
+        </figure>
+      )}
+
       {section.code && (
         <figure className="code-cutaway">
           <div className="code-heading">
