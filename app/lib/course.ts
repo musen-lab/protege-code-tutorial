@@ -724,9 +724,14 @@ workspace.initialise();`,
           edges: ["registers", "places", "loads tab", "loads view", "renders"],
           caption: "Behavior, discoverability, and default placement are separate concerns.",
         },
+        callout: {
+          label: "Two namespaces, one shape",
+          title: "A catalogue key can look exactly like a Java class name",
+          body: "org.protege.editor.owl.OWLClassDescription in a layout's pluginId is the contributing bundle namespace plus the extension id from plugin.xml. It is a catalogue key, not a class. Only the surrounding attribute disambiguates the strings: pluginId or extension id identifies a catalogue entry; class value names Java code.",
+        },
         checkpoint: {
-          prompt: "You added a ViewComponent extension and can add it manually, but it does not appear on the Classes tab after resetting preferences. What is missing?",
-          answer: "The view id must be added to viewconfig-classestab.xml, or another layout resource referenced by that WorkspaceTab contribution.",
+          prompt: "You added a ViewComponent extension and can add it manually, but it does not appear on the Classes tab after resetting preferences. What is missing, and is org.protege.editor.owl.OWLClassDescription in pluginId a class name?",
+          answer: "The catalogue key must be added to viewconfig-classestab.xml, or another layout resource referenced by that WorkspaceTab contribution. In pluginId, org.protege.editor.owl.OWLClassDescription is a catalogue key formed from the contributor namespace and extension id, not a Java class name.",
         },
       },
       {
@@ -767,6 +772,7 @@ workspace.initialise();`,
       src("Tabbed workspace", "protege-editor-core/src/main/java/org/protege/editor/core/ui/workspace/TabbedWorkspace.java", 23, "Tab loading and lifecycle"),
       src("OWL tab contributions", "protege-editor-owl/src/main/resources/plugin.xml", 310, "Declarative tabs"),
       src("Classes layout", "protege-editor-owl/src/main/resources/viewconfig-classestab.xml", 1, "Default view placement"),
+      src("Layout plugin lookup", "protege-editor-core/src/main/java/org/protege/editor/core/ui/view/ViewComponentFactory.java", 33, "pluginId is matched against the extension wrapper's unique id"),
     ],
   },
   {
@@ -1175,6 +1181,11 @@ cd protege-desktop/target/\
           edges: ["selects", "feeds", "packages", "places", "exposes"],
           caption: "Compile-time availability, distribution presence, and OSGi visibility are separate facts.",
         },
+        callout: {
+          label: "Verified mismatch",
+          title: "The CORBA ORB crosses only some of the four contracts",
+          body: "At the pinned commit, every text launch script places bundles/glassfish-corba-orb.jar on the plain JVM classpath, and the root POM declares glassfish-corba-orb 5.0.0. Neither platform assembly ships that JAR; both ship glassfish-corba-omgapi instead. Java silently ignores a missing classpath entry, so ordinary startup can conceal the mismatch. Whether a SWRL-related path still needs the ORB is an open question, not a diagnosed consequence.",
+        },
         checkpoint: {
           prompt: "The editor module compiles and tests pass, but the assembled app throws NoClassDefFoundError for a new library. Which files come next?",
           answer: "Inspect the module's BND scope/instructions and the desktop shipping lists, especially dependency-sets.xml and the duplicate include list in protege-os-x.xml.",
@@ -1211,6 +1222,10 @@ cd protege-desktop/target/\
       src("Plugin search paths", "protege-desktop/src/main/felix/conf/config.xml", 48, "Installation and per-user plugin directories"),
       src("Compiler baseline", "pom.xml", 354, "Java 11 release"),
       src("Bundle assembly list", "protege-desktop/src/main/assembly/dependency-sets.xml", 1, "Separate JAR shipping"),
+      src("Launch-script CORBA entry", "protege-desktop/src/main/env/platform-independent/run.sh", 35, "The launcher classpath names glassfish-corba-orb.jar"),
+      src("Declared CORBA ORB", "pom.xml", 330, "Dependency management declares glassfish-corba-orb for a SWRL plugin"),
+      src("Shipped CORBA API", "protege-desktop/src/main/assembly/dependency-sets.xml", 32, "The platform-independent assembly ships glassfish-corba-omgapi instead"),
+      src("macOS CORBA API", "protege-desktop/src/main/assembly/protege-os-x.xml", 40, "The macOS assembly also ships glassfish-corba-omgapi"),
       src("Core manifest instructions", "protege-editor-core/pom.xml", 1, "Export and embed rules"),
     ],
   },
@@ -1257,6 +1272,7 @@ cd protege-desktop/target/\
         title: "Search declarations and behavior together",
         paragraphs: [
           "For extension-based features, search the contribution id or class in plugin.xml and Java at the same time. For events, search both the EventType value and addListener calls. For a visible label, find it in plugin.xml before searching Swing code. For runtime failures, search the literal JAR or package in POMs, assembly XML, and config.xml.",
+          "Make boundary searches resistant to false positives. A case-insensitive search for owl under editor-core matches 20 Java files at the pin, including Window, showLog, and FlowLayout noise. Search import lines or a package-qualified name instead; this turns an architectural claim into a result you can inspect.",
           "A productive trace records four facts: entry point, responsibility boundary, next handoff, and evidence. Once those are known, secondary collaborators become optional depth instead of noise.",
         ],
         code: {
@@ -1271,7 +1287,10 @@ rg -n "ENTITY_RENDERER_CHANGED|addListener" \
   protege-editor-owl/src/main/java
 
 rg -n "artifact-name|package.name" \
-  pom.xml protege-*/pom.xml protege-desktop/src/main`,
+  pom.xml protege-*/pom.xml protege-desktop/src/main
+
+rg -n '^import (org\\.protege\\.editor\\.owl|org\\.semanticweb\\.owlapi)\\.' \
+  protege-editor-core/src/main/java`,
           focus: "Search metadata and Java together so you see discovery and behavior in one result set.",
         },
       },
@@ -1309,6 +1328,7 @@ rg -n "artifact-name|package.name" \
       src("View declaration example", "protege-editor-owl/src/main/resources/plugin.xml", 442, "Metadata-to-class search"),
       src("Plugin utility", "protege-editor-core/src/main/java/org/protege/editor/core/plugin/PluginUtilities.java", 76, "Contributor and registry bridge"),
       src("Model event dispatch", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/OWLModelManagerImpl.java", 188, "EDT-aware event path"),
+      src("Core source boundary", "protege-editor-core/src/main/java", undefined, "The false-positive-resistant import search returns no OWL or OWL API imports at the pin", `https://github.com/protegeproject/protege/tree/${SOURCE_COMMIT}/protege-editor-core/src/main/java`),
     ],
   },
   {
@@ -1528,6 +1548,11 @@ rg -n "artifact-name|package.name" \
           "The repository includes a complete minimal plugin under exercises/minimal-view-plugin. Its Java class, plugin.xml, and POM are adaptations of the fixed official example, with a currently published Protégé 5.6.6 dependency so the exercise builds from a clean Maven cache.",
           "The exercise is complete only after you inspect the JAR and observe the view in a real Protégé runtime. A successful Maven build is useful evidence, but it is not the runtime result.",
         ],
+        callout: {
+          label: "Snapshot prerequisite",
+          title: "Use JDK 11 if the full host build misses AutoValue classes",
+          body: "A full build of this pinned snapshot was observed to fail in protege-editor-owl on a JDK-21-only machine with Maven 3.9.9 because 12 expected AutoValue_* classes were not generated. The snapshot contains 12 @AutoValue declarations and pins auto-value 1.6.5 beside auto-value-annotations 1.11.1, but the root cause has not been established. Treat it as a known snapshot issue; using the project's JDK 11 target avoids the observed failure.",
+        },
         exercise: {
           title: "Ship one visible view",
           goal: "Produce a bundle whose generated manifest and root plugin.xml match the runtime contract, then make its view appear in Protégé.",
@@ -1561,6 +1586,8 @@ unzip -p target/protege-minimal-view-1.0.0.jar META-INF/MANIFEST.MF`,
       src("Cellfie 2.1.0 POM", "pom.xml", 72, "Real embed and import strategy", `${CELLFIE_URL}/pom.xml#L72-L111`),
       src("Pinned core BND instructions", "protege-editor-core/pom.xml", 88, "Singleton, imports, exports, and registry directive"),
       src("Pinned common BND instructions", "protege-common/pom.xml", 49, "Negation and optional-resolution examples"),
+      src("AutoValue dependency versions", "pom.xml", 291, "The pinned processor and annotation artifact versions"),
+      src("AutoValue source declarations", "protege-editor-owl/src/main/java/org/protege/editor/owl/model/identifiers/IdoNamespace.java", 16, "One of twelve @AutoValue declarations requiring generated implementations"),
     ],
   },
   {

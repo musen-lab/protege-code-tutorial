@@ -377,6 +377,30 @@ test("teaches the first three lessons from the motivating mechanisms", async () 
   assert.match(ontology, /receives an already-unwrapped EditorKitFactory/);
 });
 
+test("renders the precise cross-lesson corrections from the teaching pass", async () => {
+  const screen = await (await render("/lessons/screen")).text();
+  assert.match(screen, /Two namespaces, one shape/);
+  assert.match(screen, /org\.protege\.editor\.owl\.OWLClassDescription in a layout&#x27;s pluginId/);
+  assert.match(screen, /catalogue key formed from the contributor namespace and extension id/);
+
+  const safety = await (await render("/lessons/work-safely")).text();
+  assert.match(safety, /The CORBA ORB crosses only some of the four contracts/);
+  assert.match(safety, /bundles\/glassfish-corba-orb\.jar/);
+  assert.match(safety, /both ship glassfish-corba-omgapi instead/);
+  assert.match(safety, /open question, not a diagnosed consequence/);
+
+  const navigation = await (await render("/lessons/navigate")).text();
+  assert.match(navigation, /case-insensitive search for owl under editor-core matches 20 Java files/);
+  assert.match(navigation, /Window, showLog, and FlowLayout noise/);
+  assert.match(navigation, /\^import \(org\\\.protege/);
+
+  const plugin = await (await render("/lessons/build-plugin")).text();
+  assert.match(plugin, /Use JDK 11 if the full host build misses AutoValue classes/);
+  assert.match(plugin, /12 expected AutoValue_\* classes were not generated/);
+  assert.match(plugin, /auto-value 1\.6\.5 beside auto-value-annotations 1\.11\.1/);
+  assert.match(plugin, /root cause has not been established/);
+});
+
 test("internal navigation remains browser-native", async () => {
   const navigationFiles = [
     "../app/page.tsx",
